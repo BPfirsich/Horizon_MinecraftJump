@@ -8,59 +8,51 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    Spieler spieler;
-    Gegner gegner;
-    boolean tasteLinks, tasteRechts;
+
+    private GameDimension _currentDimension = null;
+    private InputData _inputData = null;
 
     @Override
     public void start(Stage stage) {
+        // JavaFX Setup
         Pane root = new Pane();
         root.setPrefSize(600, 400);
 
-        // Objekte erstellen
-        spieler = new Spieler(50, 360);
-        gegner = new Gegner(500, 370, 3);
-
-        root.getChildren().addAll(spieler.figur, gegner.figur);
-
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Jump and Run");
+        stage.setTitle("Horizon Minecraft Jump");
         stage.show();
 
-        // Tastensteuerung mit A/D
-        scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.SPACE) spieler.springen();
-            if (e.getCode() == KeyCode.A) tasteLinks = true;
-            if (e.getCode() == KeyCode.D) tasteRechts = true;
-        });
-        scene.setOnKeyReleased(e -> {
-            if (e.getCode() == KeyCode.A) tasteLinks = false;
-            if (e.getCode() == KeyCode.D) tasteRechts = false;
-        });
+        // Funktionsklassen Setup
+        _inputData = new InputData();
+        _inputData.initInputSystemOnScene(scene);
 
-        // Spielschleife
+        // TESTING ---
+        _currentDimension = new GameDimension("Test", root);
+        _currentDimension.setSpieler(new Spieler(50, 360, 250));
+        _currentDimension.addGegner(new Gegner(500, 370, 200 ));
+        // --- TESTING
+
+        // Spielschleife, also quasy das "Herz" des spiels.
         AnimationTimer timer = new AnimationTimer() {
+            double lastTimeNano = System.nanoTime();
+
             @Override
-            public void handle(long now) {
-                update();
+            public void handle(long currentTimeMillis) {
+                // Die zeit zwischen diesen und letzten frame berechnen
+                float deltaTime = (float)((currentTimeMillis - lastTimeNano) / 1_000_000_000.0);
+                lastTimeNano = currentTimeMillis;
+
+                // Alle funktionen callen, die pro frame vorkommen
+                _inputData.inputSystemUpdate();
+                update(deltaTime * 1);
             }
         };
         timer.start();
     }
 
-    private void update() {
-        // Spieler-Bewegung links/rechts
-        if (tasteLinks) spieler.figur.setTranslateX(spieler.figur.getTranslateX() - 4);
-        if (tasteRechts) spieler.figur.setTranslateX(spieler.figur.getTranslateX() + 4);
-
-        spieler.update();
-        gegner.update();
-
-        // Kollision
-        if (spieler.figur.getBoundsInParent().intersects(gegner.figur.getBoundsInParent())) {
-            spieler.figur.setFill(Color.GRAY); // Spieler „verliert“
-        }
+    private void update(float deltaTime) {
+        _currentDimension.updateDimension(deltaTime, _inputData);
     }
 
     public static void main(String[] args) {

@@ -1,37 +1,59 @@
-import javafx.animation.AnimationTimer;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-class Spieler {
-    Rectangle figur;
-    double ySpeed = 0;
-    boolean amBoden = true;
 
-    public Spieler(double x, double y) {
-        figur = new Rectangle(30, 40, Color.BLUE);
-        figur.setTranslateX(x);
-        figur.setTranslateY(y);
+class Spieler {
+    private Rectangle _figur;
+
+    private float _xSpeed;
+    private float _ySpeed = 100000000;
+    private float _gravity = 4000;
+    private float _gravityDownMulti = 1.4f;
+    private boolean _amBoden = true;
+
+    public Spieler(double x, double y, float speed) {
+        _figur = new Rectangle(30, 40, Color.BLUE);
+        _figur.setTranslateX(x);
+        _figur.setTranslateY(y);
+        _xSpeed = speed;
     }
 
-    public void springen() {
-        if (amBoden) {
-            ySpeed = -12;      // Sprungkraft
-            amBoden = false;
+    public Rectangle getFigur() {
+        return _figur;
+    }
+
+    public void update(float deltaTime, InputData inputData) {
+        // Movement
+        float speedMulti = 1.0f;
+        if (!_amBoden) { speedMulti = 1.2f; }
+        if(inputData.isTasteLinks()) {
+            _figur.setTranslateX(_figur.getTranslateX() - (_xSpeed * speedMulti * deltaTime));
+        }
+        if(inputData.isTasteRechts()) {
+            _figur.setTranslateX(_figur.getTranslateX() + (_xSpeed * speedMulti * deltaTime));
+        }
+
+        // Springen
+        if(inputData.isTasteSpringen()) springen();
+
+        // Gravitation
+        if(_ySpeed > 0) {
+            _ySpeed += _gravity * _gravityDownMulti * deltaTime; // Schwerkraft
+        } else {
+            _ySpeed += _gravity * deltaTime; // Schwerkraft
+        }
+
+        _figur.setTranslateY(_figur.getTranslateY() + (_ySpeed * deltaTime));
+        if (_figur.getTranslateY() >= 360) { // Boden bei y=360
+            _figur.setTranslateY(360);
+            _amBoden = true;
+            _ySpeed = 0;
         }
     }
 
-    public void update() {
-        ySpeed += 0.5; // Schwerkraft
-        figur.setTranslateY(figur.getTranslateY() + ySpeed);
-
-        if (figur.getTranslateY() >= 360) { // Boden bei y=360
-            figur.setTranslateY(360);
-            amBoden = true;
-            ySpeed = 0;
+    private void springen() {
+        if (_amBoden) {
+            _ySpeed = -1000;      // Sprungkraft
+            _amBoden = false;
         }
     }
 }
