@@ -36,7 +36,8 @@ public class GameDimension {
     // Fügt einen gegner zur Dimension hinzu, und fügt dessen Rectangle zur scene hinzu
     public void setSpieler(Spieler spieler) {
         _spieler = spieler;
-        _root.getChildren().add(spieler.getFigur());
+        _root.getChildren().add(spieler.getFigur());   // Hitbox (unsichtbar, nur für Kollision)
+        _root.getChildren().add(spieler.getSprite());  // Sprite (sichtbar!)
     }
 
 }
