@@ -23,12 +23,12 @@ public class InputData {
             if (e.getCode() == KeyCode.SPACE) _springenTaste = true;
             if (e.getCode() == KeyCode.A) _tasteLinks = true;
             if (e.getCode() == KeyCode.D) _tasteRechts = true;
-            if (e.getCode() == KeyCode.S) _duckenTaste = true;       // neu
+            if (e.getCode() == KeyCode.CONTROL) _duckenTaste = true;       // neu
                });
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.A) _tasteLinks = false;
             if (e.getCode() == KeyCode.D) _tasteRechts = false;
-            if (e.getCode() == KeyCode.S) _duckenTaste = false;      // neu
+            if (e.getCode() == KeyCode.CONTROL) _duckenTaste = false;      // neu
 
         });
         scene.setOnMousePressed(e -> {

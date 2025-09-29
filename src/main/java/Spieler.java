@@ -57,55 +57,75 @@ class Spieler {
     }
 
     public void update(float deltaTime, InputData inputData) {
-        // Standard = Idle
-        setImage(_idleImage);
+        double spriteHeight;
+        double hitboxHeight;
 
         // Movement
         float speedMulti = 1.0f;
-        if (!_amBoden) { speedMulti = 1.2f; }
+        if (!_amBoden) speedMulti = 1.2f;
 
         if (inputData.isTasteLinks()) {
             _figur.setTranslateX(_figur.getTranslateX() - (_xSpeed * speedMulti * deltaTime));
-            _sprite.setScaleX(-1); // spiegeln nach links
+            _sprite.setScaleX(-1);
         }
         if (inputData.isTasteRechts()) {
             _figur.setTranslateX(_figur.getTranslateX() + (_xSpeed * speedMulti * deltaTime));
-            _sprite.setScaleX(1); // normale Richtung
+            _sprite.setScaleX(1);
         }
 
         // Springen
         if (inputData.isTasteSpringen()) springen();
 
-
-        // Animationen: Idle, Ducken, Schießen
-        if (inputData.isTasteDucken()) {
-            setImage(_duckenImage);
-        } else if (inputData.isTasteSchuss()) {   // nur linke Maustaste
-            setImage(_schiessenImage);
-            // Schuss abfeuern
-        } else {
-            setImage(_idleImage);
-        }
         // Gravitation
-        if (_ySpeed > 0) {
-            _ySpeed += _gravity * _gravityDownMulti * deltaTime;
+        if (_ySpeed > 0) _ySpeed += _gravity * _gravityDownMulti * deltaTime;
+        else _ySpeed += _gravity * deltaTime;
+
+        // Hitbox & Sprite anpassen
+        if (inputData.isTasteDucken()) {
+            spriteHeight = HOEHE / 2;
+            hitboxHeight = HOEHE / 2;
+            _figur.setHeight(hitboxHeight);
+            _figur.setTranslateY(BODEN_Y - hitboxHeight);  // Hitbox vom Boden aus
+            _sprite.setFitHeight(spriteHeight);
+            _sprite.setTranslateY(BODEN_Y - spriteHeight); // Sprite auf Boden
+            setImage(_duckenImage);
         } else {
-            _ySpeed += _gravity * deltaTime;
+            spriteHeight = HOEHE;
+            hitboxHeight = HOEHE;
+            _figur.setHeight(hitboxHeight);
+
+            // Hitbox-Y nur ändern, wenn sie unter Boden ist
+            if (_figur.getTranslateY() > BODEN_Y - hitboxHeight) {
+                _figur.setTranslateY(BODEN_Y - hitboxHeight);
+                _amBoden = true;
+                _ySpeed = 0;
+            }
+
+            _sprite.setFitHeight(spriteHeight);
+            _sprite.setTranslateY(_figur.getTranslateY());
+
+            if (inputData.isTasteSchuss()) setImage(_schiessenImage);
+            else setImage(_idleImage);
         }
 
-        _figur.setTranslateY(_figur.getTranslateY() + (_ySpeed * deltaTime));
+        // Hitbox Y mit Gravitation
+        if (!_amBoden) _figur.setTranslateY(_figur.getTranslateY() + (_ySpeed * deltaTime));
 
         // Boden-Kollision
-        if (_figur.getTranslateY() >= BODEN_Y - HOEHE) {
-            _figur.setTranslateY(BODEN_Y - HOEHE);
+        if (_figur.getTranslateY() > BODEN_Y - hitboxHeight) {
+            _figur.setTranslateY(BODEN_Y - hitboxHeight);
             _amBoden = true;
             _ySpeed = 0;
         }
 
-        // Sprite folgt immer der Hitbox
+        // X-Position Sprite synchronisieren
         _sprite.setTranslateX(_figur.getTranslateX());
-        _sprite.setTranslateY(_figur.getTranslateY());
     }
+
+
+
+
+
 
     private void springen() {
         if (_amBoden) {
