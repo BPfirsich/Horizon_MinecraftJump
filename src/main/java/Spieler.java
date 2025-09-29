@@ -7,6 +7,11 @@ class Spieler {
     private Rectangle _figur;   // Hitbox (wie vorher!)
     private ImageView _sprite;  // Neues sichtbares Bild
 
+    // Konstanten für die Spielergröße und Boden
+    private static final double BREITE = 60;
+    private static final double HOEHE = 80;
+    private static final double BODEN_Y = 410;
+
     // Bilder für verschiedene Aktionen
     private Image _idleImage;
     private Image _schiessenImage;
@@ -20,9 +25,10 @@ class Spieler {
 
     public Spieler(double x, double y, float speed) {
         // Hitbox (unsichtbar machen, wenn du willst: setOpacity(0))
-        _figur = new Rectangle(30, 40, Color.BLUE);
+        _figur = new Rectangle(BREITE, HOEHE, Color.BLUE);
         _figur.setTranslateX(x);
-        _figur.setTranslateY(y);
+        double spawnY = BODEN_Y - HOEHE;
+        _figur.setTranslateY(spawnY);
         _figur.setOpacity(0); // unsichtbar
 
         // Grafiken laden (aus resources-Ordner)
@@ -32,8 +38,8 @@ class Spieler {
 
         // Sprite (startet mit Idle)
         _sprite = new ImageView(_idleImage);
-        _sprite.setFitWidth(30);
-        _sprite.setFitHeight(40);
+        _sprite.setFitWidth(60);
+        _sprite.setFitHeight(80);
         _sprite.setTranslateX(x);
         _sprite.setTranslateY(y);
 
@@ -70,16 +76,16 @@ class Spieler {
         // Springen
         if (inputData.isTasteSpringen()) springen();
 
-        // Ducken
+
+        // Animationen: Idle, Ducken, Schießen
         if (inputData.isTasteDucken()) {
             setImage(_duckenImage);
-        }
-
-        // Schießen
-        if (inputData.isTasteSchiessen()) {
+        } else if (inputData.isTasteSchuss()) {   // nur linke Maustaste
             setImage(_schiessenImage);
+            // Schuss abfeuern
+        } else {
+            setImage(_idleImage);
         }
-
         // Gravitation
         if (_ySpeed > 0) {
             _ySpeed += _gravity * _gravityDownMulti * deltaTime;
@@ -90,8 +96,8 @@ class Spieler {
         _figur.setTranslateY(_figur.getTranslateY() + (_ySpeed * deltaTime));
 
         // Boden-Kollision
-        if (_figur.getTranslateY() >= 360) {
-            _figur.setTranslateY(360);
+        if (_figur.getTranslateY() >= BODEN_Y - HOEHE) {
+            _figur.setTranslateY(BODEN_Y - HOEHE);
             _amBoden = true;
             _ySpeed = 0;
         }

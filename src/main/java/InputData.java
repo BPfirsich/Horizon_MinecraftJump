@@ -10,13 +10,13 @@ public class InputData {
     private boolean _tasteLinks;
     private boolean _springenTaste;
     private boolean _duckenTaste;       // neu
-    private boolean _schiessenTaste;    // neu
+    private boolean _tasteSchuss;
 
     private boolean _gameTasteRechts;
     private boolean _gameTasteLinks;
     private boolean _gameTasteSpringen;
     private boolean _gameTasteDucken;   // neu
-    private boolean _gameTasteSchiessen;// neu
+
 
     public void initInputSystemOnScene(Scene scene) {
         scene.setOnKeyPressed(e -> {
@@ -24,24 +24,30 @@ public class InputData {
             if (e.getCode() == KeyCode.A) _tasteLinks = true;
             if (e.getCode() == KeyCode.D) _tasteRechts = true;
             if (e.getCode() == KeyCode.S) _duckenTaste = true;       // neu
-            if (e.getCode() == KeyCode.J) _schiessenTaste = true;    // neu
-        });
+               });
         scene.setOnKeyReleased(e -> {
             if (e.getCode() == KeyCode.A) _tasteLinks = false;
             if (e.getCode() == KeyCode.D) _tasteRechts = false;
             if (e.getCode() == KeyCode.S) _duckenTaste = false;      // neu
-            if (e.getCode() == KeyCode.J) _schiessenTaste = false;   // neu
+
+        });
+        scene.setOnMousePressed(e -> {
+            if (e.isPrimaryButtonDown()) _tasteSchuss = true;
+        });
+        scene.setOnMouseReleased(e -> {
+            _tasteSchuss = false;
         });
     }
 
     public void inputSystemUpdate() {
-        // Einfach die Links/Rechts daten an die Game-Tasten weitergeben
+        // Links/Rechts/Ducken wie gehabt
         _gameTasteLinks = _tasteLinks;
         _gameTasteRechts = _tasteRechts;
-        _gameTasteDucken = _duckenTaste;        // neu
-        _gameTasteSchiessen = _schiessenTaste;  // neu
+        _gameTasteDucken = _duckenTaste;
 
-        // Wenn JavaFX den befehl für springen sendet, dann für genau einen Frame springen auf true setzten.
+
+
+        // Springen wie bisher
         if(_springenTaste && _gameTasteSpringen) {
             _springenTaste = false;
             _gameTasteSpringen = false;
@@ -50,6 +56,7 @@ public class InputData {
             _gameTasteSpringen = true;
         }
     }
+
 
     // Die Getter übergeben NUR die Gametasten. Die internen JavaFX verlassen die Klasse NICHT.
     public boolean isTasteRechts() {
@@ -64,7 +71,8 @@ public class InputData {
     public boolean isTasteDucken() {           // neu
         return _gameTasteDucken;
     }
-    public boolean isTasteSchiessen() {        // neu
-        return _gameTasteSchiessen;
+
+    public boolean isTasteSchuss() {
+        return _tasteSchuss;
     }
 }
