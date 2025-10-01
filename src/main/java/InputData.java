@@ -17,6 +17,8 @@ public class InputData {
     private boolean _gameTasteSpringen;
     private boolean _gameTasteDucken;   // neu
 
+    private boolean _gameTasteSchussOnce;
+    private boolean __gameTasteSchussOnceSended = false;
 
     public void initInputSystemOnScene(Scene scene) {
         scene.setOnKeyPressed(e -> {
@@ -55,6 +57,19 @@ public class InputData {
         if(_springenTaste) {
             _gameTasteSpringen = true;
         }
+
+        // Tsate Schuss Once
+        if(_tasteSchuss && !_gameTasteSchussOnce && !__gameTasteSchussOnceSended) {
+            _gameTasteSchussOnce = true;
+            __gameTasteSchussOnceSended = true;
+        }
+        else if(_tasteSchuss && _gameTasteSchussOnce && __gameTasteSchussOnceSended) {
+            _gameTasteSchussOnce = false;
+        }
+        else if(!_tasteSchuss) {
+            _gameTasteSchussOnce = false;
+            __gameTasteSchussOnceSended = false;
+        }
     }
 
 
@@ -74,5 +89,8 @@ public class InputData {
 
     public boolean isTasteSchuss() {
         return _tasteSchuss;
+    }
+    public boolean isTasteSchussOnce() {
+        return _gameTasteSchussOnce;
     }
 }

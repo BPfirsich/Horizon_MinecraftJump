@@ -81,7 +81,7 @@ class Spieler {
         }
 
         // Schießen
-        if (inputData.isTasteSchuss()) {
+        if (inputData.isTasteSchussOnce()) {
             // Neuen Pfeil erstellen und diesen als Projektil zu der aktuellen GameDimension hinzufügen
             float ARROW_VEL_X = 1000;
             float ARROW_VEL_Y = -250;
