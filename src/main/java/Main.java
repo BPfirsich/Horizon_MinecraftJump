@@ -30,7 +30,7 @@ public class Main extends Application {
 
         // TESTING ---
         _currentDimension = new GameDimension("Test", root);
-        _currentDimension.setSpieler(new Spieler(50, 360, 250));
+        _currentDimension.setSpieler(new Spieler(50, 360, 250, _currentDimension));
         _currentDimension.addGegner(new Gegner(500, 370, 200 ));
         // --- TESTING
 

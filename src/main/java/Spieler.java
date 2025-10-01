@@ -1,3 +1,4 @@
+import com.sun.javafx.geom.Vec2f;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -25,12 +26,16 @@ class Spieler {
 
     private float _bodenYPlayerScale = BODEN_Y;
 
-    public Spieler(double x, double y, float speed) {
+    private GameDimension _myDimension = null;
+
+    public Spieler(double x, double y, float speed, GameDimension myDimension) {
+        _myDimension = myDimension;
+
         // Hitbox (unsichtbar machen, wenn du willst: setOpacity(0))
         _figur = new Rectangle(BREITE, HOEHE, Color.BLUE);
-        _figur.setTranslateX(x);
+        _figur.setX(x);
         _bodenYPlayerScale = BODEN_Y - HOEHE;
-        _figur.setTranslateY(_bodenYPlayerScale);
+        _figur.setY(_bodenYPlayerScale);
         _figur.setOpacity(0); // unsichtbar
 
         // Grafiken laden (aus resources-Ordner)
@@ -42,8 +47,8 @@ class Spieler {
         _sprite = new ImageView(_idleImage);
         _sprite.setFitWidth(BREITE);
         _sprite.setFitHeight(HOEHE);
-        _sprite.setTranslateX(x);
-        _sprite.setTranslateY(y);
+        _sprite.setX(x);
+        _sprite.setY(y);
 
         _xSpeed = speed;
     }
@@ -67,12 +72,24 @@ class Spieler {
         if (!_amBoden) speedMulti = 1.2f;
 
         if (inputData.isTasteLinks()) {
-            _figur.setTranslateX(_figur.getTranslateX() - (_xSpeed * speedMulti * deltaTime));
+            _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
             _sprite.setScaleX(-1);
         }
         if (inputData.isTasteRechts()) {
-            _figur.setTranslateX(_figur.getTranslateX() + (_xSpeed * speedMulti * deltaTime));
+            _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
             _sprite.setScaleX(1);
+        }
+
+        // Schießen
+        if (inputData.isTasteSchuss()) {
+            // Neuen Pfeil erstellen und diesen als Projektil zu der aktuellen GameDimension hinzufügen
+            float ARROW_VEL_X = 1000;
+            float ARROW_VEL_Y = -250;
+
+            Pfeil pfeil = new Pfeil();
+            pfeil.init(new Vector2f((float)_figur.getX(), (float)_figur.getY() + 20),
+                       new Vector2f(ARROW_VEL_X, ARROW_VEL_Y));
+            _myDimension.addProjektil(pfeil);
         }
 
         // Springen
@@ -95,18 +112,18 @@ class Spieler {
         }
 
         // Hitbox Y mit Gravitation
-        if (!_amBoden) _figur.setTranslateY(_figur.getTranslateY() + (_ySpeed * deltaTime));
+        if (!_amBoden) _figur.setY(_figur.getY() + (_ySpeed * deltaTime));
 
         // Boden-Kollision
-        if (_figur.getTranslateY() > _bodenYPlayerScale ) {
-            _figur.setTranslateY(_bodenYPlayerScale);
+        if (_figur.getY() > _bodenYPlayerScale ) {
+            _figur.setY(_bodenYPlayerScale);
             _amBoden = true;
             _ySpeed = 0;
         }
 
         // X-Position Sprite synchronisieren
-        _sprite.setTranslateX(_figur.getTranslateX());
-        _sprite.setTranslateY(_figur.getTranslateY());
+        _sprite.setX(_figur.getX());
+        _sprite.setY(_figur.getY());
     }
 
 
