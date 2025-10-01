@@ -86,6 +86,8 @@ class Spieler {
             float ARROW_VEL_X = 1000;
             float ARROW_VEL_Y = -250;
 
+            if(_sprite.getScaleX() < 0) ARROW_VEL_X *= -1;
+
             Pfeil pfeil = new Pfeil();
             pfeil.init(new Vector2f((float)_figur.getX(), (float)_figur.getY() + 20),
                        new Vector2f(ARROW_VEL_X, ARROW_VEL_Y));

@@ -27,6 +27,11 @@ public class Pfeil implements Projektil {
         _sprite.setY(startPos.y);
 
         _velocity = new Vector2f(startDire);
+
+        // Pfeil umdrehen wenn velocity.x negativ ist
+        if(_velocity.x < 0) {
+            _sprite.setScaleX(_sprite.getScaleX() * -1);
+        }
     }
 
     @Override
