@@ -8,9 +8,9 @@ class Spieler {
     private ImageView _sprite;  // Neues sichtbares Bild
 
     // Konstanten für die Spielergröße und Boden
-    private static final double BREITE = 60;
-    private static final double HOEHE = 80;
-    private static final double BODEN_Y = 410;
+    private static final float BREITE = 1000/16;
+    private static final float HOEHE = 1100/16;
+    private static final float BODEN_Y = 400;
 
     // Bilder für verschiedene Aktionen
     private Image _idleImage;
@@ -23,12 +23,14 @@ class Spieler {
     private float _gravityDownMulti = 1.4f;
     private boolean _amBoden = true;
 
+    private float _bodenYPlayerScale = BODEN_Y;
+
     public Spieler(double x, double y, float speed) {
         // Hitbox (unsichtbar machen, wenn du willst: setOpacity(0))
         _figur = new Rectangle(BREITE, HOEHE, Color.BLUE);
         _figur.setTranslateX(x);
-        double spawnY = BODEN_Y - HOEHE;
-        _figur.setTranslateY(spawnY);
+        _bodenYPlayerScale = BODEN_Y - HOEHE;
+        _figur.setTranslateY(_bodenYPlayerScale);
         _figur.setOpacity(0); // unsichtbar
 
         // Grafiken laden (aus resources-Ordner)
@@ -38,8 +40,8 @@ class Spieler {
 
         // Sprite (startet mit Idle)
         _sprite = new ImageView(_idleImage);
-        _sprite.setFitWidth(60);
-        _sprite.setFitHeight(80);
+        _sprite.setFitWidth(BREITE);
+        _sprite.setFitHeight(HOEHE);
         _sprite.setTranslateX(x);
         _sprite.setTranslateY(y);
 
@@ -82,44 +84,29 @@ class Spieler {
 
         // Hitbox & Sprite anpassen
         if (inputData.isTasteDucken()) {
-            spriteHeight = HOEHE / 2;
-            hitboxHeight = HOEHE / 2;
-            _figur.setHeight(hitboxHeight);
-            _figur.setTranslateY(BODEN_Y - hitboxHeight);  // Hitbox vom Boden aus
-            _sprite.setFitHeight(spriteHeight);
-            _sprite.setTranslateY(BODEN_Y - spriteHeight); // Sprite auf Boden
             setImage(_duckenImage);
-        } else {
-            spriteHeight = HOEHE;
-            hitboxHeight = HOEHE;
-            _figur.setHeight(hitboxHeight);
-
-            // Hitbox-Y nur ändern, wenn sie unter Boden ist
-            if (_figur.getTranslateY() > BODEN_Y - hitboxHeight) {
-                _figur.setTranslateY(BODEN_Y - hitboxHeight);
-                _amBoden = true;
-                _ySpeed = 0;
-            }
-
-            _sprite.setFitHeight(spriteHeight);
-            _sprite.setTranslateY(_figur.getTranslateY());
-
-            if (inputData.isTasteSchuss()) setImage(_schiessenImage);
-            else setImage(_idleImage);
+        }
+        else if (inputData.isTasteSchuss()) {
+            setImage(_schiessenImage);
+        }
+        else {
+            // Nichts wird gedrückt => Idle-Image
+            setImage(_idleImage);
         }
 
         // Hitbox Y mit Gravitation
         if (!_amBoden) _figur.setTranslateY(_figur.getTranslateY() + (_ySpeed * deltaTime));
 
         // Boden-Kollision
-        if (_figur.getTranslateY() > BODEN_Y - hitboxHeight) {
-            _figur.setTranslateY(BODEN_Y - hitboxHeight);
+        if (_figur.getTranslateY() > _bodenYPlayerScale ) {
+            _figur.setTranslateY(_bodenYPlayerScale);
             _amBoden = true;
             _ySpeed = 0;
         }
 
         // X-Position Sprite synchronisieren
         _sprite.setTranslateX(_figur.getTranslateX());
+        _sprite.setTranslateY(_figur.getTranslateY());
     }
 
 
