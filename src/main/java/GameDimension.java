@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
@@ -11,9 +13,12 @@ public class GameDimension {
 
     final private String f_dimensionName;
     private ArrayList<Gegner> _gegnerListe;
-    private ArrayList<Rectangle> _mapTilesListe;
+    private ArrayList<ImageView> _mapTilesListe;
     private Spieler _spieler;
     private Pane _root;
+
+    private Image _grassBlockImg;
+    private Image _dirtBlockImg;
 
     public LevelData loadedLevelData;
 
@@ -30,6 +35,8 @@ public class GameDimension {
         _mapTilesListe = new ArrayList<>();
 
         _cameraPosition = new Vector2f( 0, 2);
+
+        _grassBlockImg = new Image(getClass().getResourceAsStream("/grassblock.png"));
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
@@ -81,9 +88,12 @@ public class GameDimension {
                 switch(lvl.stufe[y].charAt(x)) {
                     case '#': {
                         Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y);
-                        _mapTilesListe.add(new Rectangle(spawnPos.x+_cameraPosition.x, spawnPos.y+_cameraPosition.y,
-                                lvl.BREITE+1, lvl.HOEHE+1)); // +1 um ränderflackern zu beheben
-                        _mapTilesListe.getLast().setFill(Color.GREEN);
+                        _mapTilesListe.add(new ImageView(_grassBlockImg));
+                        _mapTilesListe.getLast().setX(spawnPos.x+_cameraPosition.x);
+                        _mapTilesListe.getLast().setY(spawnPos.y+_cameraPosition.y);
+                        _mapTilesListe.getLast().setFitWidth(lvl.BREITE+1);
+                        _mapTilesListe.getLast().setFitHeight(lvl.HOEHE+1);
+
                         //System.out.println("x: " + _mapTilesListe.getLast().getX() + ", y: " + _mapTilesListe.getLast().getY());
                         break;
                     }
