@@ -35,4 +35,8 @@ public class Vector2f {
         }
         return new Vector2f(0, 0);
     }
+
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
 }

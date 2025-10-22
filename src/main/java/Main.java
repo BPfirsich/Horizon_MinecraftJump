@@ -1,17 +1,15 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.scene.input.MouseButton;
 
 public class Main extends Application {
 
     private GameDimension _currentDimension = null;
     private InputData _inputData = null;
+
+    private LevelData overworld;
 
     @Override
     public void start(Stage stage) {
@@ -28,11 +26,19 @@ public class Main extends Application {
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(scene);
 
+        // Erstellen der Level
+        overworld = new LevelData("Overworld", 4);
+        overworld.stufe[3] = "-----";
+        overworld.stufe[2] = "-----";
+        overworld.stufe[1] = "-P--#####";
+        overworld.stufe[0] = "###########";
+
         // TESTING ---
         _currentDimension = new GameDimension("Test", root);
-        _currentDimension.setSpieler(new Spieler(50, 360, 250, _currentDimension));
         _currentDimension.addGegner(new Gegner(500, 370, 200 ));
+        _currentDimension.ladeLevel(overworld);
         // --- TESTING
+
 
         // Spielschleife, also quasy das "Herz" des spiels.
         AnimationTimer timer = new AnimationTimer() {

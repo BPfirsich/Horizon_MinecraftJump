@@ -67,6 +67,8 @@ class Spieler {
         double spriteHeight;
         double hitboxHeight;
 
+        System.out.println(_myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY()));
+
         // Movement
         float speedMulti = 1.0f;
         if (!_amBoden) speedMulti = 1.2f;
@@ -93,6 +95,13 @@ class Spieler {
                        new Vector2f(ARROW_VEL_X, ARROW_VEL_Y));
             _myDimension.addProjektil(pfeil);
         }
+
+        // Update the floor Y Pos
+        Vector2f currentTilePos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY());
+        int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX((int)currentTilePos.x + 1, 2);
+        updateFloorYHeight(
+                (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)currentTilePos.x, stufeYMitBoden).y
+        );
 
         // Springen
         if (inputData.isTasteSpringen()) springen();
@@ -144,5 +153,13 @@ class Spieler {
         if (_sprite.getImage() != img) {
             _sprite.setImage(img);
         }
+    }
+
+    private void updateFloorYHeight(int newPixelY) {
+        if(newPixelY - HOEHE != _bodenYPlayerScale) {
+            _amBoden = false;
+        }
+
+        _bodenYPlayerScale = newPixelY - HOEHE;
     }
 }
