@@ -15,7 +15,14 @@ public class GameDimension {
 
     private Image _grassBlockImg;
     private Image _dirtBlockImg;
+    private Image _halfLeftGrassImg;
+    private Image _halfRightGrassImg;
 
+    private Image _dirtHalfGrassLeftImg;
+    private Image _dirtHalfGrassRightImg;
+
+    private Image _dirtHalfLeftImg;
+    private Image _dirtHalfRightImg;
 
     public LevelData loadedLevelData;
 
@@ -35,6 +42,14 @@ public class GameDimension {
 
         _grassBlockImg = new Image(getClass().getResourceAsStream("/grassblock.png"));
         _dirtBlockImg = new Image(getClass().getResourceAsStream("/erdblock.png"));
+        _halfLeftGrassImg = new Image(getClass().getResourceAsStream("/grassblockHalfLeft.png"));
+        _halfRightGrassImg = new Image(getClass().getResourceAsStream("/grassblockHalfRight.png"));
+
+        _dirtHalfGrassLeftImg = new Image(getClass().getResourceAsStream("/erdblockHalfGrassLeft.png"));
+        _dirtHalfGrassRightImg = new Image(getClass().getResourceAsStream("/erdblockHalfGrassRight.png"));
+
+        _dirtHalfLeftImg = new Image(getClass().getResourceAsStream("/erdblockHalfLeft.png"));
+        _dirtHalfRightImg = new Image(getClass().getResourceAsStream("/erdblockHalfRight.png"));
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
@@ -96,6 +111,36 @@ public class GameDimension {
                     case '+': {
                         Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                         addTileToMapList(spawnPos, _dirtBlockImg, lvl);
+                        break;
+                    }
+                    case '>': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _halfLeftGrassImg, lvl);
+                        break;
+                    }
+                    case '<': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _halfRightGrassImg, lvl);
+                        break;
+                    }
+                    case 'u': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _dirtHalfGrassLeftImg, lvl);
+                        break;
+                    }
+                    case 'i': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _dirtHalfGrassRightImg, lvl);
+                        break;
+                    }
+                    case 'l': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _dirtHalfLeftImg, lvl);
+                        break;
+                    }
+                    case 'r': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _dirtHalfRightImg, lvl);
                         break;
                     }
                     case 'P': {

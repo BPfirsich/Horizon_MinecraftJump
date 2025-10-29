@@ -133,7 +133,7 @@ class Spieler {
 
         // Update the floor Y Pos
         Vector2f currentTilePos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true);
-        int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX(currentTilePos.x, 2);
+        int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX(currentTilePos.x, (int)currentTilePos.y);
         updateFloorYHeight(
                 (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)currentTilePos.x, stufeYMitBoden, _myDimension.cameraPosition, true).y
         );

@@ -49,9 +49,9 @@ public class Main extends Application {
         _overworld.stufe[5]  = "-----------------------------";
         _overworld.stufe[4]  = "-----------------------------";
         _overworld.stufe[3]  = "-----------------------------";
-        _overworld.stufe[2]  = "------------P--#####---------";
-        _overworld.stufe[1]  = "----#####----##+++++###------";
-        _overworld.stufe[0]  = "####+++++####++++++++++######";
+        _overworld.stufe[2]  = "------------P--<###>---------";
+        _overworld.stufe[1]  = "----<###>----<#u+++i##>------";
+        _overworld.stufe[0]  = "####u+++i####u++++++++i######";
 
         _testworld = new LevelData("Testlevel", 11, _background_1_1);
         _testworld.stufe[10] = "-----------------------------";
@@ -61,10 +61,10 @@ public class Main extends Application {
         _testworld.stufe[6]  = "-----------------------------";
         _testworld.stufe[5]  = "-----------------------------";
         _testworld.stufe[4]  = "-----------------------------";
-        _testworld.stufe[3]  = "--------------#--------------";
-        _testworld.stufe[2]  = "--------------#--------------";
-        _testworld.stufe[1]  = "-P--------#---#--------------";
-        _testworld.stufe[0]  = "#######---#---#--------------";
+        _testworld.stufe[3]  = "-------------<>--<#####------";
+        _testworld.stufe[2]  = "-------------lr--l+++++------";
+        _testworld.stufe[1]  = "-P-------<>--lr--l+++++------";
+        _testworld.stufe[0]  = "######>--lr--lr--l+++++------";
 
         // TESTING ---
         _currentDimension = new GameDimension("Test", root);
