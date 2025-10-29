@@ -11,6 +11,7 @@ public class Main extends Application {
     private InputData _inputData = null;
 
     private LevelData _overworld;
+    private LevelData _testworld;
 
     private BackgroundImage _background_1_1;
 
@@ -39,11 +40,31 @@ public class Main extends Application {
         );
 
         // Erstellen der Level
-        _overworld = new LevelData("Overworld", 4, _background_1_1);
-        _overworld.stufe[3] = "-----";
-        _overworld.stufe[2] = "-----";
-        _overworld.stufe[1] = "-P--#####";
-        _overworld.stufe[0] = "###########";
+        _overworld = new LevelData("Overworld", 11, _background_1_1);
+        _overworld.stufe[10] = "-----------------------------";
+        _overworld.stufe[9]  = "-----------------------------";
+        _overworld.stufe[8]  = "-----------------------------";
+        _overworld.stufe[7]  = "-----------------------------";
+        _overworld.stufe[6]  = "-----------------------------";
+        _overworld.stufe[5]  = "-----------------------------";
+        _overworld.stufe[4]  = "-----------------------------";
+        _overworld.stufe[3]  = "-----------------------------";
+        _overworld.stufe[2]  = "---------------#####---------";
+        _overworld.stufe[1]  = "-P--#####----##+++++###------";
+        _overworld.stufe[0]  = "####+++++####++++++++++######";
+
+        _testworld = new LevelData("Testlevel", 11, _background_1_1);
+        _testworld.stufe[10] = "-----------------------------";
+        _testworld.stufe[9]  = "-----------------------------";
+        _testworld.stufe[8]  = "-----------------------------";
+        _testworld.stufe[7]  = "-----------------------------";
+        _testworld.stufe[6]  = "-----------------------------";
+        _testworld.stufe[5]  = "-----------------------------";
+        _testworld.stufe[4]  = "-----------------------------";
+        _testworld.stufe[3]  = "--------------#--------------";
+        _testworld.stufe[2]  = "--------------#--------------";
+        _testworld.stufe[1]  = "-P--------#---#--------------";
+        _testworld.stufe[0]  = "#######---#---#--------------";
 
         // TESTING ---
         _currentDimension = new GameDimension("Test", root);

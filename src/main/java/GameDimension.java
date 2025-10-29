@@ -38,6 +38,7 @@ public class GameDimension {
         _cameraPosition = new Vector2f( 0, 2);
 
         _grassBlockImg = new Image(getClass().getResourceAsStream("/grassblock.png"));
+        _dirtBlockImg = new Image(getClass().getResourceAsStream("/erdblock.png"));
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
@@ -90,13 +91,12 @@ public class GameDimension {
                 switch(lvl.stufe[y].charAt(x)) {
                     case '#': {
                         Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y);
-                        _mapTilesListe.add(new ImageView(_grassBlockImg));
-                        _mapTilesListe.getLast().setX(spawnPos.x+_cameraPosition.x);
-                        _mapTilesListe.getLast().setY(spawnPos.y+_cameraPosition.y);
-                        _mapTilesListe.getLast().setFitWidth(lvl.BREITE+1);
-                        _mapTilesListe.getLast().setFitHeight(lvl.HOEHE+1);
-
-                        //System.out.println("x: " + _mapTilesListe.getLast().getX() + ", y: " + _mapTilesListe.getLast().getY());
+                        addTileToMapList(spawnPos, _grassBlockImg, lvl);
+                        break;
+                    }
+                    case '+': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y);
+                        addTileToMapList(spawnPos, _dirtBlockImg, lvl);
                         break;
                     }
                     case 'P': {
@@ -115,5 +115,13 @@ public class GameDimension {
         _root.getChildren().addAll(_mapTilesListe);
 
         _root.setBackground(new Background(loadedLevelData.levelBackground));
+    }
+
+    private void addTileToMapList(Vector2f spawnPos, Image img, LevelData lvl) {
+        _mapTilesListe.add(new ImageView(img));
+        _mapTilesListe.getLast().setX(spawnPos.x+_cameraPosition.x);
+        _mapTilesListe.getLast().setY(spawnPos.y+_cameraPosition.y);
+        _mapTilesListe.getLast().setFitWidth(lvl.BREITE+1);
+        _mapTilesListe.getLast().setFitHeight(lvl.HOEHE+1);
     }
 }

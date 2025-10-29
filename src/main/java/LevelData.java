@@ -44,7 +44,7 @@ public class LevelData {
         Vector2f res = new Vector2f(0, 0);
 
         res.x = x / BREITE;
-        res.y = (y + 710 + 40) / HOEHE;
+        res.y = ((710 + 40 - y) / HOEHE);
 
         return res;
     }

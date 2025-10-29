@@ -76,10 +76,24 @@ class Spieler {
         if (inputData.isTasteLinks()) {
             _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
             _sprite.setScaleX(-1);
+
+            // Überprüfen ob wir in ein tile reingelaufen sind
+            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY());
+            if(_myDimension.loadedLevelData.isBereichSolide((int)walkedPos.x, (int)walkedPos.y)) {
+                // Zurücklaufen da wir nun im tile drinnen sind lol
+                _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
+            }
         }
         if (inputData.isTasteRechts()) {
             _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
             _sprite.setScaleX(1);
+
+            // Überprüfen ob wir in ein tile reingelaufen sind
+            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY());
+            if(_myDimension.loadedLevelData.isBereichSolide((int)walkedPos.x, (int)walkedPos.y)) {
+                // Zurücklaufen da wir nun im tile drinnen sind lol
+                _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
+            }
         }
 
         // Schießen
