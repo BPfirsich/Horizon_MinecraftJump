@@ -18,7 +18,7 @@ public class Main extends Application {
     public void start(Stage stage) {
         // JavaFX Setup
         Pane root = new Pane();
-        root.setPrefSize(600, 400);
+        root.setPrefSize(1280, 720);
 
         Scene scene = new Scene(root);
         stage.setScene(scene);

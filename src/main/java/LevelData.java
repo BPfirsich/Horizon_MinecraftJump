@@ -35,7 +35,7 @@ public class LevelData {
         Vector2f res = new Vector2f(0, 0);
 
         res.x = x*BREITE;
-        res.y = 400 - (y*HOEHE) - 40; // -40 da die fensterleiste auch dazugerechnet wird...
+        res.y = 710 - (y*HOEHE) - 40; // -40 da die fensterleiste auch dazugerechnet wird...
 
         return res;
     }
@@ -44,7 +44,7 @@ public class LevelData {
         Vector2f res = new Vector2f(0, 0);
 
         res.x = x / BREITE;
-        res.y = (y + 400 + 40) / HOEHE;
+        res.y = (y + 710 + 40) / HOEHE;
 
         return res;
     }
