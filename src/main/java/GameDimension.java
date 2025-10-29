@@ -89,17 +89,17 @@ public class GameDimension {
             for(int x = 0; x < lvl.stufe[y].length(); x++) {
                 switch(lvl.stufe[y].charAt(x)) {
                     case '#': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition);
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                         addTileToMapList(spawnPos, _grassBlockImg, lvl);
                         break;
                     }
                     case '+': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition);
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                         addTileToMapList(spawnPos, _dirtBlockImg, lvl);
                         break;
                     }
                     case 'P': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition);
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                         setSpieler(new Spieler(spawnPos.x+ cameraPosition.x,
                                                     spawnPos.y+ cameraPosition.y,
                                                     250,

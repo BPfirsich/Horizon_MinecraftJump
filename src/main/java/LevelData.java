@@ -27,11 +27,15 @@ public class LevelData {
 
 
 
-    public boolean isBereichSolide(int x, int y) {
-        return stufe[y].charAt(x) == '#';
+    public boolean isBereichSolide(float x, int y) {
+        x = (float)Math.floor(x);
+        return stufe[y].charAt((int)x) == '#';
     }
 
-    public Vector2f calcPixelCordsFromTile(int x, int y, Vector2f cameraOffset) {
+    // The centeringOffset is meant to for the player. Its just moves the x pos by 0.5 tiles, so the center of
+    // the calculation result is actually in the middle of a tile, instead on the edge
+
+    public Vector2f calcPixelCordsFromTile(int x, int y, Vector2f cameraOffset, boolean centeringOffset) {
         x += (int)cameraOffset.x;
         y += (int)cameraOffset.y;
 
@@ -40,12 +44,16 @@ public class LevelData {
         res.x = x*BREITE;
         res.y = 710 - (y*HOEHE) - 40; // -40 da die fensterleiste auch dazugerechnet wird...
 
+        if(centeringOffset) res.x -= (float)BREITE/1.5f;
+
         return res;
     }
 
-    public Vector2f calcMapPosFromPixelPos(float x, float y, Vector2f cameraOffset) {
+    public Vector2f calcMapPosFromPixelPos(float x, float y, Vector2f cameraOffset, boolean centeringOffset) {
         x += cameraOffset.x;
         y += cameraOffset.y;
+
+        if(centeringOffset) x += (float)BREITE/1.5f;
 
         Vector2f res = new Vector2f(0, 0);
 
@@ -57,13 +65,15 @@ public class LevelData {
 
     // Schaut, wo der boden ist. Läuft von startStufe zu höhe 0. (von oben nach unten)
     // Returns -1 wenn kein boden gefunden wurde
-    public int getNextFloorOnX(int x, int startStufe) {
+    public int getNextFloorOnX(float x, int startStufe) {
+        x = (float)Math.floor(x);
+
         if(startStufe >= stufe.length) startStufe = stufe.length -1;
 
        for (int i = startStufe; i >= 0; i--) {
            if(stufe[i].length() <= x) continue;;
 
-            if(SOLIDS.contains(stufe[i].charAt((x)))) {
+            if(SOLIDS.contains(stufe[i].charAt((int)x))) {
                 return i;
             }
         }
@@ -73,8 +83,9 @@ public class LevelData {
 
     // Symbol Map
     // - = leer
-    // # = boden
+    // # = grass
     // P = Spieler
     // G = Gegner
+    // + = dirt
 
 }
