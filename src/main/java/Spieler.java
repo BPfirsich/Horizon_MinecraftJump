@@ -161,7 +161,7 @@ class Spieler {
         if (!_amBoden) _figur.setY(_figur.getY() + (_ySpeed * deltaTime));
 
         // Boden-Kollision
-        if (_figur.getY() > _bodenYPlayerScale ) {
+        if (_figur.getY() > _bodenYPlayerScale && _ySpeed >= 0) {
             _figur.setY(_bodenYPlayerScale);
             _amBoden = true;
             _ySpeed = 0;
@@ -196,6 +196,7 @@ class Spieler {
 
     private void updateFloorYHeight(int newPixelY) {
         if(calcFloorHeight(newPixelY) != _bodenYPlayerScale) {
+            if(_amBoden) _ySpeed = 0;
             _amBoden = false;
         }
 
