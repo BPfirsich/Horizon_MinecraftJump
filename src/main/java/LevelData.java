@@ -1,7 +1,10 @@
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
 
 public class LevelData {
     public final int BREITE = 50, HOEHE = 50;
@@ -9,15 +12,20 @@ public class LevelData {
             Arrays.asList('#')
     );
 
-    public LevelData(String name, int anzahlFloors) {
+    public LevelData(String name, int anzahlFloors, BackgroundImage background) {
         stufe = new String[anzahlFloors];
         levelName = name;
+        levelBackground = background;
     }
 
     // array[y]: y=0 ist der Boden, x=0 ist links der anfang vom level. (vom string)
     public String[] stufe;
     public String levelName;
-    public Color backgroundColor = Color.WHITE;
+    //public Color backgroundColor = Color.WHITE;
+
+    public final BackgroundImage levelBackground;
+
+
 
     public boolean isBereichSolide(int x, int y) {
         return stufe[y].charAt(x) == '#';

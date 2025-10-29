@@ -1,7 +1,8 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -9,7 +10,9 @@ public class Main extends Application {
     private GameDimension _currentDimension = null;
     private InputData _inputData = null;
 
-    private LevelData overworld;
+    private LevelData _overworld;
+
+    private BackgroundImage _background_1_1;
 
     @Override
     public void start(Stage stage) {
@@ -26,17 +29,26 @@ public class Main extends Application {
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(scene);
 
+        // Hintergründe laden
+        _background_1_1 = new BackgroundImage(
+                new Image(getClass().getResourceAsStream("/screen_ow_1.png")),
+                BackgroundRepeat.NO_REPEAT, // Wiederholung horizontal
+                BackgroundRepeat.NO_REPEAT, // Wiederholung vertikal
+                BackgroundPosition.CENTER,  // Position
+                BackgroundSize.DEFAULT      // Größe
+        );
+
         // Erstellen der Level
-        overworld = new LevelData("Overworld", 4);
-        overworld.stufe[3] = "-----";
-        overworld.stufe[2] = "-----";
-        overworld.stufe[1] = "-P--#####";
-        overworld.stufe[0] = "###########";
+        _overworld = new LevelData("Overworld", 4, _background_1_1);
+        _overworld.stufe[3] = "-----";
+        _overworld.stufe[2] = "-----";
+        _overworld.stufe[1] = "-P--#####";
+        _overworld.stufe[0] = "###########";
 
         // TESTING ---
         _currentDimension = new GameDimension("Test", root);
         _currentDimension.addGegner(new Gegner(500, 370, 200 ));
-        _currentDimension.ladeLevel(overworld);
+        _currentDimension.ladeLevel(_overworld);
         // --- TESTING
 
 

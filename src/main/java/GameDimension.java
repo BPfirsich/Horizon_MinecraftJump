@@ -20,6 +20,7 @@ public class GameDimension {
     private Image _grassBlockImg;
     private Image _dirtBlockImg;
 
+
     public LevelData loadedLevelData;
 
     private Vector2f _cameraPosition;
@@ -40,6 +41,7 @@ public class GameDimension {
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
+
     }
 
     public void updateDimension(float deltaTime, InputData inputData) {
@@ -111,5 +113,7 @@ public class GameDimension {
         }
 
         _root.getChildren().addAll(_mapTilesListe);
+
+        _root.setBackground(new Background(loadedLevelData.levelBackground));
     }
 }
