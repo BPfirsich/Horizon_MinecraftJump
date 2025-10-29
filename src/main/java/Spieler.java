@@ -86,6 +86,15 @@ class Spieler {
 
             // Spieler nicht nach links rauslaufen lassen
             if(_figur.getX() <= 0) _figur.setX(0);
+
+            // Check if the next pos has the same height as the current. If it is not the case, move back
+            int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX(walkedPos.x, 2);
+            int movedHeight =
+                    (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)walkedPos.x, stufeYMitBoden, _myDimension.cameraPosition, true).y;
+            if(calcFloorHeight(movedHeight) < _bodenYPlayerScale && _amBoden) {
+                // Zurücklaufen, da andere höhe
+                _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
+            }
         }
         if (inputData.isTasteRechts()) {
             _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
@@ -95,6 +104,15 @@ class Spieler {
             Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true);
             if(_myDimension.loadedLevelData.isBereichSolide(walkedPos.x, (int)walkedPos.y)) {
                 // Zurücklaufen da wir nun im tile drinnen sind lol
+                _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
+            }
+
+            // Check if the next pos has the same height as the current. If it is not the case, move back
+            int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX(walkedPos.x, 2);
+            int movedHeight =
+                    (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)walkedPos.x, stufeYMitBoden, _myDimension.cameraPosition, true).y;
+            if(calcFloorHeight(movedHeight) < _bodenYPlayerScale && _amBoden) {
+                // Zurücklaufen, da andere höhe
                 _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
             }
         }
@@ -172,11 +190,15 @@ class Spieler {
         }
     }
 
+    private int calcFloorHeight(int newPixelY) {
+        return newPixelY - (int)HOEHE;
+    }
+
     private void updateFloorYHeight(int newPixelY) {
-        if(newPixelY - HOEHE != _bodenYPlayerScale) {
+        if(calcFloorHeight(newPixelY) != _bodenYPlayerScale) {
             _amBoden = false;
         }
 
-        _bodenYPlayerScale = newPixelY - HOEHE;
+        _bodenYPlayerScale = calcFloorHeight(newPixelY);
     }
 }
