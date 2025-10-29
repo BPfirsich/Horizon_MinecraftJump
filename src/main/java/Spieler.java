@@ -67,7 +67,7 @@ class Spieler {
         double spriteHeight;
         double hitboxHeight;
 
-        System.out.println(_myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY()));
+        System.out.println(_myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition));
 
         // Movement
         float speedMulti = 1.0f;
@@ -78,18 +78,21 @@ class Spieler {
             _sprite.setScaleX(-1);
 
             // Überprüfen ob wir in ein tile reingelaufen sind
-            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY());
+            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition);
             if(_myDimension.loadedLevelData.isBereichSolide((int)walkedPos.x, (int)walkedPos.y)) {
                 // Zurücklaufen da wir nun im tile drinnen sind lol
                 _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
             }
+
+            // Spieler nicht nach links rauslaufen lassen
+            if(_figur.getX() <= 0) _figur.setX(0);
         }
         if (inputData.isTasteRechts()) {
             _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
             _sprite.setScaleX(1);
 
             // Überprüfen ob wir in ein tile reingelaufen sind
-            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY());
+            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition);
             if(_myDimension.loadedLevelData.isBereichSolide((int)walkedPos.x, (int)walkedPos.y)) {
                 // Zurücklaufen da wir nun im tile drinnen sind lol
                 _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
@@ -111,10 +114,10 @@ class Spieler {
         }
 
         // Update the floor Y Pos
-        Vector2f currentTilePos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY());
+        Vector2f currentTilePos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition);
         int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX((int)currentTilePos.x + 1, 2);
         updateFloorYHeight(
-                (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)currentTilePos.x, stufeYMitBoden).y
+                (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)currentTilePos.x, stufeYMitBoden, _myDimension.cameraPosition).y
         );
 
         // Springen

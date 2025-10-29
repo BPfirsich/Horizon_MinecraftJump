@@ -31,7 +31,10 @@ public class LevelData {
         return stufe[y].charAt(x) == '#';
     }
 
-    public Vector2f calcPixelCordsFromTile(int x, int y) {
+    public Vector2f calcPixelCordsFromTile(int x, int y, Vector2f cameraOffset) {
+        x += (int)cameraOffset.x;
+        y += (int)cameraOffset.y;
+
         Vector2f res = new Vector2f(0, 0);
 
         res.x = x*BREITE;
@@ -40,7 +43,10 @@ public class LevelData {
         return res;
     }
 
-    public Vector2f calcMapPosFromPixelPos(float x, float y) {
+    public Vector2f calcMapPosFromPixelPos(float x, float y, Vector2f cameraOffset) {
+        x += cameraOffset.x;
+        y += cameraOffset.y;
+
         Vector2f res = new Vector2f(0, 0);
 
         res.x = x / BREITE;

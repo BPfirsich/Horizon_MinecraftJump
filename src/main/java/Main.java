@@ -49,8 +49,8 @@ public class Main extends Application {
         _overworld.stufe[5]  = "-----------------------------";
         _overworld.stufe[4]  = "-----------------------------";
         _overworld.stufe[3]  = "-----------------------------";
-        _overworld.stufe[2]  = "---------------#####---------";
-        _overworld.stufe[1]  = "-P--#####----##+++++###------";
+        _overworld.stufe[2]  = "------------P--#####---------";
+        _overworld.stufe[1]  = "----#####----##+++++###------";
         _overworld.stufe[0]  = "####+++++####++++++++++######";
 
         _testworld = new LevelData("Testlevel", 11, _background_1_1);
