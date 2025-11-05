@@ -130,6 +130,10 @@ public class GameDimension {
 
         loadedLevelData = lvl;
 
+        cameraPosition.x = 0;
+        //cameraPosition.y = 0;
+
+        // Alle Tiles von dem Level erzeugen
         for (int y = 0; y < lvl.stufe.length; y++) {
             for (int x = 0; x < lvl.stufe[y].length(); x++) {
                 switch (lvl.stufe[y].charAt(x)) {
@@ -175,8 +179,8 @@ public class GameDimension {
                     }
                     case 'P': {
                         Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        setSpieler(new Spieler(spawnPos.x + cameraPosition.x,
-                                spawnPos.y + cameraPosition.y,
+                        setSpieler(new Spieler(spawnPos.x,
+                                spawnPos.y,
                                 250,
                                 this));
 
@@ -250,14 +254,18 @@ public class GameDimension {
         }
 
                     _root.getChildren().addAll(_mapTilesListe);
-
                     _root.setBackground(new Background(loadedLevelData.levelBackground));
+
+
+                    // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
+                    //cameraPosition.x = lvl.stufe[0].length();
+                    moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
                 }
 
                 private void addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
                     _mapTilesListe.add(new ImageView(img));
-                    _mapTilesListe.getLast().setX(spawnPos.x + cameraPosition.x);
-                    _mapTilesListe.getLast().setY(spawnPos.y + cameraPosition.y);
+                    _mapTilesListe.getLast().setX(spawnPos.x);
+                    _mapTilesListe.getLast().setY(spawnPos.y);
                     _mapTilesListe.getLast().setFitWidth(lvl.BREITE + 1);
                     _mapTilesListe.getLast().setFitHeight(lvl.HOEHE + 1);
                 }
@@ -282,15 +290,28 @@ public class GameDimension {
 
                     // Alles zur korrektur bewegen
                     float smoothErrorCorrectionValue = diff * smoothFactor * deltaTime * -1;
-                    cameraPosition.x -= smoothErrorCorrectionValue;
+
+                    System.out.println("" + ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth*2) + "  " + cameraPosition.x);
+
+                    if ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth <
+                            cameraPosition.x - smoothErrorCorrectionValue && smoothErrorCorrectionValue < 0) {
+                        return;
+                    };
+
+                    moveCameraByValue(smoothErrorCorrectionValue, 0);
+                }
+
+                // y ist noch nicht implemented
+                private void moveCameraByValue(float x, float y) {
+                    cameraPosition.x -= x;
 
                     // Move All Objects
-                    _spieler.getFigur().setX(_spieler.getFigur().getX() + smoothErrorCorrectionValue);
+                    _spieler.getFigur().setX(_spieler.getFigur().getX() + x);
                     for (Gegner g : _gegnerListe) {
-                        g.getFigur().setX(g.getFigur().getX() + smoothErrorCorrectionValue);
+                        g.getFigur().setX(g.getFigur().getX() + x);
                     }
                     for (ImageView i : _mapTilesListe) {
-                        i.setX(i.getX() + smoothErrorCorrectionValue);
+                        i.setX(i.getX() + x);
                     }
                 }
             }
