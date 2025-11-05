@@ -17,12 +17,27 @@ public class GameDimension {
     private Image _dirtBlockImg;
     private Image _halfLeftGrassImg;
     private Image _halfRightGrassImg;
+    private Image _waterImg;
+    private Image _ChestImg;
 
     private Image _dirtHalfGrassLeftImg;
     private Image _dirtHalfGrassRightImg;
 
     private Image _dirtHalfLeftImg;
     private Image _dirtHalfRightImg;
+
+    private Image _waterhalfleftImg;
+    private Image _waterhalfrightImg;
+
+    private Image _watergrassleftrightImg;
+    private Image _watergrassrightleftImg;
+
+    private Image _waterdirtleftrightImg;
+    private Image _waterdirtrightleftImg;
+
+    private Image _snowblockImg;
+    private Image _snowhalfleftImg;
+    private Image _snowhalfrightImg;
 
     public LevelData loadedLevelData;
 
@@ -44,12 +59,27 @@ public class GameDimension {
         _dirtBlockImg = new Image(getClass().getResourceAsStream("/erdblock.png"));
         _halfLeftGrassImg = new Image(getClass().getResourceAsStream("/grassblockHalfLeft.png"));
         _halfRightGrassImg = new Image(getClass().getResourceAsStream("/grassblockHalfRight.png"));
+        _waterImg = new Image(getClass().getResourceAsStream("/Wasser.png"));
+        _ChestImg = new Image(getClass().getResourceAsStream("/Chest.png"));
 
         _dirtHalfGrassLeftImg = new Image(getClass().getResourceAsStream("/erdblockHalfGrassLeft.png"));
         _dirtHalfGrassRightImg = new Image(getClass().getResourceAsStream("/erdblockHalfGrassRight.png"));
 
         _dirtHalfLeftImg = new Image(getClass().getResourceAsStream("/erdblockHalfLeft.png"));
         _dirtHalfRightImg = new Image(getClass().getResourceAsStream("/erdblockHalfRight.png"));
+
+        _waterhalfleftImg = new Image(getClass().getResourceAsStream("/Wasser_halfleft.png"));
+        _waterhalfrightImg = new Image(getClass().getResourceAsStream("/Wasser_halfright.png"));
+
+        _watergrassleftrightImg = new Image(getClass().getResourceAsStream("/Wassergrass_leftright.png"));
+        _watergrassrightleftImg = new Image(getClass().getResourceAsStream("/Wassergrass_rightleft.png"));
+
+        _waterdirtleftrightImg = new Image(getClass().getResourceAsStream("/Wassererdblock_leftright.png"));
+        _waterdirtrightleftImg = new Image(getClass().getResourceAsStream("/Wassererdblock_rightleft.png"));
+
+        _snowblockImg = new Image(getClass().getResourceAsStream("/schneeblock.png"));
+        _snowhalfleftImg = new Image(getClass().getResourceAsStream("/schneeblock_halfleft.png"));
+        _snowhalfrightImg = new Image(getClass().getResourceAsStream("/schneeblock_halfright.png"));
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
@@ -93,16 +123,16 @@ public class GameDimension {
     }
 
     public void ladeLevel(LevelData lvl) {
-        if(!_mapTilesListe.isEmpty()) {
+        if (!_mapTilesListe.isEmpty()) {
             System.err.println("Eine GameDimension kann nur ein Level laden!");
             return;
         }
 
         loadedLevelData = lvl;
 
-        for(int y = 0; y < lvl.stufe.length; y++) {
-            for(int x = 0; x < lvl.stufe[y].length(); x++) {
-                switch(lvl.stufe[y].charAt(x)) {
+        for (int y = 0; y < lvl.stufe.length; y++) {
+            for (int x = 0; x < lvl.stufe[y].length(); x++) {
+                switch (lvl.stufe[y].charAt(x)) {
                     case '#': {
                         Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                         addTileToMapList(spawnPos, _grassBlockImg, lvl);
@@ -145,59 +175,123 @@ public class GameDimension {
                     }
                     case 'P': {
                         Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        setSpieler(new Spieler(spawnPos.x+ cameraPosition.x,
-                                                    spawnPos.y+ cameraPosition.y,
-                                                    250,
-                                                    this));
+                        setSpieler(new Spieler(spawnPos.x + cameraPosition.x,
+                                spawnPos.y + cameraPosition.y,
+                                250,
+                                this));
 
                         break;
+                    }
+                    case 'w': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _waterImg, lvl);
+                        break;
+                    }
+                    case 'C': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _ChestImg, lvl);
+                        break;
+                    }
+                    case 'q': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _waterhalfleftImg, lvl);
+                        break;
+                    }
+                    case 'o': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _waterhalfrightImg, lvl);
+                        break;
+
+                    }
+                    case '1': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _watergrassleftrightImg, lvl);
+                        break;
+
+                    }
+                    case '2': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _watergrassrightleftImg, lvl);
+                        break;
+
+                    }
+                    case '3': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _waterdirtleftrightImg, lvl);
+                        break;
+
+                    }
+                    case '4': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _waterdirtrightleftImg, lvl);
+                        break;
+
+                    }
+                    case 's': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _snowblockImg, lvl);
+                        break;
+
+                    }
+                    case '7': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _snowhalfleftImg, lvl);
+                        break;
+
+                    }
+                    case '8': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _snowhalfrightImg, lvl);
+                        break;
+
                     }
                 }
             }
         }
 
-        _root.getChildren().addAll(_mapTilesListe);
+                    _root.getChildren().addAll(_mapTilesListe);
 
-        _root.setBackground(new Background(loadedLevelData.levelBackground));
-    }
+                    _root.setBackground(new Background(loadedLevelData.levelBackground));
+                }
 
-    private void addTileToMapList(Vector2f spawnPos, Image img, LevelData lvl) {
-        _mapTilesListe.add(new ImageView(img));
-        _mapTilesListe.getLast().setX(spawnPos.x+ cameraPosition.x);
-        _mapTilesListe.getLast().setY(spawnPos.y+ cameraPosition.y);
-        _mapTilesListe.getLast().setFitWidth(lvl.BREITE+1);
-        _mapTilesListe.getLast().setFitHeight(lvl.HOEHE+1);
-    }
+                private void addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
+                    _mapTilesListe.add(new ImageView(img));
+                    _mapTilesListe.getLast().setX(spawnPos.x + cameraPosition.x);
+                    _mapTilesListe.getLast().setY(spawnPos.y + cameraPosition.y);
+                    _mapTilesListe.getLast().setFitWidth(lvl.BREITE + 1);
+                    _mapTilesListe.getLast().setFitHeight(lvl.HOEHE + 1);
+                }
 
-    // Die Funtkion schaut, wie weit der Spieler von x-mitte des Fensters entfertn ist.
-    // Wenn der Spieler die deadzone vom abstant überschreitet, dann wird alles in der welt leicht in die richtung geschoben,
-    // um den fehler auszugleichen.
-    // Ebenso wird die gesamt bewegung in pixeln in der _cameraPos gespeichet, um später noch nachvollziehen zu können,
-    // wie momentant die gesamte welt relativ positioniert ist.
-    private void moveCamera(float deltaTime) {
-        final float screenWidth = 1280.f;
-        final float smoothFactor = 0.7f;
-        final float deadzonePixel = 50;
-        final float followOffsetPixel = -250;
+                // Die Funtkion schaut, wie weit der Spieler von x-mitte des Fensters entfertn ist.
+                // Wenn der Spieler die deadzone vom abstant überschreitet, dann wird alles in der welt leicht in die richtung geschoben,
+                // um den fehler auszugleichen.
+                // Ebenso wird die gesamt bewegung in pixeln in der _cameraPos gespeichet, um später noch nachvollziehen zu können,
+                // wie momentant die gesamte welt relativ positioniert ist.
+                private void moveCamera ( float deltaTime){
+                    final float screenWidth = 1280.f;
+                    final float smoothFactor = 0.7f;
+                    final float deadzonePixel = 50;
+                    final float followOffsetPixel = -250;
 
-        float diff =screenWidth/2 - (screenWidth - ((float)_spieler.getFigur().getX()) + followOffsetPixel);
+                    float diff = screenWidth / 2 - (screenWidth - ((float) _spieler.getFigur().getX()) + followOffsetPixel);
 
-        if (diff < 0 && cameraPosition.x <= 0) return;
-        else if(diff <= deadzonePixel && diff >= -deadzonePixel) return;
+                    if (diff < 0 && cameraPosition.x <= 0) return;
+                    else if (diff <= deadzonePixel && diff >= -deadzonePixel) return;
 
-        // Wenn zu weit links, dann negativ, wenn zu weit rechts, dann positiv
+                    // Wenn zu weit links, dann negativ, wenn zu weit rechts, dann positiv
 
-        // Alles zur korrektur bewegen
-        float smoothErrorCorrectionValue = diff * smoothFactor * deltaTime * -1;
-        cameraPosition.x -= smoothErrorCorrectionValue;
+                    // Alles zur korrektur bewegen
+                    float smoothErrorCorrectionValue = diff * smoothFactor * deltaTime * -1;
+                    cameraPosition.x -= smoothErrorCorrectionValue;
 
-        // Move All Objects
-        _spieler.getFigur().setX(_spieler.getFigur().getX() + smoothErrorCorrectionValue);
-        for (Gegner g : _gegnerListe) {
-            g.getFigur().setX(g.getFigur().getX() + smoothErrorCorrectionValue);
-        }
-        for (ImageView i : _mapTilesListe) {
-            i.setX(i.getX() + smoothErrorCorrectionValue);
-        }
-    }
-}
+                    // Move All Objects
+                    _spieler.getFigur().setX(_spieler.getFigur().getX() + smoothErrorCorrectionValue);
+                    for (Gegner g : _gegnerListe) {
+                        g.getFigur().setX(g.getFigur().getX() + smoothErrorCorrectionValue);
+                    }
+                    for (ImageView i : _mapTilesListe) {
+                        i.setX(i.getX() + smoothErrorCorrectionValue);
+                    }
+                }
+            }
+

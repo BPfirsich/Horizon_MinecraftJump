@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class LevelData {
     public final int BREITE = 50, HOEHE = 50;
     public final ArrayList<Character> SOLIDS = new ArrayList<Character>(
-            Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 'i')
+            Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 'i', 'w', 'q','o', '1','2', '3', '4', 's', '7', '8')
     );
 
     public LevelData(String name, int anzahlFloors, BackgroundImage background) {
@@ -89,11 +89,26 @@ public class LevelData {
     // + = dirt
     // < = half right grass
     // > = half left grass
+    // w = Water
+    // C = Chest
 
     // u = dirt half grass left
     // i = dirt half grass right
 
     // l = dirt half left
     // r = dirt half right
+
+    //q = water half left
+    //o = water half right
+
+    //1 = water left grass right
+    //2 = water right grass left
+
+    //3 = water left dirt right
+    //4 = water right dirt left
+
+    // s = Snowblock
+    // 7 = Snow half left
+    // 8 = Snow half right
 
 }
