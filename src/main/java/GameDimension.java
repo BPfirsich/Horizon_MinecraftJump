@@ -13,6 +13,8 @@ public class GameDimension {
     private Spieler _spieler;
     private Pane _root;
 
+    private MatchLeben _matchLeben;
+
     private Image _grassBlockImg;
     private Image _dirtBlockImg;
     private Image _halfLeftGrassImg;
@@ -45,9 +47,11 @@ public class GameDimension {
 
     private ArrayList<Projektil> _projektilList;
 
-    public GameDimension(String name, Pane root) {
+    public GameDimension(String name, Pane root, MatchLeben leben) {
         f_dimensionName = name;
         _root = root;
+
+        _matchLeben = leben;
 
         _gegnerListe = new ArrayList<>();
         _projektilList = new ArrayList<>();
@@ -256,10 +260,11 @@ public class GameDimension {
                     _root.getChildren().addAll(_mapTilesListe);
                     _root.setBackground(new Background(loadedLevelData.levelBackground));
 
+                    _matchLeben.erstelleHerzen(_root);
+                    _matchLeben.updateHerzen();
 
                     // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
-                    //cameraPosition.x = lvl.stufe[0].length();
-                    moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
+                    //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
                 }
 
                 private void addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
