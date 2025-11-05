@@ -11,6 +11,7 @@ public class Main extends Application {
     private GameDimension _currentDimension = null;
     private InputData _inputData = null;
     private MatchLeben _matchLeben = null;
+    private SoundPlayer _soundPlayer = null;
 
     private LevelData _overworld_1;
     private LevelData _overworld_2;
@@ -126,8 +127,9 @@ public class Main extends Application {
         _homescreen.stufe[0]  = "-------------------------------------------------------------------";
 
         // TESTING ---
-        _matchLeben = new MatchLeben(3);
-        _currentDimension = new GameDimension("Test", root, _matchLeben);
+        _matchLeben = new MatchLeben(5);
+        _soundPlayer = new SoundPlayer();
+        _currentDimension = new GameDimension("Test", root, _matchLeben, _soundPlayer);
         //_currentDimension.addGegner(new Gegner(500, 370, 200 ));
         _currentDimension.ladeLevel(_overworld_1);
         // --- TESTING

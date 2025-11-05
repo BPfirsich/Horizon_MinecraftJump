@@ -14,6 +14,7 @@ public class GameDimension {
     private Pane _root;
 
     private MatchLeben _matchLeben;
+    private SoundPlayer _soundPlayer;
 
     private Image _grassBlockImg;
     private Image _dirtBlockImg;
@@ -47,11 +48,12 @@ public class GameDimension {
 
     private ArrayList<Projektil> _projektilList;
 
-    public GameDimension(String name, Pane root, MatchLeben leben) {
+    public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer) {
         f_dimensionName = name;
         _root = root;
 
         _matchLeben = leben;
+        _soundPlayer = soundPlayer;
 
         _gegnerListe = new ArrayList<>();
         _projektilList = new ArrayList<>();
@@ -327,6 +329,8 @@ public class GameDimension {
     }
 
     private void sterben() {
+        _soundPlayer.deathSoundPlayer.play();
+
         _matchLeben.herzen--;
         _matchLeben.clearHerzen(_root);
 
