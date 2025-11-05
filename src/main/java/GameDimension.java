@@ -104,6 +104,12 @@ public class GameDimension {
             p.update(deltaTime);
         }
 
+        System.out.println(_spieler.getFigur().getY());
+        // y=0 death checken
+        if (_spieler.getFigur().getY() >= 650) {
+            sterben();
+        }
+
         // Camera bewegen
         moveCamera(deltaTime);
     }
@@ -257,67 +263,89 @@ public class GameDimension {
             }
         }
 
-                    _root.getChildren().addAll(_mapTilesListe);
-                    _root.setBackground(new Background(loadedLevelData.levelBackground));
+        _root.getChildren().addAll(_mapTilesListe);
+        _root.setBackground(new Background(loadedLevelData.levelBackground));
 
-                    _matchLeben.erstelleHerzen(_root);
-                    _matchLeben.updateHerzen();
+        _matchLeben.erstelleHerzen(_root);
+        _matchLeben.updateHerzen();
 
-                    // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
-                    //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
-                }
+        // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
+        //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
+    }
 
-                private void addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
-                    _mapTilesListe.add(new ImageView(img));
-                    _mapTilesListe.getLast().setX(spawnPos.x);
-                    _mapTilesListe.getLast().setY(spawnPos.y);
-                    _mapTilesListe.getLast().setFitWidth(lvl.BREITE + 1);
-                    _mapTilesListe.getLast().setFitHeight(lvl.HOEHE + 1);
-                }
+    private void addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
+        _mapTilesListe.add(new ImageView(img));
+        _mapTilesListe.getLast().setX(spawnPos.x);
+        _mapTilesListe.getLast().setY(spawnPos.y);
+        _mapTilesListe.getLast().setFitWidth(lvl.BREITE + 1);
+        _mapTilesListe.getLast().setFitHeight(lvl.HOEHE + 1);
+    }
 
-                // Die Funtkion schaut, wie weit der Spieler von x-mitte des Fensters entfertn ist.
-                // Wenn der Spieler die deadzone vom abstant überschreitet, dann wird alles in der welt leicht in die richtung geschoben,
-                // um den fehler auszugleichen.
-                // Ebenso wird die gesamt bewegung in pixeln in der _cameraPos gespeichet, um später noch nachvollziehen zu können,
-                // wie momentant die gesamte welt relativ positioniert ist.
-                private void moveCamera ( float deltaTime){
-                    final float screenWidth = 1280.f;
-                    final float smoothFactor = 0.7f;
-                    final float deadzonePixel = 50;
-                    final float followOffsetPixel = -250;
+    // Die Funtkion schaut, wie weit der Spieler von x-mitte des Fensters entfertn ist.
+    // Wenn der Spieler die deadzone vom abstant überschreitet, dann wird alles in der welt leicht in die richtung geschoben,
+    // um den fehler auszugleichen.
+    // Ebenso wird die gesamt bewegung in pixeln in der _cameraPos gespeichet, um später noch nachvollziehen zu können,
+    // wie momentant die gesamte welt relativ positioniert ist.
+    private void moveCamera ( float deltaTime){
+        final float screenWidth = 1280.f;
+        final float smoothFactor = 0.7f;
+        final float deadzonePixel = 50;
+        final float followOffsetPixel = -250;
 
-                    float diff = screenWidth / 2 - (screenWidth - ((float) _spieler.getFigur().getX()) + followOffsetPixel);
+        float diff = screenWidth / 2 - (screenWidth - ((float) _spieler.getFigur().getX()) + followOffsetPixel);
 
-                    if (diff < 0 && cameraPosition.x <= 0) return;
-                    else if (diff <= deadzonePixel && diff >= -deadzonePixel) return;
+        if (diff < 0 && cameraPosition.x <= 0) return;
+        else if (diff <= deadzonePixel && diff >= -deadzonePixel) return;
 
-                    // Wenn zu weit links, dann negativ, wenn zu weit rechts, dann positiv
+        // Wenn zu weit links, dann negativ, wenn zu weit rechts, dann positiv
 
-                    // Alles zur korrektur bewegen
-                    float smoothErrorCorrectionValue = diff * smoothFactor * deltaTime * -1;
+        // Alles zur korrektur bewegen
+        float smoothErrorCorrectionValue = diff * smoothFactor * deltaTime * -1;
 
-                    System.out.println("" + ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth*2) + "  " + cameraPosition.x);
+        System.out.println("" + ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth*2) + "  " + cameraPosition.x);
 
-                    if ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth <
-                            cameraPosition.x - smoothErrorCorrectionValue && smoothErrorCorrectionValue < 0) {
-                        return;
-                    };
+        if ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth <
+                cameraPosition.x - smoothErrorCorrectionValue && smoothErrorCorrectionValue < 0) {
+            return;
+        };
 
-                    moveCameraByValue(smoothErrorCorrectionValue, 0);
-                }
+        moveCameraByValue(smoothErrorCorrectionValue, 0);
+    }
 
-                // y ist noch nicht implemented
-                private void moveCameraByValue(float x, float y) {
-                    cameraPosition.x -= x;
+    // y ist noch nicht implemented
+    private void moveCameraByValue(float x, float y) {
+        cameraPosition.x -= x;
 
-                    // Move All Objects
-                    _spieler.getFigur().setX(_spieler.getFigur().getX() + x);
-                    for (Gegner g : _gegnerListe) {
-                        g.getFigur().setX(g.getFigur().getX() + x);
-                    }
-                    for (ImageView i : _mapTilesListe) {
-                        i.setX(i.getX() + x);
-                    }
-                }
-            }
+        // Move All Objects
+        _spieler.getFigur().setX(_spieler.getFigur().getX() + x);
+        for (Gegner g : _gegnerListe) {
+            g.getFigur().setX(g.getFigur().getX() + x);
+        }
+        for (ImageView i : _mapTilesListe) {
+            i.setX(i.getX() + x);
+        }
+    }
+
+    private void sterben() {
+        _matchLeben.herzen--;
+        _matchLeben.clearHerzen(_root);
+
+        _root.getChildren().removeAll(_mapTilesListe);
+        for(Projektil p : _projektilList) {
+            _root.getChildren().remove(p.getSprite());
+        }
+        for(Gegner g : _gegnerListe) {
+            _root.getChildren().remove(g.getFigur());
+        }
+        _root.getChildren().remove(_spieler.getFigur());
+        _root.getChildren().remove(_spieler.getSprite());
+
+        _mapTilesListe.clear();
+        _projektilList.clear();
+        _gegnerListe.clear();
+        _spieler = null;
+
+        ladeLevel(loadedLevelData);
+    }
+}
 

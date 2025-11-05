@@ -40,6 +40,10 @@ public class MatchLeben {
         root.getChildren().addAll(herzenViews);
     }
 
+    public void clearHerzen(Pane root) {
+        root.getChildren().removeAll(herzenViews);
+    }
+
     public void updateHerzen() {
         for (int i = 0; i < MAX_HERZEN; i++) {
             if (herzen >= i+1) {
