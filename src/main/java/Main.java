@@ -17,6 +17,35 @@ public class Main extends Application {
 
     private WeltenManager weltenManager = null;
 
+    void switchToMainMenu(Stage stage) {
+        stage.setScene(Menu.erstelleMenuScene(
+                this,
+                e -> { // Start Game
+                    _matchLeben = new MatchLeben(5);
+                    goToLevel("o1", stage);
+                    return e;
+                },
+                e -> { // Level Selector
+                    switchToLevelMenu(stage);
+                    return e;
+                }
+        ));
+    }
+    void switchToLevelMenu(Stage stage) {
+        stage.setScene(Menu.erstelleLevelAuswahlScene(
+                this,
+                s -> {
+                    _matchLeben = new MatchLeben(5);
+                    goToLevel(s, stage);
+                    return null;
+                },
+                e -> {
+                    switchToMainMenu(stage);
+                    return e;
+                }
+        ));
+    }
+
     @Override
     public void start(Stage stage) {
         // JavaFX Setup
@@ -29,14 +58,8 @@ public class Main extends Application {
 
         //Scene Level = new Scene(root);
         //stage.setScene(Level);
-        stage.setScene(Menu.erstelleMenuScene(
-                this,
-                e -> {
-                    _matchLeben = new MatchLeben(5);
-                    goToLevel("o1", stage);
-                    return e;
-                }
-        ));
+
+        switchToMainMenu(stage);
         stage.setTitle("Horizon Minecraft Jump");
         stage.show();
 
