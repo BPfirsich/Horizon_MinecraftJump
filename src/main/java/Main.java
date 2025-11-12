@@ -6,6 +6,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.rmi.server.ExportException;
+
 public class Main extends Application {
 
     private GameDimension _currentDimension = null;
@@ -15,12 +17,30 @@ public class Main extends Application {
 
     private LevelData _overworld_1;
     private LevelData _overworld_2;
+    private LevelData _overworld_3;
+
+    private LevelData _nether_1;
+    private LevelData _nether_2;
+    private LevelData _nether_3;
+
     private LevelData _testworld;
     private LevelData _homescreen;
 
     private BackgroundImage _background_1_1;
     private BackgroundImage _background_1_2;
+    private BackgroundImage _background_1_3;
+
+    private BackgroundImage _background_2_1;
+    private BackgroundImage _background_2_2;
+    private BackgroundImage _background_2_3;
+
     private BackgroundImage _homescreen_img;
+
+    private Image _loadingScreen_general;
+    private Image _loadingScreen_1;
+    private Image _loadingScreen_2;
+    private Image _loadingScreen_3;
+
 
     @Override
     public void start(Stage stage) {
@@ -58,6 +78,34 @@ public class Main extends Application {
                 BackgroundPosition.CENTER,  // Position
                 BackgroundSize.DEFAULT      // Größe
         );
+        _background_1_3 = new BackgroundImage(
+                new Image(getClass().getResourceAsStream("/screen_ow_3.png")),
+                BackgroundRepeat.NO_REPEAT, // Wiederholung horizontal
+                BackgroundRepeat.NO_REPEAT, // Wiederholung vertikal
+                BackgroundPosition.CENTER,  // Position
+                BackgroundSize.DEFAULT      // Größe
+        );
+        _background_2_1 = new BackgroundImage(
+                new Image(getClass().getResourceAsStream("/screen_ne_1.png")),
+                BackgroundRepeat.NO_REPEAT, // Wiederholung horizontal
+                BackgroundRepeat.NO_REPEAT, // Wiederholung vertikal
+                BackgroundPosition.CENTER,  // Position
+                BackgroundSize.DEFAULT      // Größe
+        );
+        _background_2_2 = new BackgroundImage(
+                new Image(getClass().getResourceAsStream("/screen_ne_2.png")),
+                BackgroundRepeat.NO_REPEAT, // Wiederholung horizontal
+                BackgroundRepeat.NO_REPEAT, // Wiederholung vertikal
+                BackgroundPosition.CENTER,  // Position
+                BackgroundSize.DEFAULT      // Größe
+        );
+        _background_2_3 = new BackgroundImage(
+                new Image(getClass().getResourceAsStream("/screen_ne_3.png")),
+                BackgroundRepeat.NO_REPEAT, // Wiederholung horizontal
+                BackgroundRepeat.NO_REPEAT, // Wiederholung vertikal
+                BackgroundPosition.CENTER,  // Position
+                BackgroundSize.DEFAULT      // Größe
+        );
 
         _homescreen_img = new BackgroundImage(
                 new Image(getClass().getResourceAsStream("/Homescreen_text.png")),
@@ -67,8 +115,13 @@ public class Main extends Application {
                 new  BackgroundSize(1280, 720, false, false, true, true) // Größe
         );
 
+        _loadingScreen_general = new Image(getClass().getResourceAsStream("/Loading_biom.png"));
+        _loadingScreen_1 = new Image(getClass().getResourceAsStream("/Loading_overworld.png"));
+        _loadingScreen_2 = new Image(getClass().getResourceAsStream("/Loading_nether.png"));
+        _loadingScreen_3 = new Image(getClass().getResourceAsStream("/Loading_end.png"));
+
         // Erstellen der Level
-        _overworld_1 = new LevelData("Overworld_1", 12, _background_1_1);
+        _overworld_1 = new LevelData("Overworld_1", 12, _background_1_1, _loadingScreen_1);
         _overworld_1.stufe[11] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_1.stufe[10] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_1.stufe[9]  = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
@@ -82,7 +135,7 @@ public class Main extends Application {
         _overworld_1.stufe[1]  = "----<###>----<#u+++i##>--------<>--lr--l++++++++++r--lr--<>----------<#>---------------------------------------------------------<#####>----------------------------------------------------------------------------------<>--<>--<>-----------------------------------------------------------------------------";
         _overworld_1.stufe[0]  = "####u+++i####u++++++++i######ww34ww34ww3++++++++++4ww34ww34ww######wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww######ww##w##ww#####wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######www###www##www##ww##wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
 
-        _overworld_2 = new LevelData("Overworld_2", 15, _background_1_2);
+        _overworld_2 = new LevelData("Overworld_2", 15, _background_1_2, _loadingScreen_general);
         _overworld_2.stufe[14] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_2.stufe[13] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_2.stufe[12] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
@@ -99,8 +152,50 @@ public class Main extends Application {
         _overworld_2.stufe[1]  = "sssssssssssssssss--8s7--8s7--8s7--8s7---------------------------------------s--s--s--------------------------------------------s--s--------------------------8ssssss7--8sssssss7-----------s--8s7--8s7-----------------------------------------------------------------------------------------------------------";
         _overworld_2.stufe[0]  = "+++++++++++++++++wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
 
+        _overworld_3 = new LevelData("Overworld_3", 12, _background_1_3, _loadingScreen_general);
+        _overworld_3.stufe[11] = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _overworld_3.stufe[10] = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _overworld_3.stufe[9]  = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _overworld_3.stufe[8]  = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _overworld_3.stufe[7]  = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _overworld_3.stufe[6]  = "-------------------------------------------------------------------------------------------------------------------d-d-d-dddd--dddd--dddd--ddd--ddd--dd--ddddd------------------------";
+        _overworld_3.stufe[5]  = "----------------------------------------------------------------------------------------------------------d--d--d---------------------------------------------------------------------";
+        _overworld_3.stufe[4]  = "---------------------------------------dd--dd--dddddddddddddddddd--------------------------------d--d--d------------------------------------------------------------------------------";
+        _overworld_3.stufe[3]  = "-------------------------------dd--dd------------------------------ddd--dd--dd----------d--d--d---------------------------------------------------------------------------------------";
+        _overworld_3.stufe[2]  = "--P--------------------dd--dd---------------------------------------------------dd--dd-------------------------------------------------------------------------------------------G----";
+        _overworld_3.stufe[1]  = "ddddddddd--dd--dd--dd-----------------------------------------------------------------------------------------------------------------------------------------dddddddddddddddddddddddd";
+        _overworld_3.stufe[0]  = "dddddddddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
 
-        _testworld = new LevelData("Testlevel", 11, _background_1_1);
+        _nether_1 = new LevelData("Nether_1", 12, _background_2_1, _loadingScreen_2);
+        _nether_1.stufe[11] = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _nether_1.stufe[10] = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _nether_1.stufe[9]  = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _nether_1.stufe[8]  = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _nether_1.stufe[7]  = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+        _nether_1.stufe[6]  = "----------------------------------------------------------------------------------------------------nn--nn-n-n-n----------------------------------------------------------------------------------------------------------------n--n--nnn-nn-nn--nn-nn-------------------------------------------------------------";
+        _nether_1.stufe[5]  = "-------------------------------------------------------------------------------nn-n-nn-n--n-n-n-nn----------------nnnn--nnn--nn-nn-nn--n---------------------------------------------------------------------------------------n------------------------n-n--n--n--------------------------------------------------";
+        _nether_1.stufe[4]  = "-------------------------------------------------------------------nn--nn--nn-------------------------------------------------------------n--nn--n----------------------------------------------------------------------------n------------------------------------n--nnn--n--n--nnn--n-n-nn-nn--nn-nn-----------C-";
+        _nether_1.stufe[3]  = "--------------------------------------n--n--n------------------nn-----------------------------------------------------------------------------------nn--nn--nn--nn-----------------------------------------------------------n--------------------------------------------------------------------------nnnnn--nnnn";
+        _nether_1.stufe[2]  = "------------------------------nn--nn-----------nn--n-n--n--nn-------------------------------------------------------------------------------------------------------n--n--n--n----------------------------------------------n--------------------------------------------------------------------------------------";
+        _nether_1.stufe[1]  = "----P-----nn--nn--n--n-n--nn----------------------------------------------------------------------------------------------------------------------------------------------------nn--nn--nn--nn--nnn--n-n-n--n--nnn-nn-nn--nn---------------------------------------------------------------------------------------";
+        _nether_1.stufe[0]  = "nnnnnnnnmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm";
+
+        _nether_2 = new LevelData("Nether_2", 13, _background_2_2, _loadingScreen_general);
+        _nether_2.stufe[12] = "-------------------------------------------------------------------";
+        _nether_2.stufe[11] = "-------------------------------------------------------------------";
+        _nether_2.stufe[10] = "-------------------------------------------------------------------";
+        _nether_2.stufe[9]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[8]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[7]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[6]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[5]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[4]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[3]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[2]  = "-----P-------------------------------------------------------------";
+        _nether_2.stufe[1]  = "-------------------------------------------------------------------";
+        _nether_2.stufe[0]  = "nnnnnnnnmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm";
+
+        _testworld = new LevelData("Testlevel", 11, _background_1_1, _loadingScreen_general);
         _testworld.stufe[10] = "-----------------------------";
         _testworld.stufe[9]  = "-----------------------------";
         _testworld.stufe[8]  = "-----------------------------";
@@ -113,7 +208,8 @@ public class Main extends Application {
         _testworld.stufe[1]  = "-P-------<>--lr--l+++++------";
         _testworld.stufe[0]  = "######>--lr--lr--l+++++------";
 
-        _homescreen = new LevelData("Homescreen", 11, _homescreen_img);
+        _homescreen = new LevelData("Homescreen", 12, _homescreen_img, _loadingScreen_general);
+        _homescreen.stufe[11] = "-------------------------------------------------------------------";
         _homescreen.stufe[10] = "-------------------------------------------------------------------";
         _homescreen.stufe[9]  = "-------------------------------------------------------------------";
         _homescreen.stufe[8]  = "-------------------------------------------------------------------";
@@ -131,7 +227,7 @@ public class Main extends Application {
         _soundPlayer = new SoundPlayer();
         _currentDimension = new GameDimension("Test", root, _matchLeben, _soundPlayer);
         //_currentDimension.addGegner(new Gegner(500, 370, 200 ));
-        _currentDimension.ladeLevel(_overworld_1);
+        _currentDimension.ladeLevel(_nether_1);
         // --- TESTING
 
 

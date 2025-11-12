@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -41,6 +42,13 @@ public class GameDimension {
     private Image _snowblockImg;
     private Image _snowhalfleftImg;
     private Image _snowhalfrightImg;
+
+    private Image _sandImg;
+    private Image _sandhalfleftImg;
+    private Image _sandhalfrightImg;
+
+    private Image _netherrackImg;
+    private Image _lavaImg;
 
     public LevelData loadedLevelData;
 
@@ -86,6 +94,13 @@ public class GameDimension {
         _snowblockImg = new Image(getClass().getResourceAsStream("/schneeblock.png"));
         _snowhalfleftImg = new Image(getClass().getResourceAsStream("/schneeblock_halfleft.png"));
         _snowhalfrightImg = new Image(getClass().getResourceAsStream("/schneeblock_halfright.png"));
+
+        _sandImg = new Image(getClass().getResourceAsStream("/sandblock.png"));
+        _sandhalfleftImg = new Image(getClass().getResourceAsStream("/sandblock_halfleft.png"));
+        _sandhalfrightImg = new Image(getClass().getResourceAsStream("/sandblock_halfright.png"));
+
+        _netherrackImg = new Image(getClass().getResourceAsStream("/netherrack.png"));
+        _lavaImg = new Image(getClass().getResourceAsStream("/Lava.png"));
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
@@ -139,6 +154,22 @@ public class GameDimension {
             System.err.println("Eine GameDimension kann nur ein Level laden!");
             return;
         }
+
+        AnimationTimer loadingTimer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+
+            }
+        };
+
+
+
+        // Zeige Ladebildschirm an
+        ImageView loadingView = new ImageView(lvl.loadingScreen);
+        loadingView.setFitWidth(1280);
+        loadingView.setFitHeight(720);
+        loadingView.setTranslateZ(1000);
+        _root.getChildren().add(loadingView);
 
         loadedLevelData = lvl;
 
@@ -261,6 +292,36 @@ public class GameDimension {
                         break;
 
                     }
+                    case 'd': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _sandImg, lvl);
+                        break;
+
+                    }
+                    case '5': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _sandhalfleftImg, lvl);
+                        break;
+
+                    }
+                    case '6': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _sandhalfrightImg, lvl);
+                        break;
+
+                    }
+                    case 'n': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _netherrackImg, lvl);
+                        break;
+
+                    }
+                    case 'm': {
+                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                        addTileToMapList(spawnPos, _lavaImg, lvl);
+                        break;
+
+                    }
                 }
             }
         }
@@ -270,6 +331,8 @@ public class GameDimension {
 
         _matchLeben.erstelleHerzen(_root);
         _matchLeben.updateHerzen();
+
+        _root.getChildren().remove(loadingView);
 
         // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
         //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);

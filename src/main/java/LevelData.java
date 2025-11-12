@@ -9,13 +9,14 @@ import java.util.Arrays;
 public class LevelData {
     public final int BREITE = 50, HOEHE = 50;
     public final ArrayList<Character> SOLIDS = new ArrayList<Character>(
-            Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 's', '7', '8')
+            Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 's', '7', '8', 'd', '5', '6', 'n')
     );
 
-    public LevelData(String name, int anzahlFloors, BackgroundImage background) {
+    public LevelData(String name, int anzahlFloors, BackgroundImage background, Image loading) {
         stufe = new String[anzahlFloors];
         levelName = name;
         levelBackground = background;
+        loadingScreen = loading;
     }
 
     // array[y]: y=0 ist der Boden, x=0 ist links der anfang vom level. (vom string)
@@ -24,7 +25,7 @@ public class LevelData {
     //public Color backgroundColor = Color.WHITE;
 
     public final BackgroundImage levelBackground;
-
+    public final Image loadingScreen;
 
 
     public boolean isBereichSolide(float x, int y) {
@@ -110,5 +111,8 @@ public class LevelData {
     // s = Snowblock
     // 7 = Snow half left
     // 8 = Snow half right
+
+    // n = netherrack
+    // m = lava
 
 }
