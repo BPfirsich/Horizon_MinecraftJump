@@ -12,11 +12,12 @@ public class LevelData {
             Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 's', '7', '8', 'd', '5', '6', 'n')
     );
 
-    public LevelData(String name, int anzahlFloors, BackgroundImage background, Image loading) {
+    public LevelData(String name, int anzahlFloors, BackgroundImage background, Image loading, String nextKey) {
         stufe = new String[anzahlFloors];
         levelName = name;
         levelBackground = background;
         loadingScreen = loading;
+        nextLevelKey = nextKey;
     }
 
     // array[y]: y=0 ist der Boden, x=0 ist links der anfang vom level. (vom string)
@@ -26,7 +27,7 @@ public class LevelData {
 
     public final BackgroundImage levelBackground;
     public final Image loadingScreen;
-
+    public final String nextLevelKey;
 
     public boolean isBereichSolide(float x, int y) {
         x = (float)Math.floor(x);
@@ -37,13 +38,13 @@ public class LevelData {
     // the calculation result is actually in the middle of a tile, instead on the edge
 
     public Vector2f calcPixelCordsFromTile(int x, int y, Vector2f cameraOffset, boolean centeringOffset) {
-        x += (int)cameraOffset.x;
-        y += (int)cameraOffset.y;
+        //x += (int)cameraOffset.x;
+        //y += (int)cameraOffset.y;
 
         Vector2f res = new Vector2f(0, 0);
 
-        res.x = x*BREITE;
-        res.y = 710 - (y*HOEHE) - 40; // -40 da die fensterleiste auch dazugerechnet wird...
+        res.x = x*BREITE - cameraOffset.x;
+        res.y = 710 - (y*HOEHE) - 40 - cameraOffset.y; // -40 da die fensterleiste auch dazugerechnet wird...
 
         if(centeringOffset) res.x -= (float)BREITE/1.5f;
 

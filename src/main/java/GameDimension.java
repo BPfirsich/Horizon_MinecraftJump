@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -55,13 +56,18 @@ public class GameDimension {
     public Vector2f cameraPosition;
 
     private ArrayList<Projektil> _projektilList;
+    private Vector2f _chestPos = null;
 
-    public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer) {
+    private Function<String, Void> _levelLoadFunc;
+
+    public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer, Function<String, Void> lvlLoadFunc) {
         f_dimensionName = name;
         _root = root;
 
         _matchLeben = leben;
         _soundPlayer = soundPlayer;
+
+        _levelLoadFunc = lvlLoadFunc;
 
         _gegnerListe = new ArrayList<>();
         _projektilList = new ArrayList<>();
@@ -123,10 +129,22 @@ public class GameDimension {
             p.update(deltaTime);
         }
 
-        System.out.println(_spieler.getFigur().getY());
+        //System.out.println(_spieler.getFigur().getY());
         // y=0 death checken
         if (_spieler.getFigur().getY() >= 650) {
             sterben();
+        }
+
+        // Gucken ob bei chest
+        if(_chestPos != null) {
+            float distanceToChest = loadedLevelData.calcPixelCordsFromTile((int)_chestPos.x, (int)_chestPos.y, cameraPosition, false)
+                    .sub(new Vector2f((int)_spieler.getFigur().getX(), (int)_spieler.getFigur().getY())).length();
+
+            System.out.println(distanceToChest);
+            /*if(distanceToChest <= 25) {
+                _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
+                return;
+            }*/
         }
 
         // Camera bewegen
@@ -257,6 +275,7 @@ public class GameDimension {
                             case 'C': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 addTileToMapList(spawnPos, _ChestImg, lvl);
+                                _chestPos = new Vector2f(x, y);
                                 break;
                             }
                             case 'q': {
@@ -393,7 +412,7 @@ public class GameDimension {
         // Alles zur korrektur bewegen
         float smoothErrorCorrectionValue = diff * smoothFactor * deltaTime * -1;
 
-        System.out.println("" + ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth*2) + "  " + cameraPosition.x);
+        //System.out.println("" + ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth*2) + "  " + cameraPosition.x);
 
         if ((float)loadedLevelData.stufe[0].length() * (float)loadedLevelData.BREITE - (float)screenWidth <
                 cameraPosition.x - smoothErrorCorrectionValue && smoothErrorCorrectionValue < 0) {
@@ -418,6 +437,7 @@ public class GameDimension {
     }
 
     private void sterben() {
+        _soundPlayer.deathSoundPlayer.stop();
         _soundPlayer.deathSoundPlayer.play();
 
         _matchLeben.herzen--;

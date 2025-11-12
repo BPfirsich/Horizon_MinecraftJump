@@ -67,7 +67,7 @@ class Spieler {
         double spriteHeight;
         double hitboxHeight;
 
-        System.out.println(_myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true));
+        //System.out.println(_myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true));
 
         // Movement
         float speedMulti = 1.0f;

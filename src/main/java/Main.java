@@ -107,7 +107,7 @@ public class Main extends Application {
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(scene);
 
-        _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer);
+        _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer, s -> { goToLevel(s, stage); return null; } );
         _currentDimension.ladeLevel(weltenManager.getLevelData(key), true);
     }
 

@@ -86,7 +86,7 @@ public class WeltenManager {
         _loadingScreen_3 = new Image(getClass().getResourceAsStream("/Loading_end.png"));
 
         // Erstellen der Level
-        _overworld_1 = new LevelData("Overworld_1", 12, _background_1_1, _loadingScreen_1);
+        _overworld_1 = new LevelData("Overworld_1", 12, _background_1_1, _loadingScreen_1, "o2");
         _overworld_1.stufe[11] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_1.stufe[10] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_1.stufe[9]  = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
@@ -100,7 +100,7 @@ public class WeltenManager {
         _overworld_1.stufe[1]  = "----<###>----<#u+++i##>--------<>--lr--l++++++++++r--lr--<>----------<#>---------------------------------------------------------<#####>----------------------------------------------------------------------------------<>--<>--<>-----------------------------------------------------------------------------";
         _overworld_1.stufe[0]  = "####u+++i####u++++++++i######ww34ww34ww3++++++++++4ww34ww34ww######wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww######ww##w##ww#####wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#######www###www##www##ww##wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
 
-        _overworld_2 = new LevelData("Overworld_2", 15, _background_1_2, _loadingScreen_general);
+        _overworld_2 = new LevelData("Overworld_2", 15, _background_1_2, _loadingScreen_general, "o3");
         _overworld_2.stufe[14] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_2.stufe[13] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_2.stufe[12] = "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
@@ -117,7 +117,7 @@ public class WeltenManager {
         _overworld_2.stufe[1]  = "sssssssssssssssss--8s7--8s7--8s7--8s7---------------------------------------s--s--s--------------------------------------------s--s--------------------------8ssssss7--8sssssss7-----------s--8s7--8s7-----------------------------------------------------------------------------------------------------------";
         _overworld_2.stufe[0]  = "+++++++++++++++++wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
 
-        _overworld_3 = new LevelData("Overworld_3", 12, _background_1_3, _loadingScreen_general);
+        _overworld_3 = new LevelData("Overworld_3", 12, _background_1_3, _loadingScreen_general, "n1");
         _overworld_3.stufe[11] = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_3.stufe[10] = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _overworld_3.stufe[9]  = "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
@@ -131,7 +131,7 @@ public class WeltenManager {
         _overworld_3.stufe[1]  = "ddddddddd--dd--dd--dd-----------------------------------------------------------------------------------------------------------------------------------------dddddddddddddddddddddddd";
         _overworld_3.stufe[0]  = "dddddddddwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
 
-        _nether_1 = new LevelData("Nether_1", 12, _background_2_1, _loadingScreen_2);
+        _nether_1 = new LevelData("Nether_1", 12, _background_2_1, _loadingScreen_2, "n2");
         _nether_1.stufe[11] = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _nether_1.stufe[10] = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
         _nether_1.stufe[9]  = "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
@@ -145,7 +145,7 @@ public class WeltenManager {
         _nether_1.stufe[1]  = "----P-----nn--nn--n--n-n--nn----------------------------------------------------------------------------------------------------------------------------------------------------nn--nn--nn--nn--nnn--n-n-n--n--nnn-nn-nn--nn---------------------------------------------------------------------------------------";
         _nether_1.stufe[0]  = "nnnnnnnnmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm";
 
-        _nether_2 = new LevelData("Nether_2", 13, _background_2_2, _loadingScreen_general);
+        _nether_2 = new LevelData("Nether_2", 13, _background_2_2, _loadingScreen_general, "n3");
         _nether_2.stufe[12] = "-------------------------------------------------------------------";
         _nether_2.stufe[11] = "-------------------------------------------------------------------";
         _nether_2.stufe[10] = "-------------------------------------------------------------------";
@@ -160,7 +160,7 @@ public class WeltenManager {
         _nether_2.stufe[1]  = "-------------------------------------------------------------------";
         _nether_2.stufe[0]  = "nnnnnnnnmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm";
 
-        _testworld = new LevelData("Testlevel", 11, _background_1_1, _loadingScreen_general);
+        _testworld = new LevelData("Testlevel", 11, _background_1_1, _loadingScreen_general, "o1");
         _testworld.stufe[10] = "-----------------------------";
         _testworld.stufe[9]  = "-----------------------------";
         _testworld.stufe[8]  = "-----------------------------";
@@ -174,7 +174,7 @@ public class WeltenManager {
         _testworld.stufe[0]  = "######>--lr--lr--l+++++------";
 
         /*
-        _homescreen = new LevelData("Homescreen", 12, _homescreen_img, _loadingScreen_general);
+        _homescreen = new LevelData("Homescreen", 12, _homescreen_img, _loadingScreen_general, "o1");
         _homescreen.stufe[11] = "-------------------------------------------------------------------";
         _homescreen.stufe[10] = "-------------------------------------------------------------------";
         _homescreen.stufe[9]  = "-------------------------------------------------------------------";
