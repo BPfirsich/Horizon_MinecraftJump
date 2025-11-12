@@ -12,7 +12,7 @@ public class Main extends Application {
 
     private GameDimension _currentDimension = null;
     private InputData _inputData = null;
-    private MatchLeben _matchLeben = null;
+    public MatchLeben _matchLeben = null;
     private SoundPlayer _soundPlayer = null;
 
     private WeltenManager weltenManager = null;
@@ -29,7 +29,14 @@ public class Main extends Application {
 
         //Scene Level = new Scene(root);
         //stage.setScene(Level);
-        stage.setScene(Menu.erstelleMenuScene(this));
+        stage.setScene(Menu.erstelleMenuScene(
+                this,
+                e -> {
+                    _matchLeben = new MatchLeben(5);
+                    goToLevel("o1", stage);
+                    return e;
+                }
+        ));
         stage.setTitle("Horizon Minecraft Jump");
         stage.show();
 
@@ -58,14 +65,14 @@ public class Main extends Application {
             }
         };
         // TESTING ---
-        goToLevel("o1", stage);
+        //goToLevel("o1", stage);
 
         // start Game loop
         timer.start();
     }
 
     private void update(float deltaTime) {
-        _currentDimension.updateDimension(deltaTime, _inputData);
+        if(_currentDimension != null) _currentDimension.updateDimension(deltaTime, _inputData);
     }
 
     private void goToLevel(String key, Stage stage) {
@@ -76,8 +83,6 @@ public class Main extends Application {
         stage.setScene(scene);
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(scene);
-
-        _matchLeben = new MatchLeben(5);
 
         _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer);
         _currentDimension.ladeLevel(weltenManager.getLevelData(key), true);
