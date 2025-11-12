@@ -108,6 +108,8 @@ public class GameDimension {
     }
 
     public void updateDimension(float deltaTime, InputData inputData) {
+        if(_spieler == null) return;
+
         // Spieler Updaten
         _spieler.update(deltaTime, inputData);
 
@@ -149,193 +151,217 @@ public class GameDimension {
         _root.getChildren().add(projektil.getSprite());
     }
 
-    public void ladeLevel(LevelData lvl) {
+    public void ladeLevel(LevelData lvl, boolean showLoadingScreen) {
         if (!_mapTilesListe.isEmpty()) {
             System.err.println("Eine GameDimension kann nur ein Level laden!");
             return;
         }
 
-        AnimationTimer loadingTimer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-
-            }
-        };
-
-
-
-        // Zeige Ladebildschirm an
         ImageView loadingView = new ImageView(lvl.loadingScreen);
         loadingView.setFitWidth(1280);
         loadingView.setFitHeight(720);
-        loadingView.setTranslateZ(1000);
-        _root.getChildren().add(loadingView);
+        //loadingView.setTranslateZ(1000);
 
         loadedLevelData = lvl;
+        GameDimension self = this;
 
-        cameraPosition.x = 0;
-        //cameraPosition.y = 0;
+        AnimationTimer loadingTimer = new AnimationTimer() {
+            long startTime = -1;
+            final static float LOADING_TIME = 2.0f;
 
-        // Alle Tiles von dem Level erzeugen
-        for (int y = 0; y < lvl.stufe.length; y++) {
-            for (int x = 0; x < lvl.stufe[y].length(); x++) {
-                switch (lvl.stufe[y].charAt(x)) {
-                    case '#': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _grassBlockImg, lvl);
-                        break;
+            @Override
+            public void handle(long l) {
+                if(startTime == -1) {
+                    if (!showLoadingScreen) {
+                        showLoadingScreen();
+                        loadLevelAndDestroyLoadingScreen();
+                        stop();
+                        return;
                     }
-                    case '+': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _dirtBlockImg, lvl);
-                        break;
-                    }
-                    case '>': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _halfLeftGrassImg, lvl);
-                        break;
-                    }
-                    case '<': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _halfRightGrassImg, lvl);
-                        break;
-                    }
-                    case 'u': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _dirtHalfGrassLeftImg, lvl);
-                        break;
-                    }
-                    case 'i': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _dirtHalfGrassRightImg, lvl);
-                        break;
-                    }
-                    case 'l': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _dirtHalfLeftImg, lvl);
-                        break;
-                    }
-                    case 'r': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _dirtHalfRightImg, lvl);
-                        break;
-                    }
-                    case 'P': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        setSpieler(new Spieler(spawnPos.x,
-                                spawnPos.y,
-                                250,
-                                this));
 
-                        break;
-                    }
-                    case 'w': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _waterImg, lvl);
-                        break;
-                    }
-                    case 'C': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _ChestImg, lvl);
-                        break;
-                    }
-                    case 'q': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _waterhalfleftImg, lvl);
-                        break;
-                    }
-                    case 'o': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _waterhalfrightImg, lvl);
-                        break;
-
-                    }
-                    case '1': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _watergrassleftrightImg, lvl);
-                        break;
-
-                    }
-                    case '2': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _watergrassrightleftImg, lvl);
-                        break;
-
-                    }
-                    case '3': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _waterdirtleftrightImg, lvl);
-                        break;
-
-                    }
-                    case '4': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _waterdirtrightleftImg, lvl);
-                        break;
-
-                    }
-                    case 's': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _snowblockImg, lvl);
-                        break;
-
-                    }
-                    case '7': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _snowhalfleftImg, lvl);
-                        break;
-
-                    }
-                    case '8': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _snowhalfrightImg, lvl);
-                        break;
-
-                    }
-                    case 'd': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _sandImg, lvl);
-                        break;
-
-                    }
-                    case '5': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _sandhalfleftImg, lvl);
-                        break;
-
-                    }
-                    case '6': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _sandhalfrightImg, lvl);
-                        break;
-
-                    }
-                    case 'n': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _netherrackImg, lvl);
-                        break;
-
-                    }
-                    case 'm': {
-                        Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                        addTileToMapList(spawnPos, _lavaImg, lvl);
-                        break;
-
-                    }
+                    showLoadingScreen();
+                    startTime = l;
+                }
+                else if ((float)(l - startTime)/1_000_000_000 >= LOADING_TIME) {
+                    loadLevelAndDestroyLoadingScreen();
+                    stop();
                 }
             }
-        }
 
-        _root.getChildren().addAll(_mapTilesListe);
-        _root.setBackground(new Background(loadedLevelData.levelBackground));
+            void showLoadingScreen() {
+                _root.getChildren().add(loadingView);
+            }
 
-        _matchLeben.erstelleHerzen(_root);
-        _matchLeben.updateHerzen();
+            void loadLevelAndDestroyLoadingScreen() {
+                cameraPosition.x = 0;
+                //cameraPosition.y = 0;
 
-        _root.getChildren().remove(loadingView);
+                // Alle Tiles von dem Level erzeugen
+                for (int y = 0; y < lvl.stufe.length; y++) {
+                    for (int x = 0; x < lvl.stufe[y].length(); x++) {
+                        switch (lvl.stufe[y].charAt(x)) {
+                            case '#': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _grassBlockImg, lvl);
+                                break;
+                            }
+                            case '+': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _dirtBlockImg, lvl);
+                                break;
+                            }
+                            case '>': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _halfLeftGrassImg, lvl);
+                                break;
+                            }
+                            case '<': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _halfRightGrassImg, lvl);
+                                break;
+                            }
+                            case 'u': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _dirtHalfGrassLeftImg, lvl);
+                                break;
+                            }
+                            case 'i': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _dirtHalfGrassRightImg, lvl);
+                                break;
+                            }
+                            case 'l': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _dirtHalfLeftImg, lvl);
+                                break;
+                            }
+                            case 'r': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _dirtHalfRightImg, lvl);
+                                break;
+                            }
+                            case 'P': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                setSpieler(new Spieler(spawnPos.x,
+                                        spawnPos.y,
+                                        250,
+                                        self));
 
-        // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
-        //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
+                                break;
+                            }
+                            case 'w': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _waterImg, lvl);
+                                break;
+                            }
+                            case 'C': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _ChestImg, lvl);
+                                break;
+                            }
+                            case 'q': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _waterhalfleftImg, lvl);
+                                break;
+                            }
+                            case 'o': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _waterhalfrightImg, lvl);
+                                break;
+
+                            }
+                            case '1': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _watergrassleftrightImg, lvl);
+                                break;
+
+                            }
+                            case '2': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _watergrassrightleftImg, lvl);
+                                break;
+
+                            }
+                            case '3': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _waterdirtleftrightImg, lvl);
+                                break;
+
+                            }
+                            case '4': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _waterdirtrightleftImg, lvl);
+                                break;
+
+                            }
+                            case 's': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _snowblockImg, lvl);
+                                break;
+
+                            }
+                            case '7': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _snowhalfleftImg, lvl);
+                                break;
+
+                            }
+                            case '8': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _snowhalfrightImg, lvl);
+                                break;
+
+                            }
+                            case 'd': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _sandImg, lvl);
+                                break;
+
+                            }
+                            case '5': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _sandhalfleftImg, lvl);
+                                break;
+
+                            }
+                            case '6': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _sandhalfrightImg, lvl);
+                                break;
+
+                            }
+                            case 'n': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _netherrackImg, lvl);
+                                break;
+
+                            }
+                            case 'm': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _lavaImg, lvl);
+                                break;
+
+                            }
+                        }
+                    }
+                }
+
+                _root.getChildren().addAll(_mapTilesListe);
+                _root.setBackground(new Background(loadedLevelData.levelBackground));
+
+                _matchLeben.erstelleHerzen(_root);
+                _matchLeben.updateHerzen();
+
+                _root.getChildren().remove(loadingView);
+
+                // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
+                //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
+            }
+        };
+
+        loadingTimer.start();
+
+
     }
 
     private void addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
@@ -412,7 +438,7 @@ public class GameDimension {
         _gegnerListe.clear();
         _spieler = null;
 
-        ladeLevel(loadedLevelData);
+        ladeLevel(loadedLevelData, false);
     }
 }
 

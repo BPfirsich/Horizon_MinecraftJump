@@ -227,7 +227,7 @@ public class Main extends Application {
         _soundPlayer = new SoundPlayer();
         _currentDimension = new GameDimension("Test", root, _matchLeben, _soundPlayer);
         //_currentDimension.addGegner(new Gegner(500, 370, 200 ));
-        _currentDimension.ladeLevel(_nether_1);
+        _currentDimension.ladeLevel(_overworld_3, true);
         // --- TESTING
 
 
