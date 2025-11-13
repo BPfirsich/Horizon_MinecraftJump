@@ -50,6 +50,10 @@ public class GameDimension {
 
     private Image _netherrackImg;
     private Image _lavaImg;
+    private Image _crimsonImg;
+    private Image _warpedImg;
+
+    private Image _endstoneImg;
 
     public LevelData loadedLevelData;
 
@@ -107,6 +111,10 @@ public class GameDimension {
 
         _netherrackImg = new Image(getClass().getResourceAsStream("/netherrack.png"));
         _lavaImg = new Image(getClass().getResourceAsStream("/Lava.png"));
+        _crimsonImg = new Image(getClass().getResourceAsStream("/crimson.png"));
+        _warpedImg = new Image(getClass().getResourceAsStream("/Warped.png"));
+
+        _endstoneImg = new Image(getClass().getResourceAsStream("/endstone.png"));
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
@@ -358,6 +366,24 @@ public class GameDimension {
                             case 'm': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 addTileToMapList(spawnPos, _lavaImg, lvl);
+                                break;
+
+                            }
+                            case 'c': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos, _crimsonImg, lvl);
+                                break;
+
+                            }
+                            case 'v': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos,_warpedImg , lvl);
+                                break;
+
+                            }
+                            case 'e': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                addTileToMapList(spawnPos,_endstoneImg , lvl);
                                 break;
 
                             }

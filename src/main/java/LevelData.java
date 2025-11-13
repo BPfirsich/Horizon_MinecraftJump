@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class LevelData {
     public final int BREITE = 50, HOEHE = 50;
     public final ArrayList<Character> SOLIDS = new ArrayList<Character>(
-            Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 's', '7', '8', 'd', '5', '6', 'n')
+            Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 's', '7', '8', 'd', '5', '6', 'n', 'c', 'v', 'e')
     );
 
     public LevelData(String name, int anzahlFloors, BackgroundImage background, Image loading, String nextKey) {
@@ -115,5 +115,8 @@ public class LevelData {
 
     // n = netherrack
     // m = lava
+    // c = crimson
+    // v = warped
 
+    // e = endstone
 }
