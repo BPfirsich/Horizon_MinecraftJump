@@ -15,6 +15,8 @@ public class GameDimension {
     private Spieler _spieler;
     private Pane _root;
 
+    private Boss _boss;
+
     private MatchLeben _matchLeben;
     public SoundPlayer _soundPlayer;
 
@@ -54,6 +56,14 @@ public class GameDimension {
     private Image _warpedImg;
 
     private Image _endstoneImg;
+
+    private Image _creeperIdleImg;
+    private Image _creeperShootImg;
+
+    private Image _kaktusIdleImg;
+
+    private Image _dragonIdleImg;
+    private Image _dragonShootImg;
 
     public LevelData loadedLevelData;
 
@@ -116,6 +126,14 @@ public class GameDimension {
 
         _endstoneImg = new Image(getClass().getResourceAsStream("/endstone.png"));
 
+        _creeperIdleImg = new Image(getClass().getResourceAsStream("/creeper.png"));
+        _creeperShootImg = new Image(getClass().getResourceAsStream("/creeper_wutend.png"));
+
+        _kaktusIdleImg = new Image(getClass().getResourceAsStream("/kaktus.png"));
+
+        _dragonIdleImg = new Image(getClass().getResourceAsStream("/enderdrache_normal.png"));
+        _dragonShootImg = new Image(getClass().getResourceAsStream("/enderdrache_wutend.png"));
+
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
 
@@ -126,6 +144,7 @@ public class GameDimension {
 
         // Spieler Updaten
         _spieler.update(deltaTime, inputData);
+        _boss.update(deltaTime, new Vector2f((float)_spieler.getFigur().getX(), (float)_spieler.getFigur().getY()));
 
         // Gegner Updaten
         for (Gegner g : _gegnerListe) {
@@ -385,7 +404,27 @@ public class GameDimension {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 addTileToMapList(spawnPos,_endstoneImg , lvl);
                                 break;
+                            }
 
+                            case 'G': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Pfeil.class,
+                                        1, 500, self, new Vector2f(571 / 5.7f, 1103 / 5.7f));
+                                break;
+                            }
+
+                            case 'K': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, Pfeil.class,
+                                        1, 500, self, new Vector2f(839 / 5.3f, 1069 / 5.3f));
+                                break;
+                            }
+
+                            case 'E': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, Pfeil.class,
+                                        1, 500, self, new Vector2f(571 / 5.7f, 1103 / 5.7f));
+                                break;
                             }
                         }
                     }
@@ -393,6 +432,8 @@ public class GameDimension {
 
                 _root.getChildren().addAll(_mapTilesListe);
                 _root.setBackground(new Background(loadedLevelData.levelBackground));
+
+                if (_boss != null) _root.getChildren().add(_boss.imageView);
 
                 _matchLeben.erstelleHerzen(_root);
                 _matchLeben.updateHerzen();
@@ -456,6 +497,7 @@ public class GameDimension {
 
         // Move All Objects
         _spieler.getFigur().setX(_spieler.getFigur().getX() + x);
+        _boss.imageView.setX(_boss.imageView.getX() + x);
         for (Gegner g : _gegnerListe) {
             g.getFigur().setX(g.getFigur().getX() + x);
         }
