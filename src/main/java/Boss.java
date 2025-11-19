@@ -14,6 +14,7 @@ public class Boss {
     private final Class<? extends Projektil> _projektil;
     private final float _shootInterval;
     private final float _projektilSpeed;
+    private final int _shootHeightOffset;
 
     private float _timeSinceLastShotSeconds;
     private final float _attackDistancePixels;
@@ -27,13 +28,14 @@ public class Boss {
     public final ImageView imageView;
 
     public Boss (Vector2f spawnPos, Image idleImage, Image shootImage, Class<? extends Projektil> projektil, float shootInterval,
-                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel, float projektilSpeed) {
+                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel, float projektilSpeed, int shootHeightOffset) {
         _idleImage = idleImage;
         _shootImage = shootImage;
         _projektil = projektil;
         _shootInterval = shootInterval;
         _attackDistancePixels = attackDistancePixels;
         _projektilSpeed = projektilSpeed;
+        _shootHeightOffset = shootHeightOffset;
 
         _timeSinceLastShotSeconds = 0f;
 
@@ -86,10 +88,10 @@ public class Boss {
         // Calc the shooting dire
         Vector2f shootDire = playerPixelPos.sub(new Vector2f(myPosition.x, playerPixelPos.y)).normalize().mul(_projektilSpeed);
 
-        int heightOffset = 90;
+        int heightOffset = _shootHeightOffset; // (Normal height)
         Random rand = new Random();
         if (rand.nextBoolean()) {
-            heightOffset = 120;
+            heightOffset += 30; // (Floor-Level)
         }
 
         // Create the Projektil

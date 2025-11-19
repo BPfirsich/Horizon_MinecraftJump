@@ -408,24 +408,24 @@ public class GameDimension {
                                 break;
                             }
 
-                            case 'G': {
-                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                                _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Energieball.class,
-                                        1.5f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600);
-                                break;
-                            }
-
                             case 'K': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, Energieball.class,
-                                        2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450);
+                                        2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450, 90);
+                                break;
+                            }
+
+                            case 'G': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Energieball.class,
+                                        1.5f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600, 90);
                                 break;
                             }
 
                             case 'E': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, Energieball.class,
-                                        0.7f, 500, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 900);
+                                        0.7f, 2000, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 900, 341);
                                 break;
                             }
                         }
@@ -524,7 +524,7 @@ public class GameDimension {
         _root.getChildren().remove(_spieler.getFigur());
         _root.getChildren().remove(_spieler.getSprite());
 
-        _root.getChildren().remove(_boss.imageView);
+        if(_boss != null) _root.getChildren().remove(_boss.imageView);
         _boss = null;
 
         _mapTilesListe.clear();
