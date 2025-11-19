@@ -2,29 +2,37 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Random;
 
 public class Boss {
 
-    private Image _idleImage;
-    private Image _shootImage;
+    private final Image _idleImage;
+    private final Image _shootImage;
 
-    private Class<? extends Projektil> _projektil;
-    private float _shootInterval;
+    private final Class<? extends Projektil> _projektil;
+    private final float _shootInterval;
+    private final float _projektilSpeed;
 
     private float _timeSinceLastShotSeconds;
-    private float _attackDistancePixels;
+    private final float _attackDistancePixels;
 
     private final GameDimension myDimension;
 
-    public ImageView imageView;
+    private final float _startingXPos = 0; // Used for moving
+    private final float _walkAroundAmountPixel = 120;
+    private final float _walkAroundSpeed = 0.6f;
+
+    public final ImageView imageView;
 
     public Boss (Vector2f spawnPos, Image idleImage, Image shootImage, Class<? extends Projektil> projektil, float shootInterval,
-                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel) {
+                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel, float projektilSpeed) {
         _idleImage = idleImage;
         _shootImage = shootImage;
         _projektil = projektil;
         _shootInterval = shootInterval;
         _attackDistancePixels = attackDistancePixels;
+        _projektilSpeed = projektilSpeed;
 
         _timeSinceLastShotSeconds = 0f;
 
@@ -42,9 +50,53 @@ public class Boss {
     }
 
     public void update(float deltaTime, Vector2f playerPixelPos) {
-        float distanceToPlayerPixel = playerPixelPos.sub(new Vector2f((float)imageView.getX(), (float)imageView.getY())).length();
+        walkAround(deltaTime);
 
+        Vector2f myPosition = new Vector2f((float)imageView.getX(), (float)imageView.getY());
+        float distanceToPlayerPixel = playerPixelPos.sub(myPosition).length();
 
+        //System.out.println(distanceToPlayerPixel);
+
+        if (distanceToPlayerPixel <= _attackDistancePixels) {
+            _timeSinceLastShotSeconds += deltaTime;
+            if (_timeSinceLastShotSeconds >= _shootInterval) {
+                try {
+                    shoot(playerPixelPos, myPosition);
+                }
+                catch (Exception e) {
+                    // Should never happen but java wants it lol
+                    e.fillInStackTrace();
+                }
+                _timeSinceLastShotSeconds = 0;
+
+                Random rand = new Random();
+                _timeSinceLastShotSeconds -= rand.nextFloat() * 0.3f;
+            }
+        }
+    }
+
+    private void walkAround(float deltaTime) {
+        double walkValue = Math.sin(((double)System.currentTimeMillis() / 1000.0) * _walkAroundSpeed) * _walkAroundAmountPixel;
+
+        imageView.setX(imageView.getX() + walkValue * deltaTime);
+    }
+
+    private void shoot(Vector2f playerPixelPos, Vector2f myPosition) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        // Calc the shooting dire
+        Vector2f shootDire = playerPixelPos.sub(new Vector2f(myPosition.x, playerPixelPos.y)).normalize().mul(_projektilSpeed);
+
+        System.out.println(shootDire);
+
+        int heightOffset = 90;
+        Random rand = new Random();
+        if (rand.nextBoolean()) {
+            heightOffset = 120;
+        }
+
+        // Create the Projektil
+        Projektil newProjectil = _projektil.getDeclaredConstructor().newInstance();
+        newProjectil.init(myPosition.add(new Vector2f(0, heightOffset)), new Vector2f(shootDire.x, 0));
+        myDimension.addProjektil(newProjectil);
     }
 
 }

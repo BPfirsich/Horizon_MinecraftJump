@@ -144,7 +144,7 @@ public class GameDimension {
 
         // Spieler Updaten
         _spieler.update(deltaTime, inputData);
-        _boss.update(deltaTime, new Vector2f((float)_spieler.getFigur().getX(), (float)_spieler.getFigur().getY()));
+        if(_boss != null) _boss.update(deltaTime, new Vector2f((float)_spieler.getFigur().getX(), (float)_spieler.getFigur().getY()));
 
         // Gegner Updaten
         for (Gegner g : _gegnerListe) {
@@ -160,18 +160,20 @@ public class GameDimension {
         // y=0 death checken
         if (_spieler.getFigur().getY() >= 650) {
             sterben();
+            return;
         }
 
         // Gucken ob bei chest
-        if(_chestPos != null) {
-            float distanceToChest = loadedLevelData.calcPixelCordsFromTile((int)_chestPos.x, (int)_chestPos.y, cameraPosition, false)
-                    .sub(new Vector2f((int)_spieler.getFigur().getX(), (int)_spieler.getFigur().getY())).length();
+        if (_chestPos != null) {
+            float distanceToChest = loadedLevelData.calcPixelCordsFromTile((int) _chestPos.x, (int) _chestPos.y, cameraPosition, false)
+                    .sub(new Vector2f((int) _spieler.getFigur().getX(), (int) _spieler.getFigur().getY())).length();
 
-            System.out.println(distanceToChest);
-            /*if(distanceToChest <= 25) {
+            //System.out.println(distanceToChest);
+            if(distanceToChest <= 30) {
+                _spieler = null; // Spieler auf null setzten um irgendwie ganz komische fehler zu fixen
                 _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
                 return;
-            }*/
+            }
         }
 
         // Camera bewegen
@@ -408,22 +410,22 @@ public class GameDimension {
 
                             case 'G': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                                _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Pfeil.class,
-                                        1, 500, self, new Vector2f(571 / 5.7f, 1103 / 5.7f));
+                                _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Energieball.class,
+                                        2f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600);
                                 break;
                             }
 
                             case 'K': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                                _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, Pfeil.class,
-                                        1, 500, self, new Vector2f(839 / 5.3f, 1069 / 5.3f));
+                                _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, Energieball.class,
+                                        1, 500, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 5);
                                 break;
                             }
 
                             case 'E': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, Pfeil.class,
-                                        1, 500, self, new Vector2f(571 / 5.7f, 1103 / 5.7f));
+                                        1, 500, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 5);
                                 break;
                             }
                         }
@@ -497,7 +499,7 @@ public class GameDimension {
 
         // Move All Objects
         _spieler.getFigur().setX(_spieler.getFigur().getX() + x);
-        _boss.imageView.setX(_boss.imageView.getX() + x);
+        if(_boss != null) _boss.imageView.setX(_boss.imageView.getX() + x);
         for (Gegner g : _gegnerListe) {
             g.getFigur().setX(g.getFigur().getX() + x);
         }
@@ -521,6 +523,9 @@ public class GameDimension {
         }
         _root.getChildren().remove(_spieler.getFigur());
         _root.getChildren().remove(_spieler.getSprite());
+
+        _root.getChildren().remove(_boss.imageView);
+        _boss = null;
 
         _mapTilesListe.clear();
         _projektilList.clear();
