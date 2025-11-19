@@ -16,7 +16,7 @@ public class GameDimension {
     private Pane _root;
 
     private MatchLeben _matchLeben;
-    private SoundPlayer _soundPlayer;
+    public SoundPlayer _soundPlayer;
 
     private Image _grassBlockImg;
     private Image _dirtBlockImg;

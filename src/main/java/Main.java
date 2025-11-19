@@ -21,11 +21,17 @@ public class Main extends Application {
         stage.setScene(Menu.erstelleMenuScene(
                 this,
                 e -> { // Start Game
+                    _soundPlayer.clickSoundPlayer.stop();
+                    _soundPlayer.clickSoundPlayer.play();
+
                     _matchLeben = new MatchLeben(5);
                     goToLevel("o1", stage);
                     return e;
                 },
                 e -> { // Level Selector
+                    _soundPlayer.clickSoundPlayer.stop();
+                    _soundPlayer.clickSoundPlayer.play();
+
                     switchToLevelMenu(stage);
                     return e;
                 }
@@ -35,11 +41,17 @@ public class Main extends Application {
         stage.setScene(Menu.erstelleLevelAuswahlScene(
                 this,
                 s -> {
+                    _soundPlayer.clickSoundPlayer.stop();
+                    _soundPlayer.clickSoundPlayer.play();
+
                     _matchLeben = new MatchLeben(5);
                     goToLevel(s, stage);
                     return null;
                 },
                 e -> {
+                    _soundPlayer.clickSoundPlayer.stop();
+                    _soundPlayer.clickSoundPlayer.play();
+
                     switchToMainMenu(stage);
                     return e;
                 }
