@@ -1,3 +1,4 @@
+import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -85,8 +86,6 @@ public class Boss {
         // Calc the shooting dire
         Vector2f shootDire = playerPixelPos.sub(new Vector2f(myPosition.x, playerPixelPos.y)).normalize().mul(_projektilSpeed);
 
-        System.out.println(shootDire);
-
         int heightOffset = 90;
         Random rand = new Random();
         if (rand.nextBoolean()) {
@@ -97,6 +96,27 @@ public class Boss {
         Projektil newProjectil = _projektil.getDeclaredConstructor().newInstance();
         newProjectil.init(myPosition.add(new Vector2f(0, heightOffset)), new Vector2f(shootDire.x, 0));
         myDimension.addProjektil(newProjectil);
-    }
 
+        AnimationTimer showShootTexture = new AnimationTimer() {
+            static final long showLengthMs = (long)(0.25 * 1_000_000_000.0);
+
+            private long startTime = -1;
+
+            @Override
+            public void handle(long l) {
+                if (startTime == -1) {
+                    startTime = l;
+                    imageView.setImage(_shootImage);
+                    System.out.println("whooo");
+                }
+
+                if (l >= (startTime + showLengthMs)) {
+                    imageView.setImage(_idleImage);
+                    this.stop();
+                    System.out.println("hoooo");
+                }
+            }
+        };
+        showShootTexture.start();
+    }
 }

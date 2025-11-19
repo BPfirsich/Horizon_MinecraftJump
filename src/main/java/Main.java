@@ -75,6 +75,7 @@ public class Main extends Application {
 
         switchToMainMenu(stage);
         stage.setTitle("Horizon Minecraft Jump");
+        stage.setResizable(false);
         stage.show();
 
 

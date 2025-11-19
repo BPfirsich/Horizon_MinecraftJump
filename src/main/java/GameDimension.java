@@ -411,7 +411,7 @@ public class GameDimension {
                             case 'G': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Energieball.class,
-                                        2f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600);
+                                        1.5f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600);
                                 break;
                             }
 
