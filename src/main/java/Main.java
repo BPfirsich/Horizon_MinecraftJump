@@ -18,19 +18,19 @@ public class Main extends Application {
     private WeltenManager weltenManager = null;
 
     void switchToMainMenu(Stage stage) {
+        _soundPlayer.setMusic("mainMenu");
+
         stage.setScene(Menu.erstelleMenuScene(
                 this,
                 e -> { // Start Game
-                    _soundPlayer.clickSoundPlayer.stop();
-                    _soundPlayer.clickSoundPlayer.play();
+                    _soundPlayer.playSound("click", 1);
 
                     _matchLeben = new MatchLeben(5);
                     goToLevel("o1", stage);
                     return e;
                 },
                 e -> { // Level Selector
-                    _soundPlayer.clickSoundPlayer.stop();
-                    _soundPlayer.clickSoundPlayer.play();
+                    _soundPlayer.playSound("click", 1);
 
                     switchToLevelMenu(stage);
                     return e;
@@ -38,19 +38,19 @@ public class Main extends Application {
         ));
     }
     void switchToLevelMenu(Stage stage) {
+        _soundPlayer.setMusic("mainMenu");
+
         stage.setScene(Menu.erstelleLevelAuswahlScene(
                 this,
                 s -> {
-                    _soundPlayer.clickSoundPlayer.stop();
-                    _soundPlayer.clickSoundPlayer.play();
+                    _soundPlayer.playSound("click", 1);
 
                     _matchLeben = new MatchLeben(5);
                     goToLevel(s, stage);
                     return null;
                 },
                 e -> {
-                    _soundPlayer.clickSoundPlayer.stop();
-                    _soundPlayer.clickSoundPlayer.play();
+                    _soundPlayer.playSound("click", 1);
 
                     switchToMainMenu(stage);
                     return e;
@@ -71,6 +71,8 @@ public class Main extends Application {
         //Scene Level = new Scene(root);
         //stage.setScene(Level);
 
+        _soundPlayer = new SoundPlayer();
+
         switchToMainMenu(stage);
         stage.setTitle("Horizon Minecraft Jump");
         stage.show();
@@ -80,7 +82,7 @@ public class Main extends Application {
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(stage.getScene());
 
-        _soundPlayer = new SoundPlayer();
+
 
         weltenManager = new WeltenManager();
 

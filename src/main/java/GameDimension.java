@@ -397,6 +397,8 @@ public class GameDimension {
                 _matchLeben.erstelleHerzen(_root);
                 _matchLeben.updateHerzen();
 
+                _soundPlayer.setMusic(lvl.myMusicKey);
+
                 _root.getChildren().remove(loadingView);
 
                 // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
@@ -463,8 +465,7 @@ public class GameDimension {
     }
 
     private void sterben() {
-        _soundPlayer.deathSoundPlayer.stop();
-        _soundPlayer.deathSoundPlayer.play();
+        _soundPlayer.playSound("death", 1);
 
         _matchLeben.herzen--;
         _matchLeben.clearHerzen(_root);

@@ -12,12 +12,13 @@ public class LevelData {
             Arrays.asList('#', '+', '<', '>', 'l', 'r', 'u', 's', '7', '8', 'd', '5', '6', 'n', 'c', 'v', 'e')
     );
 
-    public LevelData(String name, int anzahlFloors, BackgroundImage background, Image loading, String nextKey) {
+    public LevelData(String name, int anzahlFloors, BackgroundImage background, Image loading, String nextKey, String myMusicKey) {
         stufe = new String[anzahlFloors];
         levelName = name;
         levelBackground = background;
         loadingScreen = loading;
         nextLevelKey = nextKey;
+        this.myMusicKey = myMusicKey;
     }
 
     // array[y]: y=0 ist der Boden, x=0 ist links der anfang vom level. (vom string)
@@ -28,6 +29,8 @@ public class LevelData {
     public final BackgroundImage levelBackground;
     public final Image loadingScreen;
     public final String nextLevelKey;
+
+    public final String myMusicKey;
 
     public boolean isBereichSolide(float x, int y) {
         x = (float)Math.floor(x);
