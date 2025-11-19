@@ -418,14 +418,14 @@ public class GameDimension {
                             case 'K': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, Energieball.class,
-                                        1, 500, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 5);
+                                        2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450);
                                 break;
                             }
 
                             case 'E': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                                _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, Pfeil.class,
-                                        1, 500, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 5);
+                                _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, Energieball.class,
+                                        0.7f, 500, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 900);
                                 break;
                             }
                         }

@@ -36,6 +36,11 @@ public class Energieball implements Projektil {
 
     @Override
     public boolean isFromPlayer() {
+        return false; // Energiebälle können nur von bossen geschossen werden, deshalb immer false
+    }
+
+    @Override
+    public boolean doesHitPlayer() {
         return false;
     }
 }

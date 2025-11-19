@@ -54,4 +54,11 @@ public class Pfeil implements Projektil {
         // Pfeile können nur vom spieler sein, deshalb immer true
         return true;
     }
+
+    @Override
+    public boolean doesHitPlayer() {
+        return false;
+    }
+
+
 }

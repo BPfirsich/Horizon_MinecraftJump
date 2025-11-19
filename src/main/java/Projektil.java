@@ -6,4 +6,5 @@ public interface Projektil {
 
     ImageView getSprite();
     boolean isFromPlayer();
+    boolean doesHitPlayer();
 }
