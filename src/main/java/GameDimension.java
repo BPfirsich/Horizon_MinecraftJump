@@ -410,7 +410,7 @@ public class GameDimension {
 
                             case 'K': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                                _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, Energieball.class,
+                                _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, KaktusEnergie.class,
                                         2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450, 90);
                                 break;
                             }
@@ -424,7 +424,7 @@ public class GameDimension {
 
                             case 'E': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                                _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, Energieball.class,
+                                _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, DrachenAtem.class,
                                         0.7f, 2000, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 900, 341);
                                 break;
                             }
