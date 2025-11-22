@@ -135,10 +135,26 @@ class Spieler {
         }
 
         // Update the floor Y Pos
-        Vector2f currentTilePos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true);
-        int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX(currentTilePos.x, (int)currentTilePos.y);
+        // Wir überprüfen die hohe auf der linknen UND rechten seite von dem spieler. Das höher Y gewinnt
+        final float tinyOffset = 8; // Damit der spieler nicht in der Luft fliegen kann
+        Vector2f currentTilePosLeft = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX() + tinyOffset, (float)_figur.getY(), _myDimension.cameraPosition, false);
+        int stufeYMitBodenLeft = _myDimension.loadedLevelData.getNextFloorOnX(currentTilePosLeft.x, (int)currentTilePosLeft.y);
+        Vector2f currentTilePosRechts = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX() + BREITE - tinyOffset, (float)_figur.getY(), _myDimension.cameraPosition, false);
+        int stufeYMitBodenRechts = _myDimension.loadedLevelData.getNextFloorOnX(currentTilePosRechts.x, (int)currentTilePosRechts.y);
+
+        int finalStufeYMitBoden = 0;
+        Vector2f finalCurrentTilePos = null;
+        if (stufeYMitBodenLeft > stufeYMitBodenRechts) {
+            finalStufeYMitBoden = stufeYMitBodenLeft;
+            finalCurrentTilePos = currentTilePosLeft;
+        }
+        else {
+            finalStufeYMitBoden = stufeYMitBodenRechts;
+            finalCurrentTilePos = currentTilePosRechts;
+        }
+
         updateFloorYHeight(
-                (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)currentTilePos.x, stufeYMitBoden, _myDimension.cameraPosition, true).y
+                (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)finalCurrentTilePos.x, finalStufeYMitBoden, _myDimension.cameraPosition, false).y
         );
 
         // Springen
