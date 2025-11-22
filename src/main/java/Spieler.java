@@ -71,52 +71,8 @@ class Spieler {
         //System.out.println(_myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true));
 
         // Movement
-        float speedMulti = 1.0f;
-        if (!_amBoden) speedMulti = 1.2f;
-
-        if (inputData.isTasteLinks()) {
-            _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
-            _sprite.setScaleX(-1);
-
-            // Überprüfen ob wir in ein tile reingelaufen sind
-            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true);
-            if(_myDimension.loadedLevelData.isBereichSolide(walkedPos.x, (int)walkedPos.y)) {
-                // Zurücklaufen da wir nun im tile drinnen sind lol
-                _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
-            }
-
-            // Spieler nicht nach links rauslaufen lassen
-            if(_figur.getX() <= 0) _figur.setX(0);
-
-            // Check if the next pos has the same height as the current. If it is not the case, move back
-            int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX(walkedPos.x, 2);
-            int movedHeight =
-                    (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)walkedPos.x, stufeYMitBoden, _myDimension.cameraPosition, true).y;
-            if(calcFloorHeight(movedHeight) < _bodenYPlayerScale && _amBoden) {
-                // Zurücklaufen, da andere höhe
-                _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
-            }
-        }
-        if (inputData.isTasteRechts()) {
-            _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime));
-            _sprite.setScaleX(1);
-
-            // Überprüfen ob wir in ein tile reingelaufen sind
-            Vector2f walkedPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, true);
-            if(_myDimension.loadedLevelData.isBereichSolide(walkedPos.x, (int)walkedPos.y)) {
-                // Zurücklaufen da wir nun im tile drinnen sind lol
-                _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
-            }
-
-            // Check if the next pos has the same height as the current. If it is not the case, move back
-            int stufeYMitBoden = _myDimension.loadedLevelData.getNextFloorOnX(walkedPos.x, 2);
-            int movedHeight =
-                    (int)_myDimension.loadedLevelData.calcPixelCordsFromTile((int)walkedPos.x, stufeYMitBoden, _myDimension.cameraPosition, true).y;
-            if(calcFloorHeight(movedHeight) < _bodenYPlayerScale && _amBoden) {
-                // Zurücklaufen, da andere höhe
-                _figur.setX(_figur.getX() - (_xSpeed * speedMulti * deltaTime));
-            }
-        }
+        if (inputData.isTasteLinks()) movePlayer(deltaTime, -1, true);
+        if (inputData.isTasteRechts()) movePlayer(deltaTime, 1, true);
 
         // Schießen
         if (inputData.isTasteSchussOnce()) {
@@ -144,13 +100,39 @@ class Spieler {
 
         int finalStufeYMitBoden = 0;
         Vector2f finalCurrentTilePos = null;
-        if (stufeYMitBodenLeft > stufeYMitBodenRechts) {
+        if ((float)stufeYMitBodenRechts > stufeYMitBodenLeft) { // Rechts ist eine Wand/Höhere Stelle
+            //System.out.println("rechts höher");
+            // Wenn der Spieler niedriger als der höste punkte ist, dann läuft er gegen eine wand.
+            // D.h. wir müssen den Spieler wieder weg bewegen aus der wand: *KOLLISION :D*
+            // -2.9 weil da irgendwie ein komisches offset ist idk
+            if ((currentTilePosRechts.y -2.9f) < (float)stufeYMitBodenRechts) {
+                movePlayer(deltaTime, -1, false);
+                finalStufeYMitBoden = stufeYMitBodenLeft;
+                finalCurrentTilePos = currentTilePosLeft;
+            }
+            else {
+                finalStufeYMitBoden = stufeYMitBodenRechts;
+                finalCurrentTilePos = currentTilePosRechts;
+            }
+        }
+        else if ((float)stufeYMitBodenLeft > stufeYMitBodenRechts) { // Links ist eine Wand/Höhere Stelle
+            //System.out.println("links höher");
+            // Wenn der Spieler niedriger als der höste punkte ist, dann läuft er gegen eine wand.
+            // D.h. wir müssen den Spieler wieder weg bewegen aus der wand: *KOLLISION :D*
+            // -2.9 weil da irgendwie ein komisches offset ist idk
+            if (currentTilePosLeft.y-2.9f < (float)stufeYMitBodenLeft) {
+                movePlayer(deltaTime, 1, false);
+                finalStufeYMitBoden = stufeYMitBodenRechts;
+                finalCurrentTilePos = currentTilePosRechts;
+            }
+            else {
+                finalStufeYMitBoden = stufeYMitBodenLeft;
+                finalCurrentTilePos = currentTilePosLeft;
+            }
+        }
+        else if (stufeYMitBodenLeft == stufeYMitBodenRechts) {
             finalStufeYMitBoden = stufeYMitBodenLeft;
             finalCurrentTilePos = currentTilePosLeft;
-        }
-        else {
-            finalStufeYMitBoden = stufeYMitBodenRechts;
-            finalCurrentTilePos = currentTilePosRechts;
         }
 
         updateFloorYHeight(
@@ -203,6 +185,18 @@ class Spieler {
 
 
 
+    private void movePlayer(float deltaTime, float direMultiplier, boolean changePlayerDire) {
+        float speedMulti = 1.0f;
+        if (isSneaking()) speedMulti = 0.3f;
+        if (!_amBoden) speedMulti = 1.2f;
+
+        _figur.setX(_figur.getX() + (_xSpeed * speedMulti * deltaTime) * direMultiplier);
+
+        if (changePlayerDire) {
+            if (direMultiplier < 0) _sprite.setScaleX(-1);
+            else _sprite.setScaleX(1);
+        }
+    }
 
     private void springen() {
         if (_amBoden) {
