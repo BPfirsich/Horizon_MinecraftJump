@@ -27,8 +27,10 @@ public class Boss {
 
     public final ImageView imageView;
 
+    public float health;
+
     public Boss (Vector2f spawnPos, Image idleImage, Image shootImage, Class<? extends Projektil> projektil, float shootInterval,
-                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel, float projektilSpeed, int shootHeightOffset) {
+                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel, float projektilSpeed, int shootHeightOffset, float health) {
         _idleImage = idleImage;
         _shootImage = shootImage;
         _projektil = projektil;
@@ -36,6 +38,7 @@ public class Boss {
         _attackDistancePixels = attackDistancePixels;
         _projektilSpeed = projektilSpeed;
         _shootHeightOffset = shootHeightOffset;
+        this.health = health;
 
         _timeSinceLastShotSeconds = 0f;
 

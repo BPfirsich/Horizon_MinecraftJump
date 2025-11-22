@@ -9,8 +9,9 @@ class Spieler {
     private ImageView _sprite;  // Neues sichtbares Bild
 
     // Konstanten für die Spielergröße und Boden
-    private static final float BREITE = 1000/16;
-    private static final float HOEHE = 1100/16;
+    private static final float BREITE = 821/16;
+    private static final float HOEHE = 1046/16;
+    private static final float HOEHE_SNEAKEN = 821/16;
     private static final float BODEN_Y = 400;
 
     // Bilder für verschiedene Aktionen
@@ -150,13 +151,19 @@ class Spieler {
         // Hitbox & Sprite anpassen
         if (inputData.isTasteDucken()) {
             setImage(_duckenImage);
+            _figur.setHeight(HOEHE_SNEAKEN);
+            _sprite.setFitHeight(HOEHE_SNEAKEN);
         }
         else if (inputData.isTasteSchuss()) {
             setImage(_schiessenImage);
+            _figur.setHeight(HOEHE);
+            _sprite.setFitHeight(HOEHE);
         }
         else {
             // Nichts wird gedrückt => Idle-Image
             setImage(_idleImage);
+            _figur.setHeight(HOEHE);
+            _sprite.setFitHeight(HOEHE);
         }
 
         // Hitbox Y mit Gravitation
@@ -174,7 +181,9 @@ class Spieler {
         _sprite.setY(_figur.getY());
     }
 
-
+    public boolean isSneaking() {
+        return _sprite.getImage() == _duckenImage;
+    }
 
 
 
@@ -203,5 +212,9 @@ class Spieler {
         }
 
         _bodenYPlayerScale = calcFloorHeight(newPixelY);
+
+        // If sneaking add the offset
+        if (isSneaking()) _bodenYPlayerScale += HOEHE - HOEHE_SNEAKEN;
+
     }
 }

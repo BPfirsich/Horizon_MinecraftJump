@@ -17,8 +17,8 @@ public class KaktusEnergie implements Projektil {
         imageView = new ImageView(myTexture);
         imageView.setX(startPos.x);
         imageView.setY(startPos.y);
-        imageView.setFitWidth(256/3);
-        imageView.setFitHeight(240/3);
+        imageView.setFitWidth(159/3);
+        imageView.setFitHeight(159/3);
 
         _dire = new Vector2f(startDire);
     }
@@ -40,7 +40,14 @@ public class KaktusEnergie implements Projektil {
     }
 
     @Override
-    public boolean doesHitPlayer() {
-        return false;
+    public boolean doesHitPlayer(ImageView playerView) {
+        if (imageView == null) return false;
+
+        return Projektil.aabbCollision(imageView, playerView);
+    }
+
+    @Override
+    public boolean doesHitBoss(ImageView bossView) {
+        return false; // False because it's a Boss-Ball anyways
     }
 }

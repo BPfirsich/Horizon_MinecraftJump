@@ -99,7 +99,7 @@ public class Main extends Application {
 
                 // Alle funktionen callen, die pro frame vorkommen
                 _inputData.inputSystemUpdate();
-                update(deltaTime * 1);
+                update(deltaTime * 1.0f);
             }
         };
         // TESTING ---

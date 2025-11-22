@@ -56,9 +56,14 @@ public class Pfeil implements Projektil {
     }
 
     @Override
-    public boolean doesHitPlayer() {
-        return false;
+    public boolean doesHitPlayer(ImageView playerView) {
+        return false; // False because the Arrow is only used by the Player
     }
 
+    @Override
+    public boolean doesHitBoss(ImageView bossView) {
+        if(_sprite == null) return false;
 
+        return Projektil.aabbCollision(_sprite, bossView);
+    }
 }

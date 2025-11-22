@@ -156,6 +156,23 @@ public class GameDimension {
             p.update(deltaTime);
         }
 
+        // Projektil-Kollisionen Checken
+        ArrayList<Projektil> projektileZumZerstoeren = new ArrayList<>();
+        for (Projektil p : _projektilList) {
+            if (p.doesHitPlayer(_spieler.getSprite())) {
+                _matchLeben.herzen--;
+                _matchLeben.updateHerzen();
+
+                projektileZumZerstoeren.add(p);
+                _root.getChildren().remove(p.getSprite());
+            }
+            if (_boss != null && p.doesHitBoss(_boss.imageView)) {
+                projektileZumZerstoeren.add(p);
+                _root.getChildren().remove(p.getSprite());
+            }
+        }
+        _projektilList.removeAll(projektileZumZerstoeren);
+
         //System.out.println(_spieler.getFigur().getY());
         // y=0 death checken
         if (_spieler.getFigur().getY() >= 650) {
@@ -411,21 +428,21 @@ public class GameDimension {
                             case 'K': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, KaktusEnergie.class,
-                                        2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450, 90);
+                                        2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450, 95, 200);
                                 break;
                             }
 
                             case 'G': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Energieball.class,
-                                        1.5f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600, 90);
+                                        1.5f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600, 95, 400);
                                 break;
                             }
 
                             case 'E': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, DrachenAtem.class,
-                                        0.7f, 2000, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 900, 341);
+                                        0.7f, 2000, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 900, 345, 600);
                                 break;
                             }
                         }
