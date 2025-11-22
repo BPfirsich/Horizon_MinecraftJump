@@ -2,10 +2,14 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 import javafx.animation.AnimationTimer;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class GameDimension {
 
@@ -73,6 +77,8 @@ public class GameDimension {
     private Vector2f _chestPos = null;
 
     private Function<String, Void> _levelLoadFunc;
+
+    private Text levelNameText;
 
     public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer, Function<String, Void> lvlLoadFunc) {
         f_dimensionName = name;
@@ -195,6 +201,11 @@ public class GameDimension {
 
         // Camera bewegen
         moveCamera(deltaTime);
+
+        // Level Text langsam unsibar machen
+        if (levelNameText != null && levelNameText.getOpacity() > 0) {
+            levelNameText.setOpacity(levelNameText.getOpacity() - 0.4f * deltaTime);
+        }
     }
 
     // Fügt einen gegner zur Dimension hinzu, und fügt dessen Rectangle zur scene hinzu
@@ -461,13 +472,29 @@ public class GameDimension {
 
                 _root.getChildren().remove(loadingView);
 
+                // Level Text
+                levelNameText = new Text(lvl.levelName);
+                levelNameText.setFont(Font.loadFont(getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 110));
+                levelNameText.setFill(Color.WHITE);
+
+                // Schatten-Effekt
+                DropShadow ds = new DropShadow();
+                ds.setOffsetX(4);    // Verschiebung X
+                ds.setOffsetY(4);    // Verschiebung Y
+                ds.setColor(Color.GRAY); // Schattenfarbe
+                levelNameText.setEffect(ds);
+
+                levelNameText.setX(1280 / 2 - levelNameText.getLayoutBounds().getWidth() / 2);
+                levelNameText.setY(720 / 2 + levelNameText.getLayoutBounds().getHeight() / 2 - 100);
+
+                _root.getChildren().add(levelNameText);
+
                 // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
                 //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
             }
         };
 
         loadingTimer.start();
-
 
     }
 
@@ -540,6 +567,8 @@ public class GameDimension {
         }
         _root.getChildren().remove(_spieler.getFigur());
         _root.getChildren().remove(_spieler.getSprite());
+
+        _root.getChildren().remove(levelNameText);
 
         if(_boss != null) _root.getChildren().remove(_boss.imageView);
         _boss = null;
