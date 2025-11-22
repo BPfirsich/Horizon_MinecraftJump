@@ -82,6 +82,11 @@ class Spieler {
             float ARROW_VEL_X = 1000;
             float ARROW_VEL_Y = -250;
 
+            if (isSneaking()) {
+                ARROW_VEL_X *= 1.2f;
+                ARROW_VEL_Y *= 2f;
+            }
+
             if(_sprite.getScaleX() < 0) ARROW_VEL_X *= -1;
 
             Pfeil pfeil = new Pfeil();
