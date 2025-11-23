@@ -1,6 +1,7 @@
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -29,8 +30,12 @@ public class Boss {
 
     public float health;
 
+    public final String bossName;
+    public final Color bossColor;
+
     public Boss (Vector2f spawnPos, Image idleImage, Image shootImage, Class<? extends Projektil> projektil, float shootInterval,
-                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel, float projektilSpeed, int shootHeightOffset, float health) {
+                 float attackDistancePixels, GameDimension gameDimension, Vector2f sizePixel, float projektilSpeed, int shootHeightOffset, float health,
+                 String bossName, Color bossColor) {
         _idleImage = idleImage;
         _shootImage = shootImage;
         _projektil = projektil;
@@ -39,6 +44,9 @@ public class Boss {
         _projektilSpeed = projektilSpeed;
         _shootHeightOffset = shootHeightOffset;
         this.health = health;
+
+        this.bossName = bossName;
+        this.bossColor = bossColor;
 
         _timeSinceLastShotSeconds = 0f;
 

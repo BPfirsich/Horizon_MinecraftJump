@@ -22,6 +22,7 @@ public class GameDimension {
     private Boss _boss;
 
     private MatchLeben _matchLeben;
+    private Bossbar _bossbar;
     public SoundPlayer _soundPlayer;
 
     private Image _grassBlockImg;
@@ -174,6 +175,8 @@ public class GameDimension {
             }
             if (_boss != null && p.doesHitBoss(_boss.imageView)) {
                 projektileZumZerstoeren.add(p);
+                _boss.health -= 20;
+                _bossbar.updateBossbar(_boss.health);
                 _root.getChildren().remove(p.getSprite());
             }
         }
@@ -439,21 +442,24 @@ public class GameDimension {
                             case 'K': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _kaktusIdleImg, _kaktusIdleImg, KaktusEnergie.class,
-                                        2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450, 95, 200);
+                                        2.5f, 1000, self, new Vector2f(839 / 5.3f, 1069 / 5.3f), 450, 95, 500,
+                                        "Kaktus", Color.GREEN);
                                 break;
                             }
 
                             case 'G': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _creeperIdleImg, _creeperShootImg, Energieball.class,
-                                        1.5f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600, 95, 400);
+                                        1.5f, 800, self, new Vector2f(571 / 5.7f, 1103 / 5.7f), 600, 95, 1000,
+                                        "Creeper", Color.LIME);
                                 break;
                             }
 
                             case 'E': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 _boss = new Boss(spawnPos, _dragonIdleImg, _dragonShootImg, DrachenAtem.class,
-                                        0.7f, 2000, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 900, 345, 600);
+                                        1.2f, 2000, self, new Vector2f(1129 / 1.6f, 783 / 1.6f), 650, 345, 2500,
+                                        "Ender Dragon", Color.PURPLE);
                                 break;
                             }
                         }
@@ -472,22 +478,29 @@ public class GameDimension {
 
                 _root.getChildren().remove(loadingView);
 
-                // Level Text
-                levelNameText = new Text(lvl.levelName);
-                levelNameText.setFont(Font.loadFont(getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 110));
-                levelNameText.setFill(Color.WHITE);
+                if (showLoadingScreen) { // Wenn Kein Ladescren kommt dann ist man logischer weiße schonmal gestorben
+                    // Level Text
+                    levelNameText = new Text(lvl.levelName);
+                    levelNameText.setFont(Font.loadFont(getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 110));
+                    levelNameText.setFill(Color.WHITE);
 
-                // Schatten-Effekt
-                DropShadow ds = new DropShadow();
-                ds.setOffsetX(4);    // Verschiebung X
-                ds.setOffsetY(4);    // Verschiebung Y
-                ds.setColor(Color.GRAY); // Schattenfarbe
-                levelNameText.setEffect(ds);
+                    // Schatten-Effekt
+                    DropShadow ds = new DropShadow();
+                    ds.setOffsetX(4);    // Verschiebung X
+                    ds.setOffsetY(4);    // Verschiebung Y
+                    ds.setColor(Color.GRAY); // Schattenfarbe
+                    levelNameText.setEffect(ds);
 
-                levelNameText.setX(1280 / 2 - levelNameText.getLayoutBounds().getWidth() / 2);
-                levelNameText.setY(720 / 2 + levelNameText.getLayoutBounds().getHeight() / 2 - 100);
+                    levelNameText.setX(1280 / 2 - levelNameText.getLayoutBounds().getWidth() / 2);
+                    levelNameText.setY(720 / 2 + levelNameText.getLayoutBounds().getHeight() / 2 - 100);
 
-                _root.getChildren().add(levelNameText);
+                    _root.getChildren().add(levelNameText);
+                }
+
+                if(_boss != null) {
+                    _bossbar = new Bossbar(_boss.health, _boss.bossName, _boss.bossColor);
+                    _bossbar.erstelleBossbar(_root);
+                }
 
                 // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
                 //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
