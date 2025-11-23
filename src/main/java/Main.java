@@ -1,12 +1,8 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.css.Match;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
-import java.rmi.server.ExportException;
 
 public class Main extends Application {
 
@@ -34,6 +30,18 @@ public class Main extends Application {
 
                     switchToLevelMenu(stage);
                     return e;
+                },
+                e -> { // Highscore Scene
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToHighscoreMenu(stage);
+                    return e;
+                },
+                e -> { // Story Scene
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToStoryMenu(stage);
+                    return e;
                 }
         ));
     }
@@ -57,19 +65,87 @@ public class Main extends Application {
                 }
         ));
     }
+    void switchToHighscoreMenu(Stage stage) {
+        _soundPlayer.setMusic("mainMenu");
+
+        stage.setScene(Menu.erstelleHighcoreScene(
+                this,
+                e -> { // Back bt
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToMainMenu(stage);
+                    return e;
+                }
+        ));
+    }
+    void switchToStoryMenu(Stage stage) {
+        _soundPlayer.setMusic("mainMenu");
+
+        stage.setScene(Menu.erstelleStoryScene(
+                this,
+                e -> { // Back bt
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToMainMenu(stage);
+                    return e;
+                },
+                e -> { // Credits bt
+                    _soundPlayer.playSound("click", 1);
+
+                    System.out.println("Credits :OOOO");
+                    return e;
+                }
+        ));
+    }
+    void switchToWinScreen(Stage stage) {
+        _soundPlayer.setMusic("win");
+
+        stage.setScene(Menu.erstelleWinScene(
+                this,
+                e -> { // Menu bt
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToMainMenu(stage);
+                    return e;
+                },
+                e -> { // Restart bt
+                    _soundPlayer.playSound("click", 1);
+
+                    _matchLeben = new MatchLeben(5);
+                    goToLevel("o1", stage);
+                    return e;
+                }
+        ));
+    }
+    void switchToFailScreen(Stage stage) {
+        _soundPlayer.setMusic("fail");
+
+        stage.setScene(Menu.erstelleDeathScene(
+                this,
+                e -> { // Respawn
+                    _soundPlayer.playSound("click", 1);
+
+                    _matchLeben = new MatchLeben(5);
+                    goToLevel("o1", stage);
+                    return e;
+                },
+                e -> { // Lvl Auswahl
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToLevelMenu(stage);
+                    return e;
+                },
+                e -> { // Menu
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToMainMenu(stage);
+                    return e;
+                }
+        ));
+    }
 
     @Override
     public void start(Stage stage) {
-        // JavaFX Setup
-        //Pane root = new Pane();
-        //root.setPrefSize(1280, 720);
-
-        //Scene Menu = new Scene(root);
-        //stage.setScene(Menu);
-
-
-        //Scene Level = new Scene(root);
-        //stage.setScene(Level);
 
         _soundPlayer = new SoundPlayer();
 
@@ -78,12 +154,9 @@ public class Main extends Application {
         stage.setResizable(false);
         stage.show();
 
-
         // Funktionsklassen Setup
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(stage.getScene());
-
-
 
         weltenManager = new WeltenManager();
 
@@ -107,6 +180,10 @@ public class Main extends Application {
 
         // start Game loop
         timer.start();
+
+        // DAS HIER ÄNDERN LOL
+        //switchToWinScreen(stage);
+        // DAS HIER ÄNDERN LOL
     }
 
     private void update(float deltaTime) {
