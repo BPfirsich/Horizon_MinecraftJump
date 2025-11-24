@@ -96,6 +96,8 @@ public class Boss {
     }
 
     private void shoot(Vector2f playerPixelPos, Vector2f myPosition) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        myDimension._soundPlayer.playSound("gegnerSchuss", 1.0);
+
         // Calc the shooting dire
         Vector2f shootDire = playerPixelPos.sub(new Vector2f(myPosition.x, playerPixelPos.y)).normalize().mul(_projektilSpeed);
 

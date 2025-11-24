@@ -18,6 +18,10 @@ public class SoundPlayer {
         soundHashMap.put("death", new Media(getClass().getResource("death.wav").toString()));
         soundHashMap.put("click", new Media(getClass().getResource("click.wav").toString()));
         soundHashMap.put("schuss", new Media(getClass().getResource("shot.wav").toString()));
+        soundHashMap.put("gegnerSchuss", new Media(getClass().getResource("GegnerSchuss.wav").toString()));
+        soundHashMap.put("jump", new Media(getClass().getResource("JumpSound.wav").toString()));
+        soundHashMap.put("jumpLand", new Media(getClass().getResource("JumpLanding.wav").toString()));
+        soundHashMap.put("sneak", new Media(getClass().getResource("sneak.wav").toString()));
 
         // Setup Music
         musicHashMap = new HashMap<>();

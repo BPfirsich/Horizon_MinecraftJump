@@ -153,6 +153,10 @@ class Spieler {
 
         // Hitbox & Sprite anpassen
         if (inputData.isTasteDucken()) {
+            if (_sprite.getImage() != _duckenImage) {
+                _myDimension._soundPlayer.playSound("sneak", 1.0);
+            }
+
             setImage(_duckenImage);
             _figur.setHeight(HOEHE_SNEAKEN);
             _sprite.setFitHeight(HOEHE_SNEAKEN);
@@ -174,6 +178,8 @@ class Spieler {
 
         // Boden-Kollision
         if (_figur.getY() > _bodenYPlayerScale && _ySpeed >= 0) {
+            if(!_amBoden && !isSneaking()) _myDimension._soundPlayer.playSound("jumpLand", 0.3);
+
             _figur.setY(_bodenYPlayerScale);
             _amBoden = true;
             _ySpeed = 0;
@@ -207,6 +213,8 @@ class Spieler {
         if (_amBoden) {
             _ySpeed = -1000; // Sprungkraft
             _amBoden = false;
+
+            _myDimension._soundPlayer.playSound("jump", 1.0);
         }
     }
 

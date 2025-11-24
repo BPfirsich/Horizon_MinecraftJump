@@ -196,7 +196,7 @@ public class Main extends Application {
         timer.start();
 
         // DAS HIER ÄNDERN LOL
-        //switchToWinScreen(stage);
+        //switchToFailScreen(stage);
         // DAS HIER ÄNDERN LOL
     }
 
