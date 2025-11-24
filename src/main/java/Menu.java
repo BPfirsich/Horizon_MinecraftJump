@@ -294,7 +294,7 @@ public class Menu {
 
     public static Scene erstelleWinScene(Main classInstance, Function<Void, Void> meunFunction, Function<Void, Void> restartFunction) {
         Pane root = new Pane();
-        Scene newScene = createSceneBase(classInstance, root, "/screen_win.png");
+        Scene newScene = createSceneBase(classInstance, root, "/screen_win_mc.png");
 
         Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 40);
 
