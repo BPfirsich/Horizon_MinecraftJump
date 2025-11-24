@@ -32,6 +32,8 @@ public class Menu {
         Pane root = new Pane();
         Scene newScene = createSceneBase(classInstance, root, "/Homescreen_text.png");
 
+        Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 30);
+
         Button startGameButton = new Button();
         startGameButton.setPrefWidth(240);
         startGameButton.setPrefHeight(80);
@@ -56,7 +58,7 @@ public class Menu {
         highscoreButton.setLayoutX(463);
         highscoreButton.setLayoutY(485);
         highscoreButton.setOnAction(event -> {toHighscoreScene.apply(null);});
-        highscoreButton.setOpacity(1);
+        highscoreButton.setOpacity(0);
         root.getChildren().add(highscoreButton);
 
         Button storyButton = new Button("story");
@@ -65,7 +67,7 @@ public class Menu {
         storyButton.setLayoutX(463);
         storyButton.setLayoutY(575);
         storyButton.setOnAction(event -> {toStoryScreen.apply(null);});
-        storyButton.setOpacity(1);
+        storyButton.setOpacity(0);
         root.getChildren().add(storyButton);
 
         Button endBt = new Button();
@@ -76,6 +78,13 @@ public class Menu {
         endBt.setOnAction(event -> {System.exit(0);});
         endBt.setOpacity(0);
         root.getChildren().add(endBt);
+
+        Text version = new Text("version: 0.8");
+        version.setFill(Color.YELLOW);
+        version.setFont(minecraftFont);
+        version.setX(5);
+        version.setY(30);
+        root.getChildren().add(version);
 
         return newScene;
     }
@@ -181,78 +190,78 @@ public class Menu {
         Pane root = new Pane();
         Scene newScene = createSceneBase(classInstance, root, "/screen_bestzeiten.png");
 
-        Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 40);
+        Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 35);
 
         Button backBt = new Button("Zurück");
         backBt.setPrefWidth(240);
         backBt.setPrefHeight(80);
-        backBt.setLayoutX(980);
-        backBt.setLayoutY(585);
+        backBt.setLayoutX(820);
+        backBt.setLayoutY(465);
         backBt.setOnAction(event -> {backFunction.apply(null);});
-        backBt.setOpacity(1);
+        backBt.setOpacity(0);
         root.getChildren().add(backBt);
 
         Text hsForest = new Text("forest");
         hsForest.setFill(Color.YELLOW);
         hsForest.setFont(minecraftFont);
-        hsForest.setX(50);
-        hsForest.setY(50);
+        hsForest.setX(347);
+        hsForest.setY(117);
         root.getChildren().add(hsForest);
 
         Text hsSnowyPlains = new Text("snowy-plains");
         hsSnowyPlains.setFill(Color.YELLOW);
         hsSnowyPlains.setFont(minecraftFont);
-        hsSnowyPlains.setX(100);
-        hsSnowyPlains.setY(100);
+        hsSnowyPlains.setX(285);
+        hsSnowyPlains.setY(189);
         root.getChildren().add(hsSnowyPlains);
 
         Text hsDesert = new Text("desert");
         hsDesert.setFill(Color.YELLOW);
         hsDesert.setFont(minecraftFont);
-        hsDesert.setX(150);
-        hsDesert.setY(150);
+        hsDesert.setX(350);
+        hsDesert.setY(260);
         root.getChildren().add(hsDesert);
 
         Text hsNetherWaste = new Text("netherWaste");
         hsNetherWaste.setFill(Color.YELLOW);
         hsNetherWaste.setFont(minecraftFont);
-        hsNetherWaste.setX(200);
-        hsNetherWaste.setY(200);
+        hsNetherWaste.setX(290);
+        hsNetherWaste.setY(325);
         root.getChildren().add(hsNetherWaste);
 
         Text hsCrimsonForest = new Text("CrimsonForest");
         hsCrimsonForest.setFill(Color.YELLOW);
         hsCrimsonForest.setFont(minecraftFont);
-        hsCrimsonForest.setX(250);
-        hsCrimsonForest.setY(250);
+        hsCrimsonForest.setX(280);
+        hsCrimsonForest.setY(395);
         root.getChildren().add(hsCrimsonForest);
 
         Text hsWarpedForest = new Text("WarpedForest");
         hsWarpedForest.setFill(Color.YELLOW);
         hsWarpedForest.setFont(minecraftFont);
-        hsWarpedForest.setX(300);
-        hsWarpedForest.setY(300);
+        hsWarpedForest.setX(285);
+        hsWarpedForest.setY(465);
         root.getChildren().add(hsWarpedForest);
 
         Text hsEndIsland = new Text("End Island");
         hsEndIsland.setFill(Color.YELLOW);
         hsEndIsland.setFont(minecraftFont);
-        hsEndIsland.setX(350);
-        hsEndIsland.setY(350);
+        hsEndIsland.setX(320);
+        hsEndIsland.setY(535);
         root.getChildren().add(hsEndIsland);
 
         Text hsEndCity = new Text("End City");
         hsEndCity.setFill(Color.YELLOW);
         hsEndCity.setFont(minecraftFont);
-        hsEndCity.setX(400);
-        hsEndCity.setY(400);
+        hsEndCity.setX(340);
+        hsEndCity.setY(603);
         root.getChildren().add(hsEndCity);
 
         Text hsDragonIsland = new Text("Dragon Island");
         hsDragonIsland.setFill(Color.YELLOW);
         hsDragonIsland.setFont(minecraftFont);
-        hsDragonIsland.setX(450);
-        hsDragonIsland.setY(450);
+        hsDragonIsland.setX(290);
+        hsDragonIsland.setY(670);
         root.getChildren().add(hsDragonIsland);
 
         return newScene;
@@ -263,21 +272,21 @@ public class Menu {
         Scene newScene = createSceneBase(classInstance, root, "/screen_story_mc.png");
 
         Button backBt = new Button("Zurück");
-        backBt.setPrefWidth(240);
-        backBt.setPrefHeight(80);
-        backBt.setLayoutX(980);
-        backBt.setLayoutY(585);
+        backBt.setPrefWidth(220);
+        backBt.setPrefHeight(95);
+        backBt.setLayoutX(935);
+        backBt.setLayoutY(250);
         backBt.setOnAction(event -> {backFunction.apply(null);});
-        backBt.setOpacity(1);
+        backBt.setOpacity(0);
         root.getChildren().add(backBt);
 
         Button creditsBt = new Button("Credits");
-        creditsBt.setPrefWidth(240);
-        creditsBt.setPrefHeight(80);
-        creditsBt.setLayoutX(980);
-        creditsBt.setLayoutY(300);
+        creditsBt.setPrefWidth(220);
+        creditsBt.setPrefHeight(95);
+        creditsBt.setLayoutX(935);
+        creditsBt.setLayoutY(105);
         creditsBt.setOnAction(event -> {creditsFunction.apply(null);});
-        creditsBt.setOpacity(1);
+        creditsBt.setOpacity(0);
         root.getChildren().add(creditsBt);
 
         return newScene;
@@ -290,28 +299,28 @@ public class Menu {
         Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 40);
 
         Button menuBt = new Button("Menu");
-        menuBt.setPrefWidth(240);
-        menuBt.setPrefHeight(80);
-        menuBt.setLayoutX(980);
-        menuBt.setLayoutY(585);
+        menuBt.setPrefWidth(180);
+        menuBt.setPrefHeight(60);
+        menuBt.setLayoutX(875);
+        menuBt.setLayoutY(620);
         menuBt.setOnAction(event -> {meunFunction.apply(null);});
-        menuBt.setOpacity(1);
+        menuBt.setOpacity(0);
         root.getChildren().add(menuBt);
 
         Button restartBt = new Button("Restart");
-        restartBt.setPrefWidth(240);
-        restartBt.setPrefHeight(80);
-        restartBt.setLayoutX(980);
-        restartBt.setLayoutY(300);
+        restartBt.setPrefWidth(180);
+        restartBt.setPrefHeight(60);
+        restartBt.setLayoutX(875);
+        restartBt.setLayoutY(550);
         restartBt.setOnAction(event -> {restartFunction.apply(null);});
-        restartBt.setOpacity(1);
+        restartBt.setOpacity(0);
         root.getChildren().add(restartBt);
 
         Text scoreText = new Text("Highscore");
         scoreText.setFont(minecraftFont);
         scoreText.setFill(Color.RED);
         scoreText.setX(100);
-        scoreText.setY(100);
+        scoreText.setY(650);
         root.getChildren().add(scoreText);
 
         return newScene;
@@ -322,30 +331,30 @@ public class Menu {
         Scene newScene = createSceneBase(classInstance, root, "/death_screen.png");
 
         Button respawnBt = new Button("Respawn");
-        respawnBt.setPrefWidth(240);
-        respawnBt.setPrefHeight(80);
-        respawnBt.setLayoutX(980);
-        respawnBt.setLayoutY(185);
+        respawnBt.setPrefWidth(260);
+        respawnBt.setPrefHeight(85);
+        respawnBt.setLayoutX(860);
+        respawnBt.setLayoutY(345);
         respawnBt.setOnAction(event -> {respawnFunction.apply(null);});
-        respawnBt.setOpacity(1);
+        respawnBt.setOpacity(0);
         root.getChildren().add(respawnBt);
 
         Button lvlAuswwahlBt = new Button("Menu Auswahl");
-        lvlAuswwahlBt.setPrefWidth(240);
-        lvlAuswwahlBt.setPrefHeight(80);
-        lvlAuswwahlBt.setLayoutX(980);
-        lvlAuswwahlBt.setLayoutY(385);
+        lvlAuswwahlBt.setPrefWidth(260);
+        lvlAuswwahlBt.setPrefHeight(85);
+        lvlAuswwahlBt.setLayoutX(865);
+        lvlAuswwahlBt.setLayoutY(450);
         lvlAuswwahlBt.setOnAction(event -> {lvlAuswahlFunction.apply(null);});
-        lvlAuswwahlBt.setOpacity(1);
+        lvlAuswwahlBt.setOpacity(0);
         root.getChildren().add(lvlAuswwahlBt);
 
         Button menuBt = new Button("Menu");
-        menuBt.setPrefWidth(240);
-        menuBt.setPrefHeight(80);
-        menuBt.setLayoutX(980);
-        menuBt.setLayoutY(585);
+        menuBt.setPrefWidth(260);
+        menuBt.setPrefHeight(85);
+        menuBt.setLayoutX(863);
+        menuBt.setLayoutY(550);
         menuBt.setOnAction(event -> {menuFunction.apply(null);});
-        menuBt.setOpacity(1);
+        menuBt.setOpacity(0);
         root.getChildren().add(menuBt);
 
         return newScene;
