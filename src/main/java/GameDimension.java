@@ -30,7 +30,10 @@ public class GameDimension {
     private Image _halfLeftGrassImg;
     private Image _halfRightGrassImg;
     private Image _waterImg;
+
     private Image _ChestImg;
+    private Image _netherPortalImg;
+    private Image _endPortalImg;
 
     private Image _dirtHalfGrassLeftImg;
     private Image _dirtHalfGrassRightImg;
@@ -76,6 +79,7 @@ public class GameDimension {
 
     private ArrayList<Projektil> _projektilList;
     private Vector2f _chestPos = null;
+    private ImageView _chestImageView = null; // The chest is also used for portals
 
     private Function<String, Void> _levelLoadFunc;
 
@@ -101,7 +105,10 @@ public class GameDimension {
         _halfLeftGrassImg = new Image(getClass().getResourceAsStream("/grassblockHalfLeft.png"));
         _halfRightGrassImg = new Image(getClass().getResourceAsStream("/grassblockHalfRight.png"));
         _waterImg = new Image(getClass().getResourceAsStream("/Wasser.png"));
+
         _ChestImg = new Image(getClass().getResourceAsStream("/Chest.png"));
+        _netherPortalImg = new Image(getClass().getResourceAsStream("/netherport.png"));
+        _endPortalImg = new Image(getClass().getResourceAsStream("/endport.png"));
 
         _dirtHalfGrassLeftImg = new Image(getClass().getResourceAsStream("/erdblockHalfGrassLeft.png"));
         _dirtHalfGrassRightImg = new Image(getClass().getResourceAsStream("/erdblockHalfGrassRight.png"));
@@ -178,6 +185,17 @@ public class GameDimension {
                 _boss.health -= 20;
                 _bossbar.updateBossbar(_boss.health);
                 _root.getChildren().remove(p.getSprite());
+
+                // Check if boss is dead
+                if (_boss.health <= 0) {
+                    _root.getChildren().remove(_boss.imageView);
+                    _bossbar.removeBossbar(_root);
+
+                    _boss = null;
+                    _bossbar = null;
+
+                    _soundPlayer.playSound("bossDeath", 1.0);
+                }
             }
         }
         _projektilList.removeAll(projektileZumZerstoeren);
@@ -191,14 +209,21 @@ public class GameDimension {
 
         // Gucken ob bei chest
         if (_chestPos != null) {
-            float distanceToChest = loadedLevelData.calcPixelCordsFromTile((int) _chestPos.x, (int) _chestPos.y, cameraPosition, false)
-                    .sub(new Vector2f((int) _spieler.getFigur().getX(), (int) _spieler.getFigur().getY())).length();
+            if (_boss != null) {
+                _chestImageView.setVisible(false);
+            }
+            else {
+                _chestImageView.setVisible(true);
 
-            //System.out.println(distanceToChest);
-            if(distanceToChest <= 30) {
-                _spieler = null; // Spieler auf null setzten um irgendwie ganz komische fehler zu fixen
-                _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
-                return;
+                float distanceToChest = loadedLevelData.calcPixelCordsFromTile((int) _chestPos.x, (int) _chestPos.y, cameraPosition, false)
+                        .sub(new Vector2f((int) _spieler.getFigur().getX(), (int) _spieler.getFigur().getY())).length();
+
+                //System.out.println(distanceToChest);
+                if(distanceToChest <= 30) {
+                    _spieler = null; // Spieler auf null setzten um irgendwie ganz komische fehler zu fixen
+                    _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
+                    return;
+                }
             }
         }
 
@@ -332,12 +357,26 @@ public class GameDimension {
                                 addTileToMapList(spawnPos, _waterImg, lvl);
                                 break;
                             }
+
                             case 'C': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
-                                addTileToMapList(spawnPos, _ChestImg, lvl);
+                                _chestImageView = addTileToMapList(spawnPos, _ChestImg, lvl);
                                 _chestPos = new Vector2f(x, y);
                                 break;
                             }
+                            case '%': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                _chestImageView = addTileToMapList(spawnPos, _netherPortalImg, lvl);
+                                _chestPos = new Vector2f(x, y);
+                                break;
+                            }
+                            case '$': {
+                                Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
+                                _chestImageView = addTileToMapList(spawnPos, _endPortalImg, lvl);
+                                _chestPos = new Vector2f(x, y);
+                                break;
+                            }
+
                             case 'q': {
                                 Vector2f spawnPos = lvl.calcPixelCordsFromTile(x, y, cameraPosition, false);
                                 addTileToMapList(spawnPos, _waterhalfleftImg, lvl);
@@ -511,12 +550,14 @@ public class GameDimension {
 
     }
 
-    private void addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
+    private ImageView addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
         _mapTilesListe.add(new ImageView(img));
         _mapTilesListe.getLast().setX(spawnPos.x);
         _mapTilesListe.getLast().setY(spawnPos.y);
         _mapTilesListe.getLast().setFitWidth(lvl.BREITE + 1);
         _mapTilesListe.getLast().setFitHeight(lvl.HOEHE + 1);
+
+        return _mapTilesListe.getLast();
     }
 
     // Die Funtkion schaut, wie weit der Spieler von x-mitte des Fensters entfertn ist.

@@ -45,6 +45,10 @@ public class Bossbar {
         root.getChildren().addAll(_bossbarBackground, _bossbarFill, _bossbarText);
     }
 
+    public void removeBossbar(Pane root) {
+        root.getChildren().removeAll(_bossbarBackground, _bossbarFill, _bossbarText);
+    }
+
     public void updateBossbar(float displayHealth) {
         if (_bossbarText == null) return;
 
