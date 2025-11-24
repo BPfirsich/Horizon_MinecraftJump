@@ -82,10 +82,13 @@ public class GameDimension {
     private ImageView _chestImageView = null; // The chest is also used for portals
 
     private Function<String, Void> _levelLoadFunc;
+    private Function<Void, Void> _winFunction;
+    private Function<Void, Void> _failFunction;
 
     private Text levelNameText;
 
-    public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer, Function<String, Void> lvlLoadFunc) {
+    public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer, Function<String, Void> lvlLoadFunc,
+                         Function<Void, Void> winFunction, Function<Void, Void> failFunction) {
         f_dimensionName = name;
         _root = root;
 
@@ -93,6 +96,8 @@ public class GameDimension {
         _soundPlayer = soundPlayer;
 
         _levelLoadFunc = lvlLoadFunc;
+        _winFunction = winFunction;
+        _failFunction = failFunction;
 
         _gegnerListe = new ArrayList<>();
         _projektilList = new ArrayList<>();
@@ -179,6 +184,10 @@ public class GameDimension {
 
                 projektileZumZerstoeren.add(p);
                 _root.getChildren().remove(p.getSprite());
+
+                if(_matchLeben.herzen <= 0) {
+                    _failFunction.apply(null);
+                }
             }
             if (_boss != null && p.doesHitBoss(_boss.imageView)) {
                 projektileZumZerstoeren.add(p);
@@ -221,6 +230,12 @@ public class GameDimension {
                 //System.out.println(distanceToChest);
                 if(distanceToChest <= 30) {
                     _spieler = null; // Spieler auf null setzten um irgendwie ganz komische fehler zu fixen
+
+                    if(loadedLevelData.nextLevelKey.equals("win")) {
+                        _winFunction.apply(null);
+                        return;
+                    }
+
                     _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
                     return;
                 }
@@ -607,8 +622,6 @@ public class GameDimension {
     }
 
     private void sterben() {
-        _soundPlayer.playSound("death", 1);
-
         _matchLeben.herzen--;
         _matchLeben.clearHerzen(_root);
 
@@ -632,7 +645,12 @@ public class GameDimension {
         _gegnerListe.clear();
         _spieler = null;
 
-        ladeLevel(loadedLevelData, false);
+        if (_matchLeben.herzen > 0) {
+            _soundPlayer.playSound("death", 1);
+            ladeLevel(loadedLevelData, false);
+        } else {
+            _failFunction.apply(null);
+        }
     }
 }
 

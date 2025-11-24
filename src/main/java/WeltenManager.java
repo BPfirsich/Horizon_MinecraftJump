@@ -231,7 +231,7 @@ public class WeltenManager {
         _end_2.stufe[1]  = "----P---eeeeee-ee-ee--ee-ee-e-e--e-----------------------------------------------------------------";
         _end_2.stufe[0]  = "eeeeeeee-------------------------------------------------------------------------------------------";
 
-        _end_3 = new LevelData("3-3: Dragon Island", 12, _background_3_3, _loadingScreen_general, "o1", "e3");
+        _end_3 = new LevelData("3-3: Dragon Island", 12, _background_3_3, _loadingScreen_general, "win", "e3");
         _end_3.stufe[11] = "----------------------------------------";
         _end_3.stufe[10] = "----------------------------------------";
         _end_3.stufe[9]  = "---------------------------E------------";

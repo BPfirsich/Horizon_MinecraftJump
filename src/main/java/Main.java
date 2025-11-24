@@ -213,7 +213,11 @@ public class Main extends Application {
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(scene);
 
-        _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer, s -> { goToLevel(s, stage); return null; } );
+        _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer,
+                s -> { goToLevel(s, stage); return null; },
+                e -> { switchToWinScreen(stage); return e; },
+                e -> { switchToFailScreen(stage); return e; }
+        );
         _currentDimension.ladeLevel(weltenManager.getLevelData(key), true);
     }
 
