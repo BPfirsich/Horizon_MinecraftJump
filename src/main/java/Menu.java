@@ -292,7 +292,8 @@ public class Menu {
         return newScene;
     }
 
-    public static Scene erstelleWinScene(Main classInstance, Function<Void, Void> meunFunction, Function<Void, Void> restartFunction) {
+    public static Scene erstelleWinScene(Main classInstance, Function<Void, Void> meunFunction, Function<Void, Void> restartFunction,
+                                         Function<Void, Void> toHighscoreScene, Function<Void, Void> creditsFunction ) {
         Pane root = new Pane();
         Scene newScene = createSceneBase(classInstance, root, "/screen_win_mc.png");
 
@@ -315,6 +316,24 @@ public class Menu {
         restartBt.setOnAction(event -> {restartFunction.apply(null);});
         restartBt.setOpacity(0);
         root.getChildren().add(restartBt);
+
+        Button highscoreButton = new Button("highscore");
+        highscoreButton.setPrefWidth(180);
+        highscoreButton.setPrefHeight(60);
+        highscoreButton.setLayoutX(1070);
+        highscoreButton.setLayoutY(620);
+        highscoreButton.setOnAction(event -> {toHighscoreScene.apply(null);});
+        highscoreButton.setOpacity(0);
+        root.getChildren().add(highscoreButton);
+
+        Button creditsBt = new Button("Credits");
+        creditsBt.setPrefWidth(180);
+        creditsBt.setPrefHeight(60);
+        creditsBt.setLayoutX(1070);
+        creditsBt.setLayoutY(550);
+        creditsBt.setOnAction(event -> {creditsFunction.apply(null);});
+        creditsBt.setOpacity(0);
+        root.getChildren().add(creditsBt);
 
         Text scoreText = new Text("Highscore");
         scoreText.setFont(minecraftFont);

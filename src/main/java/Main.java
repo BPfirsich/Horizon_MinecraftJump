@@ -108,13 +108,27 @@ public class Main extends Application {
                     switchToMainMenu(stage);
                     return e;
                 },
+
                 e -> { // Restart bt
                     _soundPlayer.playSound("click", 1);
 
                     _matchLeben = new MatchLeben(5);
                     goToLevel("o1", stage);
                     return e;
+                },
+                e -> { // Highscore Scene
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToHighscoreMenu(stage);
+                    return e;
+                },
+                e -> { // Credits bt
+                    _soundPlayer.playSound("click", 1);
+
+                    System.out.println("Credits :OOOO");
+                    return e;
                 }
+
         ));
     }
     void switchToFailScreen(Stage stage) {
@@ -182,7 +196,7 @@ public class Main extends Application {
         timer.start();
 
         // DAS HIER ÄNDERN LOL
-        switchToWinScreen(stage);
+        //switchToWinScreen(stage);
         // DAS HIER ÄNDERN LOL
     }
 
