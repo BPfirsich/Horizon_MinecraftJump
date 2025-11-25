@@ -122,13 +122,11 @@ public class Boss {
                 if (startTime == -1) {
                     startTime = l;
                     imageView.setImage(_shootImage);
-                    System.out.println("whooo");
                 }
 
                 if (l >= (startTime + showLengthMs)) {
                     imageView.setImage(_idleImage);
                     this.stop();
-                    System.out.println("hoooo");
                 }
             }
         };

@@ -21,6 +21,8 @@ public class Main extends Application {
                 e -> { // Start Game
                     _soundPlayer.playSound("click", 1);
 
+                    _soundPlayer.playSound("newGame", 1.0);
+
                     _matchLeben = new MatchLeben(5);
                     goToLevel("o1", stage);
                     return e;

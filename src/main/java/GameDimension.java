@@ -186,7 +186,11 @@ public class GameDimension {
                 _root.getChildren().remove(p.getSprite());
 
                 if(_matchLeben.herzen <= 0) {
-                    _failFunction.apply(null);
+                    sterben();
+                    return;
+                }
+                else {
+                    _soundPlayer.playSound("damage", 1.0);
                 }
             }
             if (_boss != null && p.doesHitBoss(_boss.imageView)) {
@@ -236,6 +240,11 @@ public class GameDimension {
                         return;
                     }
 
+                    // Play the sound
+                    if (_chestImageView.getImage() == _ChestImg) _soundPlayer.playSound("chest", 1.0);
+                    else _soundPlayer.playSound("portal", 1.0);
+
+                    // Load next level
                     _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
                     return;
                 }
