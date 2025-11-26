@@ -68,4 +68,13 @@ public class HighscoreManager {
         writer.close();
     }
 
+    public static String toMM_SS_String(int ms) {
+        if (ms <= 0) return "--:--";
+
+        int minutes = (ms / 1000 / 60);
+        int seconds = ms / 1000 - minutes * 60;
+
+        return String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
+    }
+
 }

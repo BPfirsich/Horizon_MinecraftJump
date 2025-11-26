@@ -23,6 +23,7 @@ public class GameDimension {
     private MatchLeben _matchLeben;
     private Bossbar _bossbar;
     public SoundPlayer _soundPlayer;
+    private HighscoreManager _highscoreManager;
 
     private Image _grassBlockImg;
     private Image _dirtBlockImg;
@@ -86,13 +87,17 @@ public class GameDimension {
 
     private Text levelNameText;
 
+    private Text currentScoreText;
+    private long scoreStartTimeMillis; // Uses system time
+
     public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer, Function<String, Void> lvlLoadFunc,
-                         Function<Void, Void> winFunction, Function<Void, Void> failFunction) {
+                         Function<Void, Void> winFunction, Function<Void, Void> failFunction, HighscoreManager highscoreManager) {
         f_dimensionName = name;
         _root = root;
 
         _matchLeben = leben;
         _soundPlayer = soundPlayer;
+        _highscoreManager = highscoreManager;
 
         _levelLoadFunc = lvlLoadFunc;
         _winFunction = winFunction;
@@ -235,9 +240,19 @@ public class GameDimension {
 
                     // Play the sound
                     if (_chestImageView.getImage() == _ChestImg) _soundPlayer.playSound("chest", 1.0);
-                    else _soundPlayer.playSound("portal", 1.0);
+                    else {
+                        _soundPlayer.playSound("portal", 1.0);
+                        _matchLeben.herzen = 5;
+                    }
 
                     // Load next level
+                    int neededTimeFinal = (int)(System.currentTimeMillis() - scoreStartTimeMillis);
+                    if (_highscoreManager.highscoreMap.get(loadedLevelData.myKey) > neededTimeFinal ||
+                            _highscoreManager.highscoreMap.get(loadedLevelData.myKey) <= 0) {
+                        _highscoreManager.highscoreMap.put(loadedLevelData.myKey, neededTimeFinal);
+                        _highscoreManager.save();
+                    }
+
                     _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
                     return;
                 }
@@ -251,6 +266,8 @@ public class GameDimension {
         if (levelNameText != null && levelNameText.getOpacity() > 0) {
             levelNameText.setOpacity(levelNameText.getOpacity() - 0.4f * deltaTime);
         }
+
+        updateScoreTxt();
     }
 
     // Fügt einen gegner zur Dimension hinzu, und fügt dessen Rectangle zur scene hinzu
@@ -528,10 +545,13 @@ public class GameDimension {
 
                 _root.getChildren().remove(loadingView);
 
+                Font mcFontBig = Font.loadFont(getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 110);
+                Font mcFont = Font.loadFont(getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 25);
+
                 if (showLoadingScreen) { // Wenn Kein Ladescren kommt dann ist man logischer weiße schonmal gestorben
                     // Level Text
                     levelNameText = new Text(lvl.levelName);
-                    levelNameText.setFont(Font.loadFont(getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 110));
+                    levelNameText.setFont(mcFontBig);
                     levelNameText.setFill(Color.WHITE);
 
                     // Schatten-Effekt
@@ -552,6 +572,16 @@ public class GameDimension {
                     _bossbar.erstelleBossbar(_root);
                 }
 
+                // Score
+                scoreStartTimeMillis = System.currentTimeMillis();
+                currentScoreText = new Text("moinsen schwaiger");
+                currentScoreText.setY(40);
+                currentScoreText.setX(25);
+                currentScoreText.setFont(mcFont);
+                currentScoreText.setFill(Color.WHITE);
+                updateScoreTxt();
+                _root.getChildren().add(currentScoreText);
+
                 // Die Kamera zum letzten Tile bewegen (Kamerafahrt)
                 //moveCameraByValue(-lvl.stufe[0].length() * lvl.BREITE + 3000, 0);
             }
@@ -569,6 +599,12 @@ public class GameDimension {
         _mapTilesListe.getLast().setFitHeight(lvl.HOEHE + 1);
 
         return _mapTilesListe.getLast();
+    }
+
+    private void updateScoreTxt() {
+        String bestTime = HighscoreManager.toMM_SS_String(_highscoreManager.highscoreMap.get(loadedLevelData.myKey));
+
+        currentScoreText.setText(HighscoreManager.toMM_SS_String((int)(System.currentTimeMillis() - scoreStartTimeMillis)) + " / " + bestTime);
     }
 
     // Die Funtkion schaut, wie weit der Spieler von x-mitte des Fensters entfertn ist.
@@ -634,8 +670,10 @@ public class GameDimension {
         _projektilList.clear();
         _spieler = null;
 
+        _root.getChildren().remove(currentScoreText);
+
         if (_matchLeben.herzen > 0) {
-            _soundPlayer.playSound("death", 1);
+            _soundPlayer.playSound("damage", 1);
             ladeLevel(loadedLevelData, false);
         } else {
             _failFunction.apply(null);

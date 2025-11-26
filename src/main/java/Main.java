@@ -223,7 +223,7 @@ public class Main extends Application {
         timer.start();
 
         // DAS HIER ÄNDERN LOL
-        switchToCredits(stage);
+        //switchToCredits(stage);
         // DAS HIER ÄNDERN LOL
     }
 
@@ -243,7 +243,8 @@ public class Main extends Application {
         _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer,
                 s -> { goToLevel(s, stage); return null; },
                 e -> { switchToWinScreen(stage); return e; },
-                e -> { switchToFailScreen(stage); return e; }
+                e -> { switchToFailScreen(stage); return e; },
+                _highscoreManager
         );
         _currentDimension.ladeLevel(weltenManager.getLevelData(key), true);
     }
