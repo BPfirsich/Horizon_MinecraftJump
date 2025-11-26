@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 public class GameDimension {
 
     final private String f_dimensionName;
-    private ArrayList<Gegner> _gegnerListe;
     private ArrayList<ImageView> _mapTilesListe;
     private Spieler _spieler;
     private Pane _root;
@@ -99,7 +98,6 @@ public class GameDimension {
         _winFunction = winFunction;
         _failFunction = failFunction;
 
-        _gegnerListe = new ArrayList<>();
         _projektilList = new ArrayList<>();
         _mapTilesListe = new ArrayList<>();
 
@@ -164,11 +162,6 @@ public class GameDimension {
         // Spieler Updaten
         _spieler.update(deltaTime, inputData);
         if(_boss != null) _boss.update(deltaTime, new Vector2f((float)_spieler.getFigur().getX(), (float)_spieler.getFigur().getY()));
-
-        // Gegner Updaten
-        for (Gegner g : _gegnerListe) {
-            g.update(deltaTime);
-        }
 
         // Projektile bewegung
         for (Projektil p : _projektilList) {
@@ -258,12 +251,6 @@ public class GameDimension {
         if (levelNameText != null && levelNameText.getOpacity() > 0) {
             levelNameText.setOpacity(levelNameText.getOpacity() - 0.4f * deltaTime);
         }
-    }
-
-    // Fügt einen gegner zur Dimension hinzu, und fügt dessen Rectangle zur scene hinzu
-    public void addGegner(Gegner gegner) {
-        _gegnerListe.add(gegner);
-        _root.getChildren().add(gegner.getFigur());
     }
 
     // Fügt einen gegner zur Dimension hinzu, und fügt dessen Rectangle zur scene hinzu
@@ -622,9 +609,6 @@ public class GameDimension {
         // Move All Objects
         _spieler.getFigur().setX(_spieler.getFigur().getX() + x);
         if(_boss != null) _boss.imageView.setX(_boss.imageView.getX() + x);
-        for (Gegner g : _gegnerListe) {
-            g.getFigur().setX(g.getFigur().getX() + x);
-        }
         for (ImageView i : _mapTilesListe) {
             i.setX(i.getX() + x);
         }
@@ -638,9 +622,6 @@ public class GameDimension {
         for(Projektil p : _projektilList) {
             _root.getChildren().remove(p.getSprite());
         }
-        for(Gegner g : _gegnerListe) {
-            _root.getChildren().remove(g.getFigur());
-        }
         _root.getChildren().remove(_spieler.getFigur());
         _root.getChildren().remove(_spieler.getSprite());
 
@@ -651,7 +632,6 @@ public class GameDimension {
 
         _mapTilesListe.clear();
         _projektilList.clear();
-        _gegnerListe.clear();
         _spieler = null;
 
         if (_matchLeben.herzen > 0) {

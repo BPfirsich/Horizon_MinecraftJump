@@ -4,6 +4,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
     private GameDimension _currentDimension = null;
@@ -12,6 +14,7 @@ public class Main extends Application {
     private SoundPlayer _soundPlayer = null;
 
     private WeltenManager weltenManager = null;
+    private HighscoreManager _highscoreManager = null;
 
     void switchToMainMenu(Stage stage) {
         _soundPlayer.setMusic("mainMenu");
@@ -77,7 +80,8 @@ public class Main extends Application {
 
                     switchToMainMenu(stage);
                     return e;
-                }
+                },
+                _highscoreManager
         ));
     }
     void switchToStoryMenu(Stage stage) {
@@ -175,6 +179,14 @@ public class Main extends Application {
         _inputData.initInputSystemOnScene(stage.getScene());
 
         weltenManager = new WeltenManager();
+        _highscoreManager = new HighscoreManager();
+
+        try {
+            _highscoreManager.loadOrCreateHighscoreFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        _highscoreManager.save();
 
         // Spielschleife, also quasy das "Herz" des spiels.
         AnimationTimer timer = new AnimationTimer() {

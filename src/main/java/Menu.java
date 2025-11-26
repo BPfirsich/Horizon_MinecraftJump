@@ -186,7 +186,7 @@ public class Menu {
         return newScene;
     }
 
-    public static Scene erstelleHighcoreScene(Main classInstance, Function<Void, Void> backFunction) {
+    public static Scene erstelleHighcoreScene(Main classInstance, Function<Void, Void> backFunction, HighscoreManager highscore) {
         Pane root = new Pane();
         Scene newScene = createSceneBase(classInstance, root, "/screen_bestzeiten.png");
 
@@ -201,63 +201,63 @@ public class Menu {
         backBt.setOpacity(0);
         root.getChildren().add(backBt);
 
-        Text hsForest = new Text("forest");
+        Text hsForest = new Text(toMM_SS_String(highscore.highscoreMap.get("o1")));
         hsForest.setFill(Color.YELLOW);
         hsForest.setFont(minecraftFont);
         hsForest.setX(347);
         hsForest.setY(117);
         root.getChildren().add(hsForest);
 
-        Text hsSnowyPlains = new Text("snowy-plains");
+        Text hsSnowyPlains = new Text(toMM_SS_String(highscore.highscoreMap.get("o2")));
         hsSnowyPlains.setFill(Color.YELLOW);
         hsSnowyPlains.setFont(minecraftFont);
         hsSnowyPlains.setX(285);
         hsSnowyPlains.setY(189);
         root.getChildren().add(hsSnowyPlains);
 
-        Text hsDesert = new Text("desert");
+        Text hsDesert = new Text(toMM_SS_String(highscore.highscoreMap.get("o3")));
         hsDesert.setFill(Color.YELLOW);
         hsDesert.setFont(minecraftFont);
         hsDesert.setX(350);
         hsDesert.setY(260);
         root.getChildren().add(hsDesert);
 
-        Text hsNetherWaste = new Text("netherWaste");
+        Text hsNetherWaste = new Text(toMM_SS_String(highscore.highscoreMap.get("n1")));
         hsNetherWaste.setFill(Color.YELLOW);
         hsNetherWaste.setFont(minecraftFont);
         hsNetherWaste.setX(290);
         hsNetherWaste.setY(325);
         root.getChildren().add(hsNetherWaste);
 
-        Text hsCrimsonForest = new Text("CrimsonForest");
+        Text hsCrimsonForest = new Text(toMM_SS_String(highscore.highscoreMap.get("n2")));
         hsCrimsonForest.setFill(Color.YELLOW);
         hsCrimsonForest.setFont(minecraftFont);
         hsCrimsonForest.setX(280);
         hsCrimsonForest.setY(395);
         root.getChildren().add(hsCrimsonForest);
 
-        Text hsWarpedForest = new Text("WarpedForest");
+        Text hsWarpedForest = new Text(toMM_SS_String(highscore.highscoreMap.get("n3")));
         hsWarpedForest.setFill(Color.YELLOW);
         hsWarpedForest.setFont(minecraftFont);
         hsWarpedForest.setX(285);
         hsWarpedForest.setY(465);
         root.getChildren().add(hsWarpedForest);
 
-        Text hsEndIsland = new Text("End Island");
+        Text hsEndIsland = new Text(toMM_SS_String(highscore.highscoreMap.get("e1")));
         hsEndIsland.setFill(Color.YELLOW);
         hsEndIsland.setFont(minecraftFont);
         hsEndIsland.setX(320);
         hsEndIsland.setY(535);
         root.getChildren().add(hsEndIsland);
 
-        Text hsEndCity = new Text("End City");
+        Text hsEndCity = new Text(toMM_SS_String(highscore.highscoreMap.get("e2")));
         hsEndCity.setFill(Color.YELLOW);
         hsEndCity.setFont(minecraftFont);
         hsEndCity.setX(340);
         hsEndCity.setY(603);
         root.getChildren().add(hsEndCity);
 
-        Text hsDragonIsland = new Text("Dragon Island");
+        Text hsDragonIsland = new Text(toMM_SS_String(highscore.highscoreMap.get("e3")));
         hsDragonIsland.setFill(Color.YELLOW);
         hsDragonIsland.setFont(minecraftFont);
         hsDragonIsland.setX(290);
@@ -265,6 +265,13 @@ public class Menu {
         root.getChildren().add(hsDragonIsland);
 
         return newScene;
+    }
+
+    private static String toMM_SS_String(int ms) {
+        int minutes = (ms / 1000 / 60);
+        int seconds = ms / 1000 - minutes * 60;
+
+        return minutes + ":" + seconds;
     }
 
     public static Scene erstelleStoryScene(Main classInstance, Function<Void, Void> backFunction, Function<Void, Void> creditsFunction) {
