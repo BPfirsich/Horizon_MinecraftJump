@@ -1,10 +1,19 @@
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
 import java.util.function.Function;
 
@@ -382,6 +391,112 @@ public class Menu {
         menuBt.setOnAction(event -> {menuFunction.apply(null);});
         menuBt.setOpacity(0);
         root.getChildren().add(menuBt);
+
+        return newScene;
+    }
+
+    public static Scene erstelleCreditsScreen(Main classInstance, Function<Void, Void> afterCreditsActions) {
+        Pane root = new Pane();
+        Scene newScene = createSceneBase(classInstance, root, "/screen_end_3.png");
+
+        Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 40);
+
+        String creditsText = """
+        DANKE FURS SPIELEN!
+        Ein Crossover von Minecraft & Horizon
+
+        PROJEKTLEITUNG
+        Executive Producer – Benjamin T.
+        Creative Director – Benjamin T.
+        Projektleitung – Benjamin T.
+
+        GAME DESIGN
+        Lead Game Designer – Benjamin T.
+        JR-World Designer – Benjamin T.
+        Kampf- & Bossdesigner – Benjamin T.
+        Maschinenverhalten-Design – Benjamin T.
+
+        ART DEPARTMENT
+        Art Director – ChatGPT
+        Character Artists – ChatGPT
+        Maschinen Artists – ChatGPT
+        Environment Artists – ChatGPT
+        UI Artists – Benjamin T.
+
+        PROGRAMMIERUNG
+        Lead Programmer – Benjamin T.
+        Gameplay Programmierung – Benjamin T.
+        Boss-KI Programmierung – Benjamin T.
+        Weltgenerierung – Benjamin T.
+
+        AUDIO & SOUND
+        Musik – Youtube/Copyright free sounds
+        Sound Design – Benjamin T.
+        Synchronisation – Blocky
+
+        STORY 
+        Hauptautor – ChatGPT
+        Dialogautoren – Benjamin T.
+
+        QUALITY ASSURANCE
+        QA Leitung – Benjamin T.
+        Tester – Team Blockytest
+
+        MARKETING
+        Trailer Produktion – Benjamin T.
+
+        TOOLS
+        intelij - JetBrains
+        JavaFX – Oracle
+        Github - Github
+
+        SPECIAL THANKS
+        Danke an alle Spieler und besonders an Blocky
+        Und an DICH – furs Spielen!
+
+        RECHTLICHES
+        Fanprojekt / Schulprojekt 
+        Inspiriert von Minecraft & Horizon
+        Einige Bild und Ton Rechte liegen bei Microsoft und Guerilla
+        """;
+
+        Text text = new Text(creditsText);
+        text.setFont(minecraftFont);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setFill(javafx.scene.paint.Color.WHITE); // Text weiß für sichtbarkeit
+        root.getChildren().add(text);
+
+        double textHight = text.getLayoutBounds().getHeight() + 720;
+
+        AnimationTimer playTimer = new AnimationTimer() {
+            private long startTime = -1;
+            private long duration = 162L * 1_000_000_000L;
+
+            @Override
+            public void handle(long l) {
+                if (startTime == -1) {
+                    startTime = l;
+                    return;
+                }
+
+                double progress = (double)(l - startTime) / (double)duration;
+                System.out.println(progress);
+                text.setY(-textHight * progress + 720);
+
+                if (progress > 1.0) {
+                    stop();
+                    afterCreditsActions.apply(null);
+                }
+            }
+        };
+        playTimer.start();
+
+        newScene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                playTimer.stop();
+                afterCreditsActions.apply(null);
+            }
+        });
 
         return newScene;
     }

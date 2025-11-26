@@ -42,6 +42,7 @@ public class SoundPlayer {
         musicHashMap.put("mainMenu", new MediaPlayer(new Media(getClass().getResource("Hinter den Bäumen(Main Menu).mp3").toString())));
         musicHashMap.put("win", new MediaPlayer(new Media(getClass().getResource("Win_music.wav").toString())));
         musicHashMap.put("fail", new MediaPlayer(new Media(getClass().getResource("Fail_music.wav").toString())));
+        musicHashMap.put("credits", new MediaPlayer(new Media(getClass().getResource("Der Ruf der Wildnis(Abspann).mp3").toString())));
 
     }
 

@@ -98,7 +98,7 @@ public class Main extends Application {
                 e -> { // Credits bt
                     _soundPlayer.playSound("click", 1);
 
-                    System.out.println("Credits :OOOO");
+                    switchToCredits(stage);
                     return e;
                 }
         ));
@@ -131,7 +131,7 @@ public class Main extends Application {
                 e -> { // Credits bt
                     _soundPlayer.playSound("click", 1);
 
-                    System.out.println("Credits :OOOO");
+                    switchToCredits(stage);
                     return e;
                 }
 
@@ -157,6 +157,19 @@ public class Main extends Application {
                 },
                 e -> { // Menu
                     _soundPlayer.playSound("click", 1);
+
+                    switchToMainMenu(stage);
+                    return e;
+                }
+        ));
+    }
+    void switchToCredits(Stage stage) {
+        _soundPlayer.setMusic("credits");
+
+        stage.setScene(Menu.erstelleCreditsScreen(
+                this,
+                e -> { // Menu bt
+                    _soundPlayer.playSound("bossDeath", 1);
 
                     switchToMainMenu(stage);
                     return e;
@@ -210,7 +223,7 @@ public class Main extends Application {
         timer.start();
 
         // DAS HIER ÄNDERN LOL
-        //switchToFailScreen(stage);
+        switchToCredits(stage);
         // DAS HIER ÄNDERN LOL
     }
 
