@@ -1,3 +1,5 @@
+package benTho.horizonMinecraftJump;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

@@ -1,3 +1,5 @@
+package benTho.horizonMinecraftJump;
+
 import com.sun.javafx.geom.Vec2f;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

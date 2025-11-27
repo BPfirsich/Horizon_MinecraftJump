@@ -1,7 +1,9 @@
+package benTho.horizonMinecraftJump;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class KaktusEnergie implements Projektil {
+public class DrachenAtem implements Projektil {
 
     private static Image myTexture;
 
@@ -11,7 +13,7 @@ public class KaktusEnergie implements Projektil {
     @Override
     public void init(Vector2f startPos, Vector2f startDire) {
         if (myTexture == null) {
-            myTexture = new Image(getClass().getResourceAsStream("/KaktusEnergie.png"));
+            myTexture = new Image(getClass().getResourceAsStream("/DrachenAtem.png"));
         }
 
         imageView = new ImageView(myTexture);

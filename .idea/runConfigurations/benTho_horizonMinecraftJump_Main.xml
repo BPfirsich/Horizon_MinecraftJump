@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="Main" />
+  <configuration default="false" name="benTho.horizonMinecraftJump.Main" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="benTho.horizonMinecraftJump.Main" />
     <module name="Horizon_MinecraftJump" />
     <option name="VM_PARAMETERS" value="--module-path &quot;$MODULE_DIR$/lib/javafx-sdk-24.0.2/lib/&quot; --add-modules javafx.controls,javafx.fxml,javafx.base,javafx.media,javafx.graphics" />
     <method v="2">

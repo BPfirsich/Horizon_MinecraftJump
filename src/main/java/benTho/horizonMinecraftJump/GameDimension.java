@@ -1,3 +1,5 @@
+package benTho.horizonMinecraftJump;
+
 import java.util.ArrayList;
 import java.util.function.Function;
 

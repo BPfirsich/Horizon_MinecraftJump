@@ -1,9 +1,9 @@
+package benTho.horizonMinecraftJump;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.awt.*;
-
-public class Energieball implements Projektil {
+public class KaktusEnergie implements Projektil {
 
     private static Image myTexture;
 
@@ -13,7 +13,7 @@ public class Energieball implements Projektil {
     @Override
     public void init(Vector2f startPos, Vector2f startDire) {
         if (myTexture == null) {
-            myTexture = new Image(getClass().getResourceAsStream("/energieball.png"));
+            myTexture = new Image(getClass().getResourceAsStream("/KaktusEnergie.png"));
         }
 
         imageView = new ImageView(myTexture);

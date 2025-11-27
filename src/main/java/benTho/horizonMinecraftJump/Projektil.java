@@ -1,3 +1,5 @@
+package benTho.horizonMinecraftJump;
+
 import javafx.scene.image.ImageView;
 
 public interface Projektil {

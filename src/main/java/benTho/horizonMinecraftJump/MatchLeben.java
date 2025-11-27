@@ -1,3 +1,5 @@
+package benTho.horizonMinecraftJump;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -22,8 +24,8 @@ public class MatchLeben {
 
         herzenViews = new ArrayList<>();
 
-        _fullHerzImage = new Image(getClass().getResourceAsStream("HerzFull.png"));
-        _empyHerzImage = new Image(getClass().getResourceAsStream("HerzEmpy.png"));
+        _fullHerzImage = new Image(getClass().getResourceAsStream("/HerzFull.png"));
+        _empyHerzImage = new Image(getClass().getResourceAsStream("/HerzEmpy.png"));
 
         herzen = h;
     }
