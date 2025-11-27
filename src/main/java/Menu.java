@@ -273,17 +273,7 @@ public class Menu {
         hsDragonIsland.setY(668);
         root.getChildren().add(hsDragonIsland);
 
-        Text hsDragonTotal = new Text(HighscoreManager.toMM_SS_String(
-                highscore.highscoreMap.get("o1") +
-                        highscore.highscoreMap.get("o2") +
-                        highscore.highscoreMap.get("o3") +
-                        highscore.highscoreMap.get("n1") +
-                        highscore.highscoreMap.get("n2") +
-                        highscore.highscoreMap.get("n3") +
-                        highscore.highscoreMap.get("e1") +
-                        highscore.highscoreMap.get("e2") +
-                        highscore.highscoreMap.get("e3")
-        ));
+        Text hsDragonTotal = new Text(HighscoreManager.toMM_SS_String(calcTotalTime(highscore)));
         hsDragonTotal.setFill(Color.YELLOW);
         hsDragonTotal.setFont(minecraftFont);
         hsDragonTotal.setX(760);
@@ -291,6 +281,18 @@ public class Menu {
         root.getChildren().add(hsDragonTotal);
 
         return newScene;
+    }
+
+    private static int calcTotalTime(HighscoreManager hm) {
+        return hm.highscoreMap.get("o1") +
+                hm.highscoreMap.get("o2") +
+                hm.highscoreMap.get("o3") +
+                hm.highscoreMap.get("n1") +
+                hm.highscoreMap.get("n2") +
+                hm.highscoreMap.get("n3") +
+                hm.highscoreMap.get("e1") +
+                hm.highscoreMap.get("e2") +
+                hm.highscoreMap.get("e3");
     }
 
     public static Scene erstelleStoryScene(Main classInstance, Function<Void, Void> backFunction, Function<Void, Void> creditsFunction) {
@@ -319,7 +321,7 @@ public class Menu {
     }
 
     public static Scene erstelleWinScene(Main classInstance, Function<Void, Void> meunFunction, Function<Void, Void> restartFunction,
-                                         Function<Void, Void> toHighscoreScene, Function<Void, Void> creditsFunction ) {
+                                         Function<Void, Void> toHighscoreScene, Function<Void, Void> creditsFunction, HighscoreManager highscore) {
         Pane root = new Pane();
         Scene newScene = createSceneBase(classInstance, root, "/screen_win_mc.png");
 
@@ -361,7 +363,7 @@ public class Menu {
         creditsBt.setOpacity(0);
         root.getChildren().add(creditsBt);
 
-        Text scoreText = new Text("Highscore");
+        Text scoreText = new Text(HighscoreManager.toMM_SS_String(calcTotalTime(highscore)));
         scoreText.setFont(minecraftFont);
         scoreText.setFill(Color.RED);
         scoreText.setX(100);
@@ -490,7 +492,7 @@ public class Menu {
                 }
 
                 double progress = (double)(l - startTime) / (double)duration;
-                System.out.println(progress);
+                //System.out.println(progress);
                 text.setY(-textHight * progress + 720);
 
                 if (progress > 1.0) {

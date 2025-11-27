@@ -133,8 +133,8 @@ public class Main extends Application {
 
                     switchToCredits(stage);
                     return e;
-                }
-
+                },
+                _highscoreManager
         ));
     }
     void switchToFailScreen(Stage stage) {
@@ -223,7 +223,7 @@ public class Main extends Application {
         timer.start();
 
         // DAS HIER ÄNDERN LOL
-        //switchToCredits(stage);
+        //switchToWinScreen(stage);
         // DAS HIER ÄNDERN LOL
     }
 

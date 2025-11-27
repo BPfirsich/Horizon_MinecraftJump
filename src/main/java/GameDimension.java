@@ -233,6 +233,15 @@ public class GameDimension {
                 if(distanceToChest <= 30) {
                     _spieler = null; // Spieler auf null setzten um irgendwie ganz komische fehler zu fixen
 
+                    // Calc the new highscore
+                    int neededTimeFinal = (int)(System.currentTimeMillis() - scoreStartTimeMillis);
+                    if (_highscoreManager.highscoreMap.get(loadedLevelData.myKey) > neededTimeFinal ||
+                            _highscoreManager.highscoreMap.get(loadedLevelData.myKey) <= 0) {
+                        _highscoreManager.highscoreMap.put(loadedLevelData.myKey, neededTimeFinal);
+                        _highscoreManager.save();
+                    }
+
+                    // Check if the player won the game
                     if(loadedLevelData.nextLevelKey.equals("win")) {
                         _winFunction.apply(null);
                         return;
@@ -246,13 +255,6 @@ public class GameDimension {
                     }
 
                     // Load next level
-                    int neededTimeFinal = (int)(System.currentTimeMillis() - scoreStartTimeMillis);
-                    if (_highscoreManager.highscoreMap.get(loadedLevelData.myKey) > neededTimeFinal ||
-                            _highscoreManager.highscoreMap.get(loadedLevelData.myKey) <= 0) {
-                        _highscoreManager.highscoreMap.put(loadedLevelData.myKey, neededTimeFinal);
-                        _highscoreManager.save();
-                    }
-
                     _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
                     return;
                 }
