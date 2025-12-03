@@ -56,6 +56,10 @@ class Spieler {
         _xSpeed = speed;
     }
 
+    public void nullizeMyDimension() {
+        _myDimension = null;
+    }
+
     // Getter wie früher
     public Rectangle getFigur() {
         return _figur;

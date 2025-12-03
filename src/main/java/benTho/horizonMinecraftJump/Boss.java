@@ -22,7 +22,7 @@ public class Boss {
     private float _timeSinceLastShotSeconds;
     private final float _attackDistancePixels;
 
-    private final GameDimension myDimension;
+    private GameDimension myDimension;
 
     private final float _startingXPos = 0; // Used for moving
     private final float _walkAroundAmountPixel = 120;
@@ -63,6 +63,10 @@ public class Boss {
 
 
         myDimension = gameDimension;
+    }
+
+    public void nullizeMyDimension() {
+        myDimension = null;
     }
 
     public void update(float deltaTime, Vector2f playerPixelPos) {

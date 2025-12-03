@@ -166,6 +166,9 @@ public class GameDimension {
     public void updateDimension(float deltaTime, InputData inputData) {
         if(_spieler == null) return;
 
+        // Camera bewegen
+        moveCamera(deltaTime);
+
         // Spieler Updaten
         _spieler.update(deltaTime, inputData);
         if(_boss != null) _boss.update(deltaTime, new Vector2f((float)_spieler.getFigur().getX(), (float)_spieler.getFigur().getY()));
@@ -233,7 +236,7 @@ public class GameDimension {
 
                 //System.out.println(distanceToChest);
                 if(distanceToChest <= 30) {
-                    _spieler = null; // Spieler auf null setzten um irgendwie ganz komische fehler zu fixen
+                    // _spieler = null; // Spieler auf null setzten um irgendwie ganz komische fehler zu fixen
 
                     // Calc the new highscore
                     int neededTimeFinal = (int)(System.currentTimeMillis() - scoreStartTimeMillis);
@@ -245,6 +248,7 @@ public class GameDimension {
 
                     // Check if the player won the game
                     if(loadedLevelData.nextLevelKey.equals("win")) {
+                        unload();
                         _winFunction.apply(null);
                         return;
                     }
@@ -257,14 +261,12 @@ public class GameDimension {
                     }
 
                     // Load next level
+                    unload();
                     _levelLoadFunc.apply(loadedLevelData.nextLevelKey);
                     return;
                 }
             }
         }
-
-        // Camera bewegen
-        moveCamera(deltaTime);
 
         // Level Text langsam unsibar machen
         if (levelNameText != null && levelNameText.getOpacity() > 0) {
@@ -592,7 +594,6 @@ public class GameDimension {
         };
 
         loadingTimer.start();
-
     }
 
     private ImageView addTileToMapList (Vector2f spawnPos, Image img, LevelData lvl){
@@ -658,6 +659,17 @@ public class GameDimension {
         _matchLeben.herzen--;
         _matchLeben.clearHerzen(_root);
 
+        unload();
+
+        if (_matchLeben.herzen > 0) {
+            _soundPlayer.playSound("damage", 1);
+            ladeLevel(loadedLevelData, false);
+        } else {
+            _failFunction.apply(null);
+        }
+    }
+
+    public void unload() {
         _root.getChildren().removeAll(_mapTilesListe);
         for(Projektil p : _projektilList) {
             _root.getChildren().remove(p.getSprite());
@@ -667,21 +679,21 @@ public class GameDimension {
 
         _root.getChildren().remove(levelNameText);
 
-        if(_boss != null) _root.getChildren().remove(_boss.imageView);
+        if(_boss != null) {
+            _root.getChildren().remove(_boss.imageView);
+            _boss.nullizeMyDimension();
+        }
         _boss = null;
 
         _mapTilesListe.clear();
         _projektilList.clear();
+
+        _spieler.nullizeMyDimension();
         _spieler = null;
 
         _root.getChildren().remove(currentScoreText);
 
-        if (_matchLeben.herzen > 0) {
-            _soundPlayer.playSound("damage", 1);
-            ladeLevel(loadedLevelData, false);
-        } else {
-            _failFunction.apply(null);
-        }
+        _root.getChildren().clear();
     }
 }
 

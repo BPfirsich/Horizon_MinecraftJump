@@ -7,6 +7,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 public class Main extends Application {
 
@@ -209,6 +210,8 @@ public class Main extends Application {
 
             @Override
             public void handle(long currentTimeMillis) {
+                long frameStartTime = System.currentTimeMillis();
+
                 // Die zeit zwischen diesen und letzten frame berechnen
                 float deltaTime = (float)((currentTimeMillis - lastTimeNano) / 1_000_000_000.0);
                 lastTimeNano = currentTimeMillis;
@@ -216,6 +219,9 @@ public class Main extends Application {
                 // Alle funktionen callen, die pro frame vorkommen
                 _inputData.inputSystemUpdate();
                 update(deltaTime * 1.0f);
+
+                long frameTime = (System.currentTimeMillis() - frameStartTime);
+                if(frameTime > 10) System.out.println("Frametime: " + frameTime + "ms");
             }
         };
         // TESTING ---
@@ -242,6 +248,8 @@ public class Main extends Application {
         _inputData = new InputData();
         _inputData.initInputSystemOnScene(scene);
 
+        WeakReference<GameDimension> ref = new WeakReference<>(_currentDimension);
+
         _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer,
                 s -> { goToLevel(s, stage); return null; },
                 e -> { switchToWinScreen(stage); return e; },
@@ -249,6 +257,9 @@ public class Main extends Application {
                 _highscoreManager
         );
         _currentDimension.ladeLevel(weltenManager.getLevelData(key), true);
+
+        System.gc();
+        System.out.println("Ref: " + ref.get());
     }
 
     public static void main(String[] args) {
