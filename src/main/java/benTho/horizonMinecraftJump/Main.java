@@ -5,7 +5,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import javafx.scene.layout.StackPane;
+import javafx.scene.Scene;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
@@ -183,57 +190,84 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
 
-        _soundPlayer = new SoundPlayer();
+        // --------------------------
+        // SPLASHSCREEN (neu!)
+        // --------------------------
+        ImageView splash = new ImageView(new Image(getClass().getResourceAsStream("/splash.png")));
+        splash.setFitWidth(429);
+        splash.setFitHeight(764);
 
-        switchToMainMenu(stage);
-        stage.setTitle("Horizon Minecraft Jump");
+        StackPane splashRoot = new StackPane(splash);
+        Scene splashScene = new Scene(splashRoot, 429, 764);
+
+        stage.setScene(splashScene);
         stage.setResizable(false);
         stage.show();
 
-        // Funktionsklassen Setup
-        _inputData = new InputData();
-        _inputData.initInputSystemOnScene(stage.getScene());
+        // Fade-Out
+        FadeTransition fade = new FadeTransition(Duration.seconds(1.5), splashRoot);
+        fade.setDelay(Duration.seconds(1.0)); // wie lange Splash bleibt
+        fade.setFromValue(1);
+        fade.setToValue(0);
 
-        weltenManager = new WeltenManager();
-        _highscoreManager = new HighscoreManager();
+        fade.setOnFinished(f -> {
 
-        try {
-            _highscoreManager.loadOrCreateHighscoreFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        _highscoreManager.save();
+            //ende Splash screen
+            _soundPlayer = new SoundPlayer();
 
-        // Spielschleife, also quasy das "Herz" des spiels.
-        AnimationTimer timer = new AnimationTimer() {
-            double lastTimeNano = System.nanoTime();
+            switchToMainMenu(stage);
+            stage.setTitle("Horizon Minecraft Jump");
+            stage.setResizable(false);
+            stage.show();
 
-            @Override
-            public void handle(long currentTimeMillis) {
-                long frameStartTime = System.currentTimeMillis();
+            // Funktionsklassen Setup
+            _inputData = new InputData();
+            _inputData.initInputSystemOnScene(stage.getScene());
 
-                // Die zeit zwischen diesen und letzten frame berechnen
-                float deltaTime = (float)((currentTimeMillis - lastTimeNano) / 1_000_000_000.0);
-                lastTimeNano = currentTimeMillis;
+            weltenManager = new WeltenManager();
+            _highscoreManager = new HighscoreManager();
 
-                // Alle funktionen callen, die pro frame vorkommen
-                _inputData.inputSystemUpdate();
-                update(deltaTime * 1.0f);
-
-                long frameTime = (System.currentTimeMillis() - frameStartTime);
-                if(frameTime > 10) System.out.println("Frametime: " + frameTime + "ms");
+            try {
+                _highscoreManager.loadOrCreateHighscoreFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        };
-        // TESTING ---
-        //goToLevel("o1", stage);
+            _highscoreManager.save();
 
-        // start Game loop
-        timer.start();
+            // Spielschleife, also quasy das "Herz" des spiels.
+            AnimationTimer timer = new AnimationTimer() {
+                double lastTimeNano = System.nanoTime();
 
-        // DAS HIER ÄNDERN LOL
-        //switchToWinScreen(stage);
-        // DAS HIER ÄNDERN LOL
-    }
+                @Override
+                public void handle(long currentTimeMillis) {
+                    long frameStartTime = System.currentTimeMillis();
+
+                    // Die zeit zwischen diesen und letzten frame berechnen
+                    float deltaTime = (float) ((currentTimeMillis - lastTimeNano) / 1_000_000_000.0);
+                    lastTimeNano = currentTimeMillis;
+
+                    // Alle funktionen callen, die pro frame vorkommen
+                    _inputData.inputSystemUpdate();
+                    update(deltaTime * 1.0f);
+
+                    long frameTime = (System.currentTimeMillis() - frameStartTime);
+                    if (frameTime > 10) System.out.println("Frametime: " + frameTime + "ms");
+                }
+            };
+            // TESTING ---
+            //goToLevel("o1", stage);
+
+            // start Game loop
+            timer.start();
+
+            // DAS HIER ÄNDERN LOL
+            //switchToWinScreen(stage);
+            // DAS HIER ÄNDERN LOL
+
+        });
+        fade.play(); // <--- ebenfalls wichtig!
+    }            // <---- UND DAS ist das Ende der start()-Methode!
+
 
     private void update(float deltaTime) {
         if(_currentDimension != null) _currentDimension.updateDimension(deltaTime, _inputData);
