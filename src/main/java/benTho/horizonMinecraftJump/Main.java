@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.animation.FadeTransition;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import javafx.scene.image.Image;
@@ -27,6 +28,7 @@ public class Main extends Application {
     private HighscoreManager _highscoreManager = null;
 
     void switchToMainMenu(Stage stage) {
+        clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
 
         stage.setScene(Menu.erstelleMenuScene(
@@ -61,6 +63,7 @@ public class Main extends Application {
         ));
     }
     void switchToLevelMenu(Stage stage) {
+        clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
 
         stage.setScene(Menu.erstelleLevelAuswahlScene(
@@ -81,6 +84,7 @@ public class Main extends Application {
         ));
     }
     void switchToHighscoreMenu(Stage stage) {
+        clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
 
         stage.setScene(Menu.erstelleHighcoreScene(
@@ -95,6 +99,7 @@ public class Main extends Application {
         ));
     }
     void switchToStoryMenu(Stage stage) {
+        clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
 
         stage.setScene(Menu.erstelleStoryScene(
@@ -114,6 +119,7 @@ public class Main extends Application {
         ));
     }
     void switchToWinScreen(Stage stage) {
+        clearOldRoot(stage);
         _soundPlayer.setMusic("win");
 
         stage.setScene(Menu.erstelleWinScene(
@@ -148,6 +154,7 @@ public class Main extends Application {
         ));
     }
     void switchToFailScreen(Stage stage) {
+        clearOldRoot(stage);
         _soundPlayer.setMusic("fail");
 
         stage.setScene(Menu.erstelleDeathScene(
@@ -174,6 +181,7 @@ public class Main extends Application {
         ));
     }
     void switchToCredits(Stage stage) {
+        clearOldRoot(stage);
         _soundPlayer.setMusic("credits");
 
         stage.setScene(Menu.erstelleCreditsScreen(
@@ -200,17 +208,22 @@ public class Main extends Application {
         StackPane splashRoot = new StackPane(splash);
         Scene splashScene = new Scene(splashRoot, 429, 764);
 
+        //stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+
+
         stage.setScene(splashScene);
         stage.setResizable(false);
         stage.show();
 
         // Fade-Out
-        FadeTransition fade = new FadeTransition(Duration.seconds(1.5), splashRoot);
-        fade.setDelay(Duration.seconds(1.0)); // wie lange Splash bleibt
+        FadeTransition fade = new FadeTransition(Duration.seconds(1.0), splashRoot);
+        fade.setDelay(Duration.seconds(0.5)); // wie lange Splash bleibt
         fade.setFromValue(1);
         fade.setToValue(0);
 
         fade.setOnFinished(f -> {
+
+
 
             //ende Splash screen
             _soundPlayer = new SoundPlayer();
@@ -219,6 +232,8 @@ public class Main extends Application {
             stage.setTitle("Horizon Minecraft Jump");
             stage.setResizable(false);
             stage.show();
+
+            stage.centerOnScreen();
 
             // Funktionsklassen Setup
             _inputData = new InputData();
@@ -274,6 +289,10 @@ public class Main extends Application {
     }
 
     private void goToLevel(String key, Stage stage) {
+        // Sichergehen das das aktuelle root WIRKLICH leer ist
+        clearOldRoot(stage);
+
+        // Neues level laden
         Pane root = new Pane();
         root.setPrefSize(1280, 720);
         Scene scene = new Scene(root);
@@ -294,6 +313,13 @@ public class Main extends Application {
 
         System.gc();
         System.out.println("Ref: " + ref.get());
+    }
+
+    public void clearOldRoot(Stage stage) {
+        // Sichergehen das das aktuelle root WIRKLICH leer ist
+        Pane oldRoot = (Pane)stage.getScene().getRoot();
+        System.out.println("Cleared Element: " + oldRoot.getChildren().toArray().length);
+        oldRoot.getChildren().clear();
     }
 
     public static void main(String[] args) {

@@ -164,6 +164,8 @@ public class GameDimension {
     }
 
     public void updateDimension(float deltaTime, InputData inputData) {
+        //System.out.println(f_dimensionName + " " + _root.getChildren().stream().count());
+
         if(_spieler == null) return;
 
         // Camera bewegen
