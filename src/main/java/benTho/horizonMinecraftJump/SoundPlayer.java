@@ -1,10 +1,14 @@
 package benTho.horizonMinecraftJump;
 
+import com.sun.glass.ui.delegate.MenuItemDelegate;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class SoundPlayer {
 
@@ -29,6 +33,7 @@ public class SoundPlayer {
         soundHashMap.put("portal", new Media(getClass().getResource("/portalSound.mp3").toString()));
         soundHashMap.put("chest", new Media(getClass().getResource("/chestSound.wav").toString()));
         soundHashMap.put("damage", new Media(getClass().getResource("/playerDamage.wav").toString()));
+        bakeSoundPlayerPool();
 
         // Setup Music
         musicHashMap = new HashMap<>();
@@ -48,10 +53,36 @@ public class SoundPlayer {
 
     }
 
+    HashMap<String, ArrayList<MediaPlayer>> _soundPlayerPool;
+
+    private void bakeSoundPlayerPool() {
+        final int soundPoolSize = 10;
+        _soundPlayerPool = new HashMap<>();
+
+        for (Map.Entry<String, Media> entry : soundHashMap.entrySet()) {
+            _soundPlayerPool.put(entry.getKey(), new ArrayList<>());
+
+            for (int i = 0; i < soundPoolSize; i++) {
+                MediaPlayer nMP = new MediaPlayer(entry.getValue());
+                nMP.setOnEndOfMedia(() -> {
+                    nMP.stop();
+                    nMP.seek(Duration.ZERO);
+                });
+                _soundPlayerPool.get(entry.getKey()).add(nMP);
+
+            }
+        }
+    }
+
     public void playSound(String id, double volume) {
-        MediaPlayer newPlayer = new MediaPlayer(soundHashMap.get(id));
-        newPlayer.setVolume(volume);
-        newPlayer.play();
+        MediaPlayer target = _soundPlayerPool.get(id).get(0);
+        //_soundPlayerPool.get(id).get(1).stop(); // Stopping the next in queue, so it wont bug lol
+        _soundPlayerPool.get(id).remove(target);
+        _soundPlayerPool.get(id).add(target);
+
+        //target.stop();
+        target.setVolume(volume);
+        target.play();
     }
 
     public void setMusic(String id) {
