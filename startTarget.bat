@@ -1,0 +1,1 @@
+java --module-path "C:\Users\eliah\coding\repos\intelliJ\Horizon_MinecraftJump\lib\javafx-sdk-24.0.2\lib" --add-modules javafx.controls,javafx.graphics,javafx.base,javafx.fxml,javafx.swing,javafx.media,javafx.web -jar .\target\Horizon_MinecraftJump-1.0-SNAPSHOT.jar
