@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.Scene;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
 
 public class Main extends Application {
 
@@ -26,6 +27,8 @@ public class Main extends Application {
 
     private WeltenManager weltenManager = null;
     private HighscoreManager _highscoreManager = null;
+
+    public static ServerConnector serverConnector = null; // Static, denn man kann nur maximal zu einem server verbunden sein
 
     void switchToMainMenu(Stage stage) {
         clearOldRoot(stage);
@@ -101,6 +104,10 @@ public class Main extends Application {
     void switchToStoryMenu(Stage stage) {
         clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
+
+        serverConnector.TryConnection(InetAddress.getLoopbackAddress());
+        System.out.println(serverConnector.getPing());
+        serverConnector.CreateRoom();
 
         stage.setScene(Menu.erstelleStoryScene(
                 this,
@@ -248,6 +255,8 @@ public class Main extends Application {
                 throw new RuntimeException(e);
             }
             _highscoreManager.save();
+
+            serverConnector = new ServerConnector();
 
             // Spielschleife, also quasy das "Herz" des spiels.
             AnimationTimer timer = new AnimationTimer() {

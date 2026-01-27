@@ -31,6 +31,8 @@ class Spieler {
 
     private GameDimension _myDimension = null;
 
+    private long _lastMessageToServerMs = 0;
+
     public Spieler(double x, double y, float speed, GameDimension myDimension) {
         _myDimension = myDimension;
 
@@ -54,6 +56,8 @@ class Spieler {
         _sprite.setY(y);
 
         _xSpeed = speed;
+
+        _lastMessageToServerMs = System.currentTimeMillis();
     }
 
     public void nullizeMyDimension() {
@@ -194,6 +198,23 @@ class Spieler {
         // X-Position Sprite synchronisieren
         _sprite.setX(_figur.getX());
         _sprite.setY(_figur.getY());
+
+        // Sync Player Pos to Server (If Connected)
+        if (Main.serverConnector.isConnected()
+                && (System.currentTimeMillis() - _lastMessageToServerMs) > Main.serverConnector.getServerTickMs()){
+
+            Vector2f worldPos = _myDimension.loadedLevelData.calcMapPosFromPixelPos(
+                    (float)_figur.getX(),
+                    (float)_figur.getY(),
+                    _myDimension.cameraPosition,
+                    false
+            );
+            float xPos = worldPos.x;
+            float yPos = worldPos.y;
+
+            Main.serverConnector.sendPlayerPos(xPos, yPos);
+            _lastMessageToServerMs = System.currentTimeMillis();
+        }
     }
 
     public boolean isSneaking() {
