@@ -543,6 +543,13 @@ public class Menu {
         serverAddressField.setLayoutX(213);
         serverAddressField.setLayoutY(290);
         serverAddressField.setFont(minecraftFont);
+        serverAddressField.setStyle("""
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+""");
         root.getChildren().add(serverAddressField);
 
         Text connectedStatusText = new Text(Main.serverConnector.isConnected() ? "Connected to Server" : "Disconnected");
@@ -586,6 +593,13 @@ public class Menu {
         roomNumberTextField.setPrefWidth(290);
         roomNumberTextField.setLayoutX(550);
         roomNumberTextField.setLayoutY(488);
+        roomNumberTextField.setStyle("""
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+""");
         roomNumberTextField.setFont(minecraftFont);
 
         // TextFormatter für nur Zahlen
@@ -631,7 +645,7 @@ public class Menu {
                     return;
                 }
 
-                if (Main.serverConnector.TryConnection(address)) connectedStatusText.setText("Successfully connected!");
+                if (Main.serverConnector.TryConnection(address, classInstance)) connectedStatusText.setText("Successfully connected!");
                 else connectedStatusText.setText("Connection Failed!");
             }
         });

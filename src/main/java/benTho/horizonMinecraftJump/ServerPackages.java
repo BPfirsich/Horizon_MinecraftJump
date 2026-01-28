@@ -162,6 +162,37 @@ public class ServerPackages {
         }
     }
 
+    public static String tcp_GetCurrentWorld(BlockingDeque<ByteBuffer> in, DataOutputStream out, int roomID) throws IOException {
+        System.out.println("Request Package to server: GetCurrentWorld");
+
+        ByteBuffer buffer = ByteBuffer.allocate(12);
+        buffer.putInt(200);
+        buffer.putInt(4);
+        buffer.putInt(roomID);
+        out.write(buffer.array());
+
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return "__"; // On disconnect or anything like that
+            return Character.toString(response.getChar()) + Character.toString(response.getChar());
+
+        } catch (InterruptedException e) {
+            return "__";
+        }
+    }
+
+    public static void tcp_changeWorld(DataOutputStream out, int targetRoomID, String world) throws IOException {
+        System.out.println("Request Package to server: ChangeWorld - " + world);
+
+        ByteBuffer buffer = ByteBuffer.allocate(8 + 4 + 2 + 2);
+        buffer.putInt(201);
+        buffer.putInt(4 + 2 + 2); // Payload
+        buffer.putInt(targetRoomID);
+        buffer.putChar(world.charAt(0));
+        buffer.putChar(world.charAt(1));
+        out.write(buffer.array());
+    }
+
     // ====================================
     // UDP
     // ====================================

@@ -30,7 +30,11 @@ public class Main extends Application {
 
     public static ServerConnector serverConnector = null; // Static, denn man kann nur maximal zu einem server verbunden sein
 
+    public Stage stageRef;
+
     void switchToMainMenu(Stage stage) {
+
+        stageRef = stage;
         clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
 
@@ -42,7 +46,7 @@ public class Main extends Application {
                     _soundPlayer.playSound("newGame", 1.0);
 
                     _matchLeben = new MatchLeben(5);
-                    goToLevel("o1", stage);
+                    goToLevel("o1", stage, false);
                     return e;
                 },
                 e -> { // Level Selector
@@ -81,7 +85,7 @@ public class Main extends Application {
                     _soundPlayer.playSound("click", 1);
 
                     _matchLeben = new MatchLeben(5);
-                    goToLevel(s, stage);
+                    goToLevel(s, stage, false);
                     return null;
                 },
                 e -> {
@@ -144,7 +148,7 @@ public class Main extends Application {
                     _soundPlayer.playSound("click", 1);
 
                     _matchLeben = new MatchLeben(5);
-                    goToLevel("o1", stage);
+                    goToLevel("o1", stage, false);
                     return e;
                 },
                 e -> { // Highscore Scene
@@ -172,7 +176,7 @@ public class Main extends Application {
                     _soundPlayer.playSound("click", 1);
 
                     _matchLeben = new MatchLeben(5);
-                    goToLevel("o1", stage);
+                    goToLevel("o1", stage, false);
                     return e;
                 },
                 e -> { // Lvl Auswahl
@@ -315,7 +319,18 @@ public class Main extends Application {
         if(_currentDimension != null) _currentDimension.updateDimension(deltaTime, _inputData);
     }
 
-    private void goToLevel(String key, Stage stage) {
+    public void goToLevel(String key, Stage stage, boolean isCalledByServer) {
+        if (serverConnector.isConnected() && !isCalledByServer) {
+            int currentRoomID = serverConnector.getCurrentRoomID();
+            if (currentRoomID == -1) {
+                // In case if we arent in a room, we cannot start the game. Because yeah, dont be in Server you u want to play offline :P
+                return;
+            } else {
+                serverConnector.changeWorld(currentRoomID, key);
+                return;
+            }
+        }
+
         // Sichergehen das das aktuelle root WIRKLICH leer ist
         clearOldRoot(stage);
 
@@ -331,7 +346,7 @@ public class Main extends Application {
         WeakReference<GameDimension> ref = new WeakReference<>(_currentDimension);
 
         _currentDimension = new GameDimension(key, root, _matchLeben, _soundPlayer,
-                s -> { goToLevel(s, stage); return null; },
+                s -> { goToLevel(s, stage, false); return null; },
                 e -> { switchToWinScreen(stage); return e; },
                 e -> { switchToFailScreen(stage); return e; },
                 _highscoreManager

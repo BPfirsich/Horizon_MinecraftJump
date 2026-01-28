@@ -25,10 +25,14 @@ public class ServerLoop {
     private volatile boolean tcpListenerRunning = false;
     private volatile boolean udpListenerRunning = false;
 
-    public ServerLoop(DataInputStream tcpIn, DatagramSocket udpSocket, InetAddress address) {
+    private final Main mainRef;
+
+    public ServerLoop(DataInputStream tcpIn, DatagramSocket udpSocket, InetAddress address, Main mainRef) {
         this.tcpIn = tcpIn;
         this.udpSocket = udpSocket;
         this.address = address;
+
+        this.mainRef = mainRef;
     }
 
     public void startServerLoop_tcp() {
@@ -111,6 +115,7 @@ public class ServerLoop {
     }
 
     private static final int TCPHEADER_RESPONSE = 0;
+    private static final int TCPHEADER_CHANGE_WORLD = 100;
 
     private void processTcpPackage(int header, ByteBuffer data) {
         System.out.println("Received Package from server with header: " + header);
@@ -120,6 +125,14 @@ public class ServerLoop {
                 try {
                     responseQueue.put(data); // Blocks until it can write into it
                 } catch (InterruptedException e) { }
+            }
+            case TCPHEADER_CHANGE_WORLD -> {
+                String targetWorld = "";
+                targetWorld = Character.toString(data.getChar()) + Character.toString(data.getChar());
+
+                if (targetWorld.equals("__")) break;
+
+                mainRef.goToLevel(targetWorld, mainRef.stageRef, true);
             }
         }
     }

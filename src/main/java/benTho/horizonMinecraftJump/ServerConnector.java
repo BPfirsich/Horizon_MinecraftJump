@@ -31,9 +31,10 @@ public class ServerConnector {
     // Status values
     private volatile boolean _isConnected = false; // volatile = all threads see the current state
     private InetAddress _currentServerAddress = null;
+    private String _currentWorld = "__";
 
     public boolean isConnected() {
-        return _isConnected && _currentRoomID != -1;
+        return _isConnected;
     }
 
     public int getPing() {
@@ -44,7 +45,7 @@ public class ServerConnector {
         return _serverTickMs;
     }
 
-    public boolean TryConnection(InetAddress serverAddress) {
+    public boolean TryConnection(InetAddress serverAddress, Main mainRef) {
         if (_isConnected) {
             System.err.println("Cant connect to server while being already connected!");
             return false;
@@ -62,7 +63,7 @@ public class ServerConnector {
             _currentServerAddress = serverAddress;
             _isConnected = true;
 
-            _serverLoop = new ServerLoop(tcpIn, udpSocket, _currentServerAddress);
+            _serverLoop = new ServerLoop(tcpIn, udpSocket, _currentServerAddress, mainRef);
             _serverLoop.startServerLoop_tcp();
 
             if (!GatherServerInfo()) {
@@ -198,6 +199,31 @@ public class ServerConnector {
                     _currentRoomID,
                     x, y
             );
+
+        } catch (IOException e) {
+            System.err.println("Server connection lost!");
+            Disconnect();
+        }
+    }
+
+    public String getCurrentWorld(int targetRoomID) {
+        if (!_isConnected) return "__";
+
+        try {
+            return ServerPackages.tcp_GetCurrentWorld(_serverLoop.responseQueue, tcpOut, targetRoomID);
+
+        } catch (IOException e) {
+            System.err.println("Server connection lost!");
+            Disconnect();
+            return "__";
+        }
+    }
+
+    public void changeWorld(int roomID, String targetWorld) {
+        if (!_isConnected) return;
+
+        try {
+            ServerPackages.tcp_changeWorld(tcpOut, roomID, targetWorld);
 
         } catch (IOException e) {
             System.err.println("Server connection lost!");
