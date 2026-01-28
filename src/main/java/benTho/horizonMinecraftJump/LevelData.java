@@ -44,7 +44,7 @@ public class LevelData {
     // The centeringOffset is meant to for the player. Its just moves the x pos by 0.5 tiles, so the center of
     // the calculation result is actually in the middle of a tile, instead on the edge
 
-    public Vector2f calcPixelCordsFromTile(int x, int y, Vector2f cameraOffset, boolean centeringOffset) {
+    public Vector2f calcPixelCordsFromTile(float x, float y, Vector2f cameraOffset, boolean centeringOffset) {
         //x += (int)cameraOffset.x;
         //y += (int)cameraOffset.y;
 

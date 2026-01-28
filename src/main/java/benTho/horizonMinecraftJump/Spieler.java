@@ -11,8 +11,8 @@ class Spieler {
     private ImageView _sprite;  // Neues sichtbares Bild
 
     // Konstanten für die Spielergröße und Boden
-    private static final float BREITE = 821/16;
-    private static final float HOEHE = 1046/16;
+    public static final float BREITE = 821/16;
+    public static final float HOEHE = 1046/16;
     private static final float HOEHE_SNEAKEN = 821/16;
     private static final float BODEN_Y = 400;
 

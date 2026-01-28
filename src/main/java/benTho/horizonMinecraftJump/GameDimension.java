@@ -1,6 +1,8 @@
 package benTho.horizonMinecraftJump;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import javafx.animation.AnimationTimer;
@@ -75,6 +77,8 @@ public class GameDimension {
     private Image _dragonIdleImg;
     private Image _dragonShootImg;
 
+    private Image _playerIdleImage; // For Server
+
     public LevelData loadedLevelData;
 
     public Vector2f cameraPosition;
@@ -91,6 +95,10 @@ public class GameDimension {
 
     private Text currentScoreText;
     private long scoreStartTimeMillis; // Uses system time
+
+    // SERVER BASED STUFF ===========
+    private Map<Integer, ImageView> _networkPlayers = new HashMap<>();
+    // ==============================
 
     public GameDimension(String name, Pane root, MatchLeben leben, SoundPlayer soundPlayer, Function<String, Void> lvlLoadFunc,
                          Function<Void, Void> winFunction, Function<Void, Void> failFunction, HighscoreManager highscoreManager) {
@@ -157,6 +165,8 @@ public class GameDimension {
 
         _dragonIdleImg = new Image(getClass().getResourceAsStream("/enderdrache_normal.png"));
         _dragonShootImg = new Image(getClass().getResourceAsStream("/enderdrache_wutend.png"));
+
+        _playerIdleImage = new Image(getClass().getResourceAsStream("/spieler_idle.png")); // For Server
 
         // Hintergrund aktualisieren
         //_root.setBackground(new Background(new BackgroundFill(new Paint)));
@@ -276,6 +286,27 @@ public class GameDimension {
         }
 
         updateScoreTxt();
+    }
+
+    // Update the Sprite of another Player. (Server-only)
+    public void updateNetworkPlayer(int playerID, float x, float y) {
+        if (_networkPlayers.containsKey(playerID)) {
+            ImageView target = _networkPlayers.get(playerID);
+            Vector2f targetPos = loadedLevelData.calcPixelCordsFromTile(x, y - 1.6f, cameraPosition, false);
+            target.setX(targetPos.x);
+            target.setY(targetPos.y);
+        } else {
+            ImageView newView = new ImageView(_playerIdleImage);
+            _networkPlayers.put(playerID, newView);
+
+            newView.setFitHeight(Spieler.HOEHE);
+            newView.setFitWidth(Spieler.BREITE);
+            newView.setPreserveRatio(false);
+
+            _root.getChildren().add(newView);
+
+            updateNetworkPlayer(playerID, x, y);
+        }
     }
 
     // Fügt einen gegner zur Dimension hinzu, und fügt dessen Rectangle zur scene hinzu
@@ -692,6 +723,10 @@ public class GameDimension {
 
         _spieler.nullizeMyDimension();
         _spieler = null;
+
+        for(Map.Entry<Integer, ImageView> netPlayer : _networkPlayers.entrySet()) {
+            _root.getChildren().remove(netPlayer.getValue());
+        }
 
         _root.getChildren().remove(currentScoreText);
 

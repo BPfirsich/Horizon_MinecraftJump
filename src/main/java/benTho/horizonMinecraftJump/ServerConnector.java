@@ -70,6 +70,7 @@ public class ServerConnector {
                 return false; // The function already handling disconnection etc.
             }
             _serverPing = calculatePing();
+            System.out.println("Server Ping: " + _serverPing);
 
             _serverLoop.startServerLoop_udp(_currentClientID);
 

@@ -23,7 +23,7 @@ import java.util.function.Function;
 
 public class Main extends Application {
 
-    private GameDimension _currentDimension = null;
+    public GameDimension _currentDimension = null;
     private InputData _inputData = null;
     public MatchLeben _matchLeben = null;
     private SoundPlayer _soundPlayer = null;

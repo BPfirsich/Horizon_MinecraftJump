@@ -2,6 +2,7 @@ package benTho.horizonMinecraftJump;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
@@ -147,12 +148,47 @@ public class ServerLoop {
     private void udpLoop(int clientID) {
         System.out.println("UDP Thread Running...");
 
-        // Send ClientData to Server to create a "tunnel"
-
-
         // Start the loop
+        while(udpListenerRunning) {
+            try {
+                byte[] buffer = new byte[1024];
+                DatagramPacket udpPacket = new DatagramPacket(buffer, buffer.length);
+
+                udpSocket.receive(udpPacket);
+
+                ByteBuffer bb = ByteBuffer.wrap(udpPacket.getData(), 0, udpPacket.getLength());
+                bb.order(ByteOrder.BIG_ENDIAN);
+
+                int header = bb.getInt();
+                processUdpPackage(header, bb);
+
+            } catch (IOException e) {
+                connectionErrorHappened();
+                break;
+            }
+
+        }
 
         System.out.println("UDP Thread Stopped...");
+    }
+
+    private static final int UDPHEADER_PLAYERPOS = 1;
+
+    private void processUdpPackage(int header, ByteBuffer data) {
+        switch (header) {
+            case UDPHEADER_PLAYERPOS -> {
+                int playerID = data.getInt();
+                float posX = data.getFloat();
+                float posY = data.getFloat();
+
+                mainRef.doSomethingQueue.add(e -> {
+                    if(mainRef._currentDimension != null) {
+                        mainRef._currentDimension.updateNetworkPlayer(playerID, posX, posY);
+                    }
+                    return e;
+                });
+            }
+        }
     }
 
     private void udpKeepAlive() {
