@@ -17,6 +17,9 @@ import javafx.scene.Scene;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.function.Function;
 
 public class Main extends Application {
 
@@ -30,6 +33,7 @@ public class Main extends Application {
 
     public static ServerConnector serverConnector = null; // Static, denn man kann nur maximal zu einem server verbunden sein
 
+    public Queue<Function<Void, Void>> doSomethingQueue = new ConcurrentLinkedDeque<>(); // Used by the server. (Thread-safe)
     public Stage stageRef;
 
     void switchToMainMenu(Stage stage) {
@@ -296,6 +300,11 @@ public class Main extends Application {
                     _inputData.inputSystemUpdate();
                     update(deltaTime * 1.0f);
 
+                    while (!doSomethingQueue.isEmpty()) {
+                        // Things are done here like loading Levels in Multiplayer etc.
+                        doSomethingQueue.poll().apply(null);
+                    }
+
                     long frameTime = (System.currentTimeMillis() - frameStartTime);
                     if (frameTime > 10) System.out.println("Frametime: " + frameTime + "ms");
                 }
@@ -323,12 +332,16 @@ public class Main extends Application {
         if (serverConnector.isConnected() && !isCalledByServer) {
             int currentRoomID = serverConnector.getCurrentRoomID();
             if (currentRoomID == -1) {
-                // In case if we arent in a room, we cannot start the game. Because yeah, dont be in Server you u want to play offline :P
+                // In case if we aren't in a room, we cannot start the game. Because yeah, don't be in Server you u want to play offline :P
                 return;
             } else {
                 serverConnector.changeWorld(currentRoomID, key);
                 return;
             }
+        }
+        System.out.println(isCalledByServer);
+        if (isCalledByServer) {
+            _matchLeben = new MatchLeben(5); // The Buttons do this normally but online you didn't pressed the button
         }
 
         // Sichergehen das das aktuelle root WIRKLICH leer ist

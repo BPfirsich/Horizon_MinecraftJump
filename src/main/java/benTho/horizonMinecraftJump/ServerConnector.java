@@ -71,6 +71,8 @@ public class ServerConnector {
             }
             _serverPing = calculatePing();
 
+            _serverLoop.startServerLoop_udp(_currentClientID);
+
             System.out.println("Successfully connected to \"" + serverAddress.toString() + "\"");
             return true;
 

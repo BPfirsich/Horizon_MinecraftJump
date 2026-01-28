@@ -218,9 +218,11 @@ public class ServerPackages {
         udpSocket.send(packet);
     }
 
-    public static void udp_sendAliveSignal(DatagramSocket udpSocket, InetAddress address) throws IOException {
-        ByteBuffer buffer = ByteBuffer.allocate(4);
+    public static void udp_sendAliveSignal(DatagramSocket udpSocket, InetAddress address, int clientID) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(12);
         buffer.putInt(1);
+        buffer.putInt(clientID);
+        buffer.putInt(-1); // Room doesn't matter
 
         byte[] data = buffer.array();
         DatagramPacket packet = new DatagramPacket(

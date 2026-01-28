@@ -18,6 +18,8 @@ public class ServerLoop {
     private DatagramSocket udpSocket = null;
     private InetAddress address = null;
 
+    private int clientID;
+
     private Thread tcpThread = null;
     private Thread udpThread = null;
     private Thread udpKeepAliveThread = null;
@@ -33,6 +35,8 @@ public class ServerLoop {
         this.address = address;
 
         this.mainRef = mainRef;
+
+        this.clientID = clientID;
     }
 
     public void startServerLoop_tcp() {
@@ -47,6 +51,8 @@ public class ServerLoop {
     // Because for UDP we need a clientID, and we can only get this if the tcp tunnel is already setup
     public void startServerLoop_udp(int clientID) {
         System.out.println("Starting Server-listener-loop");
+
+        this.clientID = clientID;
 
         udpKeepAliveThread = new Thread(this::udpKeepAlive);
         udpThread = new Thread(() -> this.udpLoop(clientID));
@@ -127,12 +133,13 @@ public class ServerLoop {
                 } catch (InterruptedException e) { }
             }
             case TCPHEADER_CHANGE_WORLD -> {
-                String targetWorld = "";
-                targetWorld = Character.toString(data.getChar()) + Character.toString(data.getChar());
+                String targetWorld = Character.toString(data.getChar()) + Character.toString(data.getChar());
 
                 if (targetWorld.equals("__")) break;
 
-                mainRef.goToLevel(targetWorld, mainRef.stageRef, true);
+                mainRef.doSomethingQueue.add(e -> {
+                    mainRef.goToLevel(targetWorld, mainRef.stageRef, true); return e;
+                });
             }
         }
     }
@@ -154,14 +161,14 @@ public class ServerLoop {
         // Send a alive signal every 20_000ms
         while(udpListenerRunning) {
             try {
-                ServerPackages.udp_sendAliveSignal(udpSocket, address);
+                ServerPackages.udp_sendAliveSignal(udpSocket, address, clientID);
             } catch (IOException e) {
                 connectionErrorHappened();
                 break;
             }
 
             try {
-                Thread.sleep(20000);
+                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 // Just chill about it :P
             }
