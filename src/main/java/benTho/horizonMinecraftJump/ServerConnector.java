@@ -26,6 +26,8 @@ public class ServerConnector {
     private DataInputStream tcpIn = null;
     private DataOutputStream tcpOut = null;
 
+    private ServerLoop _serverLoop = null;
+
     // Status values
     private volatile boolean _isConnected = false; // volatile = all threads see the current state
     private InetAddress _currentServerAddress = null;
@@ -60,6 +62,9 @@ public class ServerConnector {
             _currentServerAddress = serverAddress;
             _isConnected = true;
 
+            _serverLoop = new ServerLoop(tcpIn, udpSocket, _currentServerAddress);
+            _serverLoop.startServerLoop_tcp();
+
             if (!GatherServerInfo()) {
                 return false; // The function already handling disconnection etc.
             }
@@ -70,6 +75,7 @@ public class ServerConnector {
 
         } catch (IOException e) {
             System.err.println("Connection to Server failed!");
+            e.printStackTrace();
             _isConnected = false;
             return false;
         }
@@ -80,7 +86,9 @@ public class ServerConnector {
 
         if (_isConnected) {
             try {
-                ServerPackages.tcp_Disconnect(tcpIn, tcpOut);
+                _serverLoop.stopServerLoop();
+
+                ServerPackages.tcp_Disconnect(tcpOut);
                 udpSocket.close();
                 tcpSocket.close();
             } catch (IOException e) { }
@@ -101,6 +109,7 @@ public class ServerConnector {
         tcpOut = null;
 
         _currentServerAddress = null;
+        _serverLoop = null;
     }
 
     // If ServerVersion and Client Version doesn't match -> cancel connection, and false
@@ -108,14 +117,14 @@ public class ServerConnector {
         if (!_isConnected) return false;
 
         try {
-            _serverVersion = ServerPackages.tcp_getServerVersion(tcpIn, tcpOut);
+            _serverVersion = ServerPackages.tcp_getServerVersion(_serverLoop.responseQueue, tcpOut);
             if (_serverVersion != MY_SERVER_VERSION) {
                 System.err.println("Server and client version doesn't match!");
                 Disconnect();
                 return false;
             }
-            _serverTickMs = ServerPackages.tcp_GetServerTickSpeedMs(tcpIn, tcpOut);
-            _currentClientID = ServerPackages.tcp_GetClientID(tcpIn, tcpOut);
+            _serverTickMs = ServerPackages.tcp_GetServerTickSpeedMs(_serverLoop.responseQueue, tcpOut);
+            _currentClientID = ServerPackages.tcp_GetClientID(_serverLoop.responseQueue, tcpOut);
 
         } catch (IOException e) {
             System.err.println("Server connection lost!");
@@ -129,7 +138,7 @@ public class ServerConnector {
         if (!_isConnected) return;
 
         try {
-            _currentRoomID = ServerPackages.tcp_createRoom(tcpIn, tcpOut);
+            _currentRoomID = ServerPackages.tcp_createRoom(_serverLoop.responseQueue, tcpOut);
 
         } catch (IOException e) {
             System.err.println("Server connection lost!");
@@ -141,7 +150,7 @@ public class ServerConnector {
         if (!_isConnected) return -1;
 
         try {
-            _currentRoomID = ServerPackages.tcp_getRoomNumber(tcpIn, tcpOut);
+            _currentRoomID = ServerPackages.tcp_getRoomNumber(_serverLoop.responseQueue, tcpOut);
             return _currentRoomID;
 
         } catch (IOException e) {
@@ -155,7 +164,7 @@ public class ServerConnector {
         if (!_isConnected) return;
 
         try {
-            ServerPackages.tcp_joinRoom(tcpIn, tcpOut, roomID);
+            ServerPackages.tcp_joinRoom(tcpOut, roomID);
 
         } catch (IOException e) {
             System.err.println("Server connection lost!");
@@ -167,7 +176,7 @@ public class ServerConnector {
         if (!_isConnected) return;
 
         try {
-            ServerPackages.tcp_leaveRoom(tcpIn, tcpOut);
+            ServerPackages.tcp_leaveRoom(tcpOut);
 
         } catch (IOException e) {
             System.err.println("Server connection lost!");
@@ -202,7 +211,7 @@ public class ServerConnector {
             final int measureTimes = 5;
 
             for (int i = 0; i < measureTimes; i++) {
-                sum += ServerPackages.tcp_GetPingMs(tcpIn, tcpOut);
+                sum += ServerPackages.tcp_GetPingMs(_serverLoop.responseQueue, tcpOut);
             }
             return sum / measureTimes;
 

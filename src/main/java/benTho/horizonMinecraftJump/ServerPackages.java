@@ -7,6 +7,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.util.concurrent.BlockingDeque;
 
 public class ServerPackages {
 
@@ -14,65 +15,142 @@ public class ServerPackages {
     // TCP
     // ====================================
 
-    public static void tcp_Disconnect(DataInputStream in, DataOutputStream out) throws IOException {
-        out.writeInt(0);
-        out.writeInt(0);
+    public static void tcp_Disconnect(DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: Disconnect");
+
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(0); // Header
+        buffer.putInt(0); // Payload
+        out.write(buffer.array());
     }
 
-    public static int tcp_GetClientID(DataInputStream in, DataOutputStream out) throws IOException {
-        out.writeInt(1);
-        out.writeInt(0);
+    public static int tcp_GetClientID(BlockingDeque<ByteBuffer> in, DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: ClientID");
 
-        return in.readInt();
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(1);
+        buffer.putInt(0);
+        out.write(buffer.array());
+
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return -1; // On disconnect or anything like that
+            return response.getInt();
+
+        } catch (InterruptedException e) {
+            return -1;
+        }
     }
 
-    public static int tcp_createRoom(DataInputStream in, DataOutputStream out) throws IOException {
-        out.writeInt(2);
-        out.writeInt(0);
+    public static int tcp_createRoom(BlockingDeque<ByteBuffer> in, DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: CreateRoom");
 
-        return in.readInt();
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(2);
+        buffer.putInt(0);
+        out.write(buffer.array());
+
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return -1; // On disconnect or anything like that
+            return response.getInt();
+
+        } catch (InterruptedException e) {
+            return -1;
+        }
     }
 
-    public static void tcp_joinRoom(DataInputStream in, DataOutputStream out, int roomID) throws IOException {
-        out.writeInt(3);
-        out.writeInt(4);
+    public static void tcp_joinRoom(DataOutputStream out, int roomID) throws IOException {
+        System.out.println("Request Package to server: JoinRoom");
 
-        out.writeInt(roomID);
+        ByteBuffer buffer = ByteBuffer.allocate(12);
+        buffer.putInt(3);
+        buffer.putInt(4);
+        buffer.putInt(roomID);
+        out.write(buffer.array());
     }
 
-    public static int tcp_getRoomNumber(DataInputStream in, DataOutputStream out) throws IOException {
-        out.writeInt(4);
-        out.writeInt(0);
+    public static int tcp_getRoomNumber(BlockingDeque<ByteBuffer> in, DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: getRoomNumber");
 
-        return in.readInt();
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(4);
+        buffer.putInt(0);
+        out.write(buffer.array());
+
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return -1; // On disconnect or anything like that
+            return response.getInt();
+
+        } catch (InterruptedException e) {
+            return -1;
+        }
     }
 
-    public static void tcp_leaveRoom(DataInputStream in, DataOutputStream out) throws IOException {
-        out.writeInt(5);
-        out.writeInt(0);
+    public static void tcp_leaveRoom(DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: LeaveRoom");
+
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(5);
+        buffer.putInt(0);
+        out.write(buffer.array());
     }
 
-    public static int tcp_getServerVersion(DataInputStream in, DataOutputStream out) throws IOException {
-        out.writeInt(100);
-        out.writeInt(0);
+    public static int tcp_getServerVersion(BlockingDeque<ByteBuffer> in, DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: GetServerVersion");
 
-        return in.readInt();
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(100);
+        buffer.putInt(0);
+        out.write(buffer.array());
+
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return -1; // On disconnect or anything like that
+            return response.getInt();
+
+        } catch (InterruptedException e) {
+            return -1;
+        }
     }
 
-    public static int tcp_GetServerTickSpeedMs(DataInputStream in, DataOutputStream out) throws IOException {
-        out.writeInt(101);
-        out.writeInt(0);
+    public static int tcp_GetServerTickSpeedMs(BlockingDeque<ByteBuffer> in, DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: TickSpeed");
 
-        return in.readInt();
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(101);
+        buffer.putInt(0);
+        out.write(buffer.array());
+
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return -1; // On disconnect or anything like that
+            return response.getInt();
+
+        } catch (InterruptedException e) {
+            return -1;
+        }
     }
 
-    public static int tcp_GetPingMs(DataInputStream in, DataOutputStream out) throws IOException {
+    public static int tcp_GetPingMs(BlockingDeque<ByteBuffer> in, DataOutputStream out) throws IOException {
+        System.out.println("Request Package to server: Ping");
+
         long startTime = System.currentTimeMillis();
-        out.writeInt(102);
-        out.writeInt(0);
+        ByteBuffer buffer = ByteBuffer.allocate(8);
+        buffer.putInt(102);
+        buffer.putInt(0);
+        out.write(buffer.array());
 
-        boolean b = in.readBoolean();
-        return (int)(System.currentTimeMillis() - startTime);
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return -1; // On disconnect or anything like that
+            // Just do nothing with the return. Just contains a bool of "True"
+            return (int)(System.currentTimeMillis() - startTime);
+
+        } catch (InterruptedException e) {
+            return -1;
+        }
     }
 
     // ====================================
@@ -91,6 +169,20 @@ public class ServerPackages {
 
         byte[] data = buffer.array();
 
+        DatagramPacket packet = new DatagramPacket(
+                data,
+                data.length,
+                address,
+                ServerConnector.PORT
+        );
+        udpSocket.send(packet);
+    }
+
+    public static void udp_sendAliveSignal(DatagramSocket udpSocket, InetAddress address) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(4);
+        buffer.putInt(1);
+
+        byte[] data = buffer.array();
         DatagramPacket packet = new DatagramPacket(
                 data,
                 data.length,
