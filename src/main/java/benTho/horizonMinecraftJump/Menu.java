@@ -44,9 +44,10 @@ public class Menu {
     }
 
     public static Scene erstelleMenuScene(Main classInstance, Function<Void, Void> loadLevel1,
-                                   Function<Void, Void> toLevelScreen, Function<Void, Void> toHighscoreScene, Function<Void, Void> toStoryScreen) {
+                                   Function<Void, Void> toLevelScreen, Function<Void, Void> toHighscoreScene,
+                                          Function<Void, Void> toStoryScreen, Function<Void, Void> toServerScreen) {
         Pane root = new Pane();
-        Scene newScene = createSceneBase(classInstance, root, "/Homescreen_text.png");
+        Scene newScene = createSceneBase(classInstance, root, "/Homescreen_text_multi.png");
 
         Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 30);
 
@@ -95,7 +96,17 @@ public class Menu {
         endBt.setOpacity(0);
         root.getChildren().add(endBt);
 
-        Text version = new Text("version: 1.0");
+        Button onlineBt = new Button("online");
+        onlineBt.setPrefWidth(240);
+        onlineBt.setPrefHeight(80);
+        onlineBt.setLayoutX(1010);
+        onlineBt.setLayoutY(440);
+        onlineBt.setOpacity(0);
+        onlineBt.setOnAction(event -> { toServerScreen.apply(null); });
+        root.getChildren().add(onlineBt);
+
+
+        Text version = new Text("version: 1.1");
         version.setFill(Color.YELLOW);
         version.setFont(minecraftFont);
         version.setX(5);
@@ -522,15 +533,15 @@ public class Menu {
 
     public static Scene erstelleServerMenu(Main classInstance, Function<Void, Void> backFunction) {
         Pane root = new Pane();
-        Scene newScene = createSceneBase(classInstance, root, "/screen_end_3.png");
+        Scene newScene = createSceneBase(classInstance, root, "/Screen_online.png");
 
         Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 40);
 
         TextField serverAddressField = new TextField("localhost");
-        serverAddressField.setPrefHeight(80);
-        serverAddressField.setPrefWidth(300);
-        serverAddressField.setLayoutX(200);
-        serverAddressField.setLayoutY(200);
+        serverAddressField.setPrefHeight(90);
+        serverAddressField.setPrefWidth(290);
+        serverAddressField.setLayoutX(213);
+        serverAddressField.setLayoutY(290);
         serverAddressField.setFont(minecraftFont);
         root.getChildren().add(serverAddressField);
 
@@ -538,8 +549,8 @@ public class Menu {
         connectedStatusText.setFont(minecraftFont);
         connectedStatusText.setTextAlignment(TextAlignment.CENTER);
         connectedStatusText.setFill(javafx.scene.paint.Color.WHITE);
-        connectedStatusText.setLayoutX(200);
-        connectedStatusText.setLayoutY(320);
+        connectedStatusText.setLayoutX(210);
+        connectedStatusText.setLayoutY(420);
         root.getChildren().add(connectedStatusText);
 
         // Connected Menu
@@ -548,8 +559,8 @@ public class Menu {
         currentRoomText.setFont(minecraftFont);
         currentRoomText.setTextAlignment(TextAlignment.CENTER);
         currentRoomText.setFill(javafx.scene.paint.Color.WHITE);
-        currentRoomText.setLayoutX(200);
-        currentRoomText.setLayoutY(400);
+        currentRoomText.setLayoutX(210);
+        currentRoomText.setLayoutY(620);
         {
             int currentRoom = Main.serverConnector.getCurrentRoomID();
             currentRoomText.setText((currentRoom != -1) ? "Current Room: " + currentRoom :
@@ -558,10 +569,11 @@ public class Menu {
         root.getChildren().add(currentRoomText);
 
         Button createRoomBt = new Button("Create Room");
-        createRoomBt.setPrefHeight(60);
-        createRoomBt.setPrefWidth(100);
+        createRoomBt.setPrefHeight(80);
+        createRoomBt.setPrefWidth(200);
         createRoomBt.setLayoutX(200);
-        createRoomBt.setLayoutY(450);
+        createRoomBt.setLayoutY(492);
+        createRoomBt.setOpacity(0);
         createRoomBt.setOnAction(event -> {
             int joinedRoom = Main.serverConnector.CreateRoom();
             currentRoomText.setText((joinedRoom != -1) ? "Current Room: " + joinedRoom :
@@ -570,10 +582,10 @@ public class Menu {
         root.getChildren().add(createRoomBt);
 
         TextField roomNumberTextField = new TextField();
-        roomNumberTextField.setPrefHeight(80);
-        roomNumberTextField.setPrefWidth(200);
-        roomNumberTextField.setLayoutX(200);
-        roomNumberTextField.setLayoutY(550);
+        roomNumberTextField.setPrefHeight(90);
+        roomNumberTextField.setPrefWidth(290);
+        roomNumberTextField.setLayoutX(550);
+        roomNumberTextField.setLayoutY(488);
         roomNumberTextField.setFont(minecraftFont);
 
         // TextFormatter für nur Zahlen
@@ -587,10 +599,11 @@ public class Menu {
         root.getChildren().add(roomNumberTextField);
 
         Button joinRoomBt = new Button("Join Room");
-        joinRoomBt.setPrefHeight(60);
-        joinRoomBt.setPrefWidth(100);
-        joinRoomBt.setLayoutX(450);
-        joinRoomBt.setLayoutY(550);
+        joinRoomBt.setPrefHeight(100);
+        joinRoomBt.setPrefWidth(150);
+        joinRoomBt.setLayoutX(850);
+        joinRoomBt.setLayoutY(480);
+        joinRoomBt.setOpacity(0);
         joinRoomBt.setOnAction(event -> {
             if (roomNumberTextField.getText().isEmpty()) return;
 
@@ -603,10 +616,11 @@ public class Menu {
         // =======================================================
 
         Button connectButton = new Button("Connect to Server");
-        connectButton.setPrefHeight(60);
-        connectButton.setPrefWidth(100);
-        connectButton.setLayoutX(500);
-        connectButton.setLayoutY(200);
+        connectButton.setPrefHeight(100);
+        connectButton.setPrefWidth(200);
+        connectButton.setLayoutX(520);
+        connectButton.setLayoutY(290);
+        connectButton.setOpacity(0);
         connectButton.setOnAction(event -> {
             if (!Main.serverConnector.isConnected()) {
                 InetAddress address = null;
@@ -626,8 +640,9 @@ public class Menu {
         Button backBt = new Button("Zurück");
         backBt.setPrefWidth(220);
         backBt.setPrefHeight(95);
-        backBt.setLayoutX(935);
-        backBt.setLayoutY(250);
+        backBt.setLayoutX(950);
+        backBt.setLayoutY(235);
+        backBt.setOpacity(0);
         backBt.setOnAction(event -> {backFunction.apply(null);});
         root.getChildren().add(backBt);
 

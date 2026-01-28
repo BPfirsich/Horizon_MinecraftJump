@@ -62,6 +62,12 @@ public class Main extends Application {
 
                     switchToStoryMenu(stage);
                     return e;
+                },
+                e -> {
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToServerMenu(stage);
+                    return e;
                 }
         ));
     }
@@ -104,18 +110,6 @@ public class Main extends Application {
     void switchToStoryMenu(Stage stage) {
         clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
-
-//        serverConnector.TryConnection(InetAddress.getLoopbackAddress());
-//        System.out.println(serverConnector.getPing());
-//        serverConnector.CreateRoom();
-        stage.setScene(Menu.erstelleServerMenu(this,
-                e -> {
-                    _soundPlayer.playSound("click", 1);
-
-                    switchToMainMenu(stage);
-                    return e;
-                }));
-        if (1 == 1) return;
 
         stage.setScene(Menu.erstelleStoryScene(
                 this,
@@ -210,6 +204,22 @@ public class Main extends Application {
         ));
     }
 
+    void switchToServerMenu(Stage stage) {
+        clearOldRoot(stage);
+        _soundPlayer.setMusic("mainMenu");
+
+//        serverConnector.TryConnection(InetAddress.getLoopbackAddress());
+//        System.out.println(serverConnector.getPing());
+//        serverConnector.CreateRoom();
+        stage.setScene(Menu.erstelleServerMenu(this,
+                e -> {
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToMainMenu(stage);
+                    return e;
+        }));
+    }
+
     @Override
     public void start(Stage stage) {
 
@@ -293,7 +303,7 @@ public class Main extends Application {
             timer.start();
 
             // DAS HIER ÄNDERN LOL
-            //switchToWinScreen(stage);
+            //switchToStoryMenu(stage);
             // DAS HIER ÄNDERN LOL
 
         });
