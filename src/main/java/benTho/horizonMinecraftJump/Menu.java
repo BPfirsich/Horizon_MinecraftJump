@@ -8,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
@@ -18,6 +20,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.function.Function;
 
 public class Menu {
@@ -516,6 +520,118 @@ public class Menu {
         return newScene;
     }
 
+    public static Scene erstelleServerMenu(Main classInstance, Function<Void, Void> backFunction) {
+        Pane root = new Pane();
+        Scene newScene = createSceneBase(classInstance, root, "/screen_end_3.png");
 
+        Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 40);
+
+        TextField serverAddressField = new TextField("localhost");
+        serverAddressField.setPrefHeight(80);
+        serverAddressField.setPrefWidth(300);
+        serverAddressField.setLayoutX(200);
+        serverAddressField.setLayoutY(200);
+        serverAddressField.setFont(minecraftFont);
+        root.getChildren().add(serverAddressField);
+
+        Text connectedStatusText = new Text(Main.serverConnector.isConnected() ? "Connected to Server" : "Disconnected");
+        connectedStatusText.setFont(minecraftFont);
+        connectedStatusText.setTextAlignment(TextAlignment.CENTER);
+        connectedStatusText.setFill(javafx.scene.paint.Color.WHITE);
+        connectedStatusText.setLayoutX(200);
+        connectedStatusText.setLayoutY(320);
+        root.getChildren().add(connectedStatusText);
+
+        // Connected Menu
+        // =======================================================
+        Text currentRoomText = new Text("Current Room: Fetching...");
+        currentRoomText.setFont(minecraftFont);
+        currentRoomText.setTextAlignment(TextAlignment.CENTER);
+        currentRoomText.setFill(javafx.scene.paint.Color.WHITE);
+        currentRoomText.setLayoutX(200);
+        currentRoomText.setLayoutY(400);
+        {
+            int currentRoom = Main.serverConnector.getCurrentRoomID();
+            currentRoomText.setText((currentRoom != -1) ? "Current Room: " + currentRoom :
+                    "Current Room: None");
+        }
+        root.getChildren().add(currentRoomText);
+
+        Button createRoomBt = new Button("Create Room");
+        createRoomBt.setPrefHeight(60);
+        createRoomBt.setPrefWidth(100);
+        createRoomBt.setLayoutX(200);
+        createRoomBt.setLayoutY(450);
+        createRoomBt.setOnAction(event -> {
+            int joinedRoom = Main.serverConnector.CreateRoom();
+            currentRoomText.setText((joinedRoom != -1) ? "Current Room: " + joinedRoom :
+                    "Current Room: Creation Failed");
+        });
+        root.getChildren().add(createRoomBt);
+
+        TextField roomNumberTextField = new TextField();
+        roomNumberTextField.setPrefHeight(80);
+        roomNumberTextField.setPrefWidth(200);
+        roomNumberTextField.setLayoutX(200);
+        roomNumberTextField.setLayoutY(550);
+        roomNumberTextField.setFont(minecraftFont);
+
+        // TextFormatter für nur Zahlen
+        roomNumberTextField.setTextFormatter(new TextFormatter<>(change -> {
+            if (change.getText().matches("[0-9]*")) {
+                return change; // erlaubt
+            }
+            return null; // blockt alles andere
+        }));
+
+        root.getChildren().add(roomNumberTextField);
+
+        Button joinRoomBt = new Button("Join Room");
+        joinRoomBt.setPrefHeight(60);
+        joinRoomBt.setPrefWidth(100);
+        joinRoomBt.setLayoutX(450);
+        joinRoomBt.setLayoutY(550);
+        joinRoomBt.setOnAction(event -> {
+            if (roomNumberTextField.getText().isEmpty()) return;
+
+            int joinedRoom = Main.serverConnector.joinRoom(Integer.parseInt(roomNumberTextField.getText()));
+            currentRoomText.setText((joinedRoom != -1) ? "Current Room: " + joinedRoom :
+                    "Current Room: Room doesnt exist!");
+        });
+        root.getChildren().add(joinRoomBt);
+
+        // =======================================================
+
+        Button connectButton = new Button("Connect to Server");
+        connectButton.setPrefHeight(60);
+        connectButton.setPrefWidth(100);
+        connectButton.setLayoutX(500);
+        connectButton.setLayoutY(200);
+        connectButton.setOnAction(event -> {
+            if (!Main.serverConnector.isConnected()) {
+                InetAddress address = null;
+                try {
+                    address = InetAddress.getByName(serverAddressField.getText());
+                } catch (UnknownHostException e) {
+                    connectedStatusText.setText("Invalid IP Address");
+                    return;
+                }
+
+                if (Main.serverConnector.TryConnection(address)) connectedStatusText.setText("Successfully connected!");
+                else connectedStatusText.setText("Connection Failed!");
+            }
+        });
+        root.getChildren().add(connectButton);
+
+        Button backBt = new Button("Zurück");
+        backBt.setPrefWidth(220);
+        backBt.setPrefHeight(95);
+        backBt.setLayoutX(935);
+        backBt.setLayoutY(250);
+        backBt.setOnAction(event -> {backFunction.apply(null);});
+        root.getChildren().add(backBt);
+
+        return newScene;
+    }
 
 }

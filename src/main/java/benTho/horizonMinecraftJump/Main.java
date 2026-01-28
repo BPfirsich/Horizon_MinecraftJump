@@ -105,9 +105,17 @@ public class Main extends Application {
         clearOldRoot(stage);
         _soundPlayer.setMusic("mainMenu");
 
-        serverConnector.TryConnection(InetAddress.getLoopbackAddress());
-        System.out.println(serverConnector.getPing());
-        serverConnector.CreateRoom();
+//        serverConnector.TryConnection(InetAddress.getLoopbackAddress());
+//        System.out.println(serverConnector.getPing());
+//        serverConnector.CreateRoom();
+        stage.setScene(Menu.erstelleServerMenu(this,
+                e -> {
+                    _soundPlayer.playSound("click", 1);
+
+                    switchToMainMenu(stage);
+                    return e;
+                }));
+        if (1 == 1) return;
 
         stage.setScene(Menu.erstelleStoryScene(
                 this,

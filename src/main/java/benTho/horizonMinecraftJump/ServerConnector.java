@@ -134,15 +134,17 @@ public class ServerConnector {
         return true;
     }
 
-    public void CreateRoom() {
-        if (!_isConnected) return;
+    public int CreateRoom() {
+        if (!_isConnected) return -1;
 
         try {
             _currentRoomID = ServerPackages.tcp_createRoom(_serverLoop.responseQueue, tcpOut);
+            return _currentRoomID;
 
         } catch (IOException e) {
             System.err.println("Server connection lost!");
             Disconnect();
+            return -1;
         }
     }
 
@@ -160,15 +162,16 @@ public class ServerConnector {
         }
     }
 
-    public void joinRoom(int roomID) {
-        if (!_isConnected) return;
+    public int joinRoom(int roomID) {
+        if (!_isConnected) return -1;
 
         try {
-            ServerPackages.tcp_joinRoom(tcpOut, roomID);
+            return ServerPackages.tcp_joinRoom(_serverLoop.responseQueue, tcpOut, roomID);
 
         } catch (IOException e) {
             System.err.println("Server connection lost!");
             Disconnect();
+            return -1;
         }
     }
 

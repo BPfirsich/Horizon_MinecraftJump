@@ -60,7 +60,7 @@ public class ServerPackages {
         }
     }
 
-    public static void tcp_joinRoom(DataOutputStream out, int roomID) throws IOException {
+    public static int tcp_joinRoom(BlockingDeque<ByteBuffer> in, DataOutputStream out, int roomID) throws IOException {
         System.out.println("Request Package to server: JoinRoom");
 
         ByteBuffer buffer = ByteBuffer.allocate(12);
@@ -68,6 +68,15 @@ public class ServerPackages {
         buffer.putInt(4);
         buffer.putInt(roomID);
         out.write(buffer.array());
+
+        try {
+            ByteBuffer response = in.take(); // Blocks until is reads something
+            if (response.limit() == 0) return -1; // On disconnect or anything like that
+            return response.getInt();
+
+        } catch (InterruptedException e) {
+            return -1;
+        }
     }
 
     public static int tcp_getRoomNumber(BlockingDeque<ByteBuffer> in, DataOutputStream out) throws IOException {
