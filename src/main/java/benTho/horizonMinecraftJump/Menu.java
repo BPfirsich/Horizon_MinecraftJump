@@ -537,7 +537,7 @@ public class Menu {
 
         Font minecraftFont = Font.loadFont(classInstance.getClass().getResourceAsStream("/minecraft-ten-font/MinecraftTen-VGORe.ttf"), 40);
 
-        TextField serverAddressField = new TextField("localhost");
+        TextField serverAddressField = new TextField("45.11.229.14");
         serverAddressField.setPrefHeight(90);
         serverAddressField.setPrefWidth(290);
         serverAddressField.setLayoutX(213);

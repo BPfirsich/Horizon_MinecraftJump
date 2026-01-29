@@ -69,7 +69,7 @@ public class Pfeil implements Projektil {
     @Override
     public boolean doesHitBoss(ImageView bossView) {
         if(_sprite == null) return false;
-        if (isOnlyVisual) return false;
+        //if (isOnlyVisual) return false;
 
         return Projektil.aabbCollision(_sprite, bossView);
     }
