@@ -173,6 +173,7 @@ public class ServerLoop {
     }
 
     private static final int UDPHEADER_PLAYERPOS = 1;
+    private static final int UDPHEADER_SPAWN_ARROW = 2;
 
     private void processUdpPackage(int header, ByteBuffer data) {
         switch (header) {
@@ -184,6 +185,19 @@ public class ServerLoop {
                 mainRef.doSomethingQueue.add(e -> {
                     if(mainRef._currentDimension != null) {
                         mainRef._currentDimension.updateNetworkPlayer(playerID, posX, posY);
+                    }
+                    return e;
+                });
+            }
+            case UDPHEADER_SPAWN_ARROW -> {
+                float posX = data.getFloat();
+                float poxY = data.getFloat();
+                float velX = data.getFloat();
+                float velY = data.getFloat();
+
+                mainRef.doSomethingQueue.add(e -> {
+                    if(mainRef._currentDimension != null) {
+                        mainRef._currentDimension.spawnNetworkArrow(posX, poxY, velX, velY);
                     }
                     return e;
                 });

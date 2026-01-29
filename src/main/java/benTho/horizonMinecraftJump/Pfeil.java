@@ -12,6 +12,8 @@ public class Pfeil implements Projektil {
     private ImageView _sprite = null;
     private Vector2f _velocity;
 
+    public boolean isOnlyVisual = false; // Used for arrows by other players
+
     @Override
     public void init(Vector2f startPos, Vector2f startDire) {
         // Die bilder laden, falls dies noch nicht geschehen ist
@@ -34,6 +36,8 @@ public class Pfeil implements Projektil {
         if(_velocity.x < 0) {
             _sprite.setScaleX(_sprite.getScaleX() * -1);
         }
+
+        this.isOnlyVisual = isOnlyVisual;
     }
 
     @Override
@@ -65,6 +69,7 @@ public class Pfeil implements Projektil {
     @Override
     public boolean doesHitBoss(ImageView bossView) {
         if(_sprite == null) return false;
+        if (isOnlyVisual) return false;
 
         return Projektil.aabbCollision(_sprite, bossView);
     }

@@ -103,6 +103,11 @@ class Spieler {
             pfeil.init(new Vector2f((float)_figur.getX(), (float)_figur.getY() + 20),
                        new Vector2f(ARROW_VEL_X, ARROW_VEL_Y));
             _myDimension.addProjektil(pfeil);
+
+            if (Main.serverConnector.isConnected()) {
+                Vector2f arrowTilePos = _myDimension.loadedLevelData.calcMapPosFromPixelPos((float)_figur.getX(), (float)_figur.getY(), _myDimension.cameraPosition, false);
+                Main.serverConnector.syncArrow(arrowTilePos.x, arrowTilePos.y, ARROW_VEL_X, ARROW_VEL_Y);
+            }
         }
 
         // Update the floor Y Pos

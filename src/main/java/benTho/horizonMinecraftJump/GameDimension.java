@@ -288,6 +288,8 @@ public class GameDimension {
         updateScoreTxt();
     }
 
+    // SERER ==========================================================
+
     // Update the Sprite of another Player. (Server-only)
     public void updateNetworkPlayer(int playerID, float x, float y) {
         if (_networkPlayers.containsKey(playerID)) {
@@ -308,6 +310,19 @@ public class GameDimension {
             updateNetworkPlayer(playerID, x, y);
         }
     }
+
+    public void spawnNetworkArrow(float posX, float posY, float velX, float velY) {
+        Pfeil visualPfeil = new Pfeil();
+        Vector2f startPos = loadedLevelData.calcPixelCordsFromTile(posX, posY - 1.6f, cameraPosition, false);
+        Vector2f startVel = new Vector2f(velX, velY);
+
+        visualPfeil.isOnlyVisual = true;
+        visualPfeil.init(startPos, startVel);
+
+        addProjektil(visualPfeil);
+    }
+
+    // ==================================================================
 
     // Fügt einen gegner zur Dimension hinzu, und fügt dessen Rectangle zur scene hinzu
     public void setSpieler(Spieler spieler) {
@@ -727,6 +742,7 @@ public class GameDimension {
         for(Map.Entry<Integer, ImageView> netPlayer : _networkPlayers.entrySet()) {
             _root.getChildren().remove(netPlayer.getValue());
         }
+        _networkPlayers.clear();
 
         _root.getChildren().remove(currentScoreText);
 

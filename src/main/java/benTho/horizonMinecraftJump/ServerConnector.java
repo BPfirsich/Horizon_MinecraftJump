@@ -234,6 +234,19 @@ public class ServerConnector {
         }
     }
 
+    public void syncArrow(float x, float y, float vx, float vy) {
+        if (!_isConnected) return;
+
+        try {
+            ServerPackages.udp_sendArrowShot(udpSocket, _currentServerAddress, _currentClientID, _currentRoomID,
+                    x, y, vx, vy);
+
+        } catch (IOException e) {
+            System.err.println("Server connection lost!");
+            Disconnect();
+        }
+    }
+
     // Currently just meant to be called once on connection. Bad design but yeah...
     private int calculatePing() {
         if (!_isConnected) return -1;

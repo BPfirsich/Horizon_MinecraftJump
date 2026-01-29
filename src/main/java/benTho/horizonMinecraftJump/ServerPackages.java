@@ -234,4 +234,26 @@ public class ServerPackages {
         udpSocket.send(packet);
     }
 
+    public static void udp_sendArrowShot(DatagramSocket udpSocket, InetAddress address, int clientID, int roomID,
+                                         float px, float py, float vx, float vy) throws IOException {
+        ByteBuffer buffer = ByteBuffer.allocate(12 + 16);
+        buffer.putInt(2);
+        buffer.putInt(clientID);
+        buffer.putInt(roomID);
+
+        buffer.putFloat(px);
+        buffer.putFloat(py);
+        buffer.putFloat(vx);
+        buffer.putFloat(vy);
+
+        byte[] data = buffer.array();
+        DatagramPacket packet = new DatagramPacket(
+                data,
+                data.length,
+                address,
+                ServerConnector.PORT
+        );
+        udpSocket.send(packet);
+    }
+
 }
